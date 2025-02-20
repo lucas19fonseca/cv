@@ -113,7 +113,7 @@
         src="assets/programador.png" alt="Imagem do desenvolvedor" class="imagem"/>
       <div class="texto">
         <p>
-          Olá! Meu nome é Lucas Andrade, tenho 20 anos e estou no 4º semestre de Ciências da
+          Olá! Meu nome é Lucas Andrade, tenho 20 anos e estou no 5º semestre de Ciências da
           Computação. Embora ainda não tenha experiência profissional, sou uma pessoa
           comunicativa e tenho facilidade em interagir e colaborar com os outros, o que me ajuda
           bastante no ambiente acadêmico e em projetos em grupo.
@@ -221,26 +221,26 @@
     </div>
     
     <div class="titulo-body">
-      <!--adc um btn pra sair da img -->
+
       <h4 id="titulo-certificados">Certificados</h4>
     </div>  
     <div class="container-certificados">
       <div class="card-certificados">
-        <a href="assets/git-certificado.png">
-          <img src="assets/git-certificado.png" alt="Certificado Git">
-        </a>
+        <img src="assets/git-certificado.png" alt="Certificado Git" onclick="openModal(this)">
       </div>
       <div class="card-certificados">
-        <a href="assets/java.jpeg">
-          <img src="assets/java.jpeg" alt="Certificado Java">
-        </a>
+        <img src="assets/java.jpeg" alt="Certificado Java" onclick="openModal(this)">
       </div>
       <div class="card-certificados">
-        <a href="assets/py.jpeg">
-          <img src="assets/py.jpeg" alt="Certificado Python">
-        </a>
+        <img src="assets/py.jpeg" alt="Certificado Python" onclick="openModal(this)">
       </div>
     </div>
+    
+    <div id="modal" class="modal">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <img id="modal-img">
+    </div>
+    
     
     <div class="titulo-body">
       <h4 id="titulo-Contato"> Contato</h4>     

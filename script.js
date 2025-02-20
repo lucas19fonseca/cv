@@ -27,3 +27,20 @@ document.querySelectorAll('.hearder-info').forEach(anchor => {
         }
     });
 });
+function openModal(img) {
+    let modal = document.getElementById("modal");
+    let modalImg = document.getElementById("modal-img");
+    
+    modal.style.display = "flex";
+    modalImg.src = img.src;
+  }
+
+  function closeModal() {
+    document.getElementById("modal").style.display = "none";
+  }
+
+  document.getElementById("modal").addEventListener("click", function (event) {
+    if (event.target === this) {
+      closeModal();
+    }
+  });
