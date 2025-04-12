@@ -1,1 +1,1 @@
-"# cv"  
+Criei um currículo online utilizando HTML, CSS e JavaScript como forma de treinar meus conhecimentos em desenvolvimento web. O site apresenta informações sobre mim, destaca as tecnologias que domino e reúne meus principais projetos.
