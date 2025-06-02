@@ -4,73 +4,87 @@ import ReactCert from "../../assets/certificados/react-curso.png";
 import Py from "../../assets/certificados/py.jpeg";
 import Js from "../../assets/certificados/java.jpeg";
 import Git from "../../assets/certificados/git-certificado.png";
-import Tw from "../../assets/certificados/curso-tw.jpg"
+import Tw from "../../assets/certificados/curso-tw.jpg";
 
 export default function Certificados() {
   const [mostrarMais, setMostrarMais] = useState(false);
   const [imagemModal, setImagemModal] = useState(null);
 
-  // Função para abrir modal
   const abrirModal = (img) => {
     setImagemModal(img);
   };
 
-  // Função para fechar modal
   const fecharModal = () => {
     setImagemModal(null);
   };
 
   return (
     <div>
-      <div className="grid grid-cols-3 gap-4 px-8 ">
-        <button onClick={() => abrirModal(ReactCert)}>
-          <img src={ReactCert} alt="curso react" className="h-75 cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)]" />
-        </button>
-        <button onClick={() => abrirModal(Py)}>
-          <img src={Py} alt="Curso Python" className="h-75 cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)]" />
-        </button>
-        <button onClick={() => abrirModal(Git)}>
-          <img src={Git} alt="curso Git" className="h-75 cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)]" />
-        </button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8 mt-10">
+        <motion.button onClick={() => abrirModal(ReactCert)}>
+          <img
+            src={ReactCert}
+            alt="curso react"
+            className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg"
+          />
+        </motion.button>
+
+        <motion.button onClick={() => abrirModal(Py)}>
+          <img
+            src={Py}
+            alt="Curso Python"
+            className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg"
+          />
+        </motion.button>
+
+        <motion.button onClick={() => abrirModal(Git)}>
+          <img
+            src={Git}
+            alt="curso Git"
+            className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg"
+          />
+        </motion.button>
 
         <AnimatePresence>
           {mostrarMais && (
             <motion.div
-              className="col-span-3 grid grid-cols-3 gap-4 mt-4"
+              className="col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.4 }}
             >
-              <button onClick={() => abrirModal(Js)}>
-                <img src={Js} alt="curso JavaScript" className="h-75 cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)]" />
-              </button>
-              <button onClick={() => abrirModal(Tw)}>
-                <img src={Tw} alt="curso Tailwind" className="h-75 cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)]" />
-              </button>
+              <motion.button onClick={() => abrirModal(Js)}>
+                <img
+                  src={Js}
+                  alt="curso JavaScript"
+                  className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg"
+                />
+              </motion.button>
+
+              <motion.button onClick={() => abrirModal(Tw)}>
+                <img
+                  src={Tw}
+                  alt="curso Tailwind"
+                  className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg"
+                />
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
       <div className="flex justify-center mt-10">
-        <button
+        <motion.button
           onClick={() => setMostrarMais(!mostrarMais)}
-          className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-18 py-1 text-xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-18 py-1 text-lg md:text-xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2"
         >
-          {mostrarMais ? (
-            <>
-              ver menos <i className="fa-solid fa-arrow-up"></i>
-            </>
-          ) : (
-            <>
-              ver mais <i className="fa-solid fa-arrow-down"></i>
-            </>
-          )}
-        </button>
+          {mostrarMais ? <>ver menos</> : <>ver mais</>}
+        </motion.button>
       </div>
 
-      {/* Modal */}
       <AnimatePresence>
         {imagemModal && (
           <motion.div

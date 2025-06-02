@@ -4,6 +4,7 @@ import Tecnologia from "../Tecnologias/index";
 import Certificados from "../Certificados/index";
 import Contato from "../Contato/index";
 import Projetos from "../projetos/index";
+import curriculo from "../../assets/curriculo.pdf"
 import Wave from "../Wave/index"
 
 export default function Main() {
@@ -49,9 +50,14 @@ export default function Main() {
             </div>
 
 
-            <div className="ml-20">
-              <a href="mailto:lucas19fonseca@gmail.com" className="bg-white text-black rounded-3xl px-4 py-2 inline-block text-xl hover:scale-110 transition duration-500 ">
-                Entrar em contato
+            <div className="flex justify-center mr-34">
+              <a
+                href={curriculo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className=" bg-white text-black rounded-3xl px-15 font-medium py-2 inline-block text-xl hover:scale-110 transition duration-500"
+              > 
+                Currículo
               </a>
             </div>
 
