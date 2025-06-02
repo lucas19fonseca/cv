@@ -5,12 +5,12 @@ export default function Contato() {
         {/* Contato info */}
         <div className="flex justify-center">
           <div className="text-white">
-            <h4 className="text-[#ff5403] text-xl md:text-2xl font-Poppin mb-3 mt-6 md:mt-10">
+            <h4 className="text-[#ff5403] text-xl md:text-2xl font-Poppin mb-3 mt-6 md:mt-10 md:ml-29">
               Entre em contato
             </h4>
 
             {/* Redes sociais */}
-            <div className="text-2xl ml-7 flex gap-4 mb-4">
+            <div className="text-2xl ml-7 md:ml-36 flex gap-4 mb-4">
               <a
                 href="https://www.instagram.com/lucax.andrade_/"
                 target="_blank"
@@ -46,8 +46,8 @@ export default function Contato() {
             </div>
 
             {/* Lista de contatos */}
-            <div className="mt-10 md:mt-20 ">
-              <ul className="space-y-3 text-base md:text-xl mr-20">
+            <div className="mt-10 md:mt-20 md:mr-45 ">
+              <ul className="space-y-3 text-base md:text-xl ">
                 <li>
                   <i className="fas fa-envelope mr-2"></i>lucas19fonseca@gmail.com
                 </li>
@@ -106,7 +106,7 @@ export default function Contato() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-[#ff5403] text-white rounded-2xl px-6 py-2 font-semibold hover:scale-105 transition"
+              className="bg-[#ff5403] text-white rounded-2xl px-6 py-2 font-semibold hover:scale-105 transition duration-400"
             >
               Enviar Mensagem
             </button>

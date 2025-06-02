@@ -65,7 +65,7 @@ export default function Projetos() {
             onClick={() => setMostrarMais(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-18 py-1 text-xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2"
+            className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-20 py-1 md:mt-4 text-lg md:text-2xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2"
           >
             Ver mais
           </motion.button>

@@ -79,7 +79,7 @@ export default function Certificados() {
           onClick={() => setMostrarMais(!mostrarMais)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-18 py-1 text-lg md:text-xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2"
+          className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-20 py-1 md:mt-4 text-lg md:text-2xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2"
         >
           {mostrarMais ? <>ver menos</> : <>ver mais</>}
         </motion.button>
@@ -88,7 +88,7 @@ export default function Certificados() {
       <AnimatePresence>
         {imagemModal && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-150"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -96,7 +96,7 @@ export default function Certificados() {
             <div className="relative">
               <button
                 onClick={fecharModal}
-                className="absolute top-[-30px] right-[-30px] text-white text-3xl font-bold"
+                className="absolute top-[-50px] right-[-60px] text-white text-7xl font-bold"
               >
                 &times;
               </button>

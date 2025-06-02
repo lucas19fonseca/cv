@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './index.css'
 import Header from './components/Header/index'
-import Main from './components/main/index'
+import Main from '../src/components/Main/index'
 
 
 

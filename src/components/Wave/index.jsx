@@ -1,15 +1,12 @@
 export default function Wave() {
-    return (
-        <div>
-            <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)"
-                class="animate-move-forever" style="animation-delay:-2s; animation-duration:7s;" />
-            <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)"
-                class="animate-move-forever" style="animation-delay:-3s; animation-duration:10s;" />
-            <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)"
-                class="animate-move-forever" style="animation-delay:-4s; animation-duration:13s;" />
-            <use xlink:href="#gentle-wave" x="48" y="7" fill="#E2E2E2E2"
-                class="animate-move-forever" style="animation-delay:-5s; animation-duration:20s;" />
-
-        </div>
-    );
+  return (
+    <div className="relative">
+      <svg className="w-full h-20" viewBox="0 0 1440 320">
+        <path
+          fill="#f4f4f4"
+          d="M0,160L80,138.7C160,117,320,75,480,101.3C640,128,800,224,960,240C1120,256,1280,192,1360,160L1440,128V320H0Z"
+        ></path>
+      </svg>
+    </div>
+  );
 }

@@ -66,27 +66,27 @@ export default function Main() {
           <div className="flex justify-center">
             <img src={FotoLucas} alt="Foto Lucas" className=" object-cover rounded-full h-10 md:h-90 md:w-90 md:ml-40" />
           </div>
-          
         </div>
+        <Wave/>
       </div>
       <div className="w-full flex justify-center md:pt-8">
-        <h1 className="font-medium md:text-2xl" id="sobre-mim">Sobre Mim</h1>
+        <h1 className="font-medium md:text-3xl" id="sobre-mim">Sobre Mim</h1>
       </div>
       <SobreMim />
-      <div className="w-full flex justify-center md:pt-6 md:pb-8">
-        <h1 className="font-medium md:text-2xl" id="tecnologias">Tecnologias</h1>
+      <div className="w-full flex justify-center md:pt-6 md:pb-8 md:mt-20">
+        <h1 className="font-medium md:text-3xl" id="tecnologias">Tecnologias</h1>
       </div>
       <Tecnologia/>
-      <div className="w-full flex justify-center md:pt-6 md:pb-8">
-        <h1 className="font-medium md:text-2xl" id="projetos">Projetos</h1>
+      <div className="w-full flex justify-center md:pt-6 md:pb-8 md:mt-20">
+        <h1 className="font-medium md:text-3xl" id="projetos">Projetos</h1>
       </div>
       <Projetos/>
-      <div className="w-full flex justify-center md:pt-6 md:pb-8">
-        <h1 className="font-medium md:text-2xl" id="certificados">Certificados</h1>
+      <div className="w-full flex justify-center md:pt-6 md:pb-3  md:mt-20">
+        <h1 className="font-medium md:text-3xl" id="certificados">Certificados</h1>
       </div>
         <Certificados/>
-      <div className="w-full flex justify-center md:pt-6 md:pb-8">
-        <h1 className="font-medium md:text-2xl" id="contato">Contato</h1>
+      <div className="w-full flex justify-center md:pt-6 md:pb-8 md:mt-20">
+        <h1 className="font-medium md:text-3xl" id="contato">Contato</h1>
       </div>
       <Contato/>
     </main >
