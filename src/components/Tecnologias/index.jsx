@@ -1,6 +1,6 @@
 import Html from "../../assets/tecnologias/html.png"
 import Css from "../../assets/tecnologias/css.png"
-import Java from "../../assets/tecnologias/java.sc.png"
+import Java from "../../assets/tecnologias/Java.sc.png"
 import React from "../../assets/tecnologias/react copy.svg"
 import Py from "../../assets/tecnologias/py.png"
 import GitHub from "../../assets/tecnologias/github.png"
