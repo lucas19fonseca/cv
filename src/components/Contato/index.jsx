@@ -1,4 +1,24 @@
+import { useRef } from "react";
+import emailjs from "emailjs-com";
+
 export default function Contato() {
+  const form = useRef();
+
+  const enviarEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm("service_ey0v7lf", "template_9pmqr9p", form.current, "3Q1UnYYGtaM4UmNuS")
+      .then(() => {
+        alert("Mensagem enviada com sucesso!");
+        form.current.reset();
+      })
+      .catch((error) => {
+        console.log("Erro ao enviar", error);
+        alert("Erro ao enviar mensagem.");
+      });
+  };
+
   return (
     <div className="flex justify-center pb-10">
       <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full max-w-6xl rounded-xl p-6 gap-8">
@@ -63,7 +83,11 @@ export default function Contato() {
         </div>
 
         {/* Formulário */}
-        <form className="bg-[#f4f4f4] rounded p-4 space-y-4 w-full">
+        <form
+          ref={form}
+          onSubmit={enviarEmail}
+          className="bg-[#f4f4f4] rounded p-4 space-y-4 w-full"
+        >
           <div>
             <label htmlFor="nome" className="block text-sm font-medium text-gray-700">
               Nome
@@ -71,6 +95,7 @@ export default function Contato() {
             <input
               id="nome"
               type="text"
+              name="name"
               placeholder="Seu nome"
               className="w-full bg-white rounded px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff5403]"
               required
@@ -84,6 +109,7 @@ export default function Contato() {
             <input
               id="email"
               type="email"
+              name="email"
               placeholder="Seu email"
               className="w-full bg-white rounded px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff5403]"
               required
@@ -96,6 +122,7 @@ export default function Contato() {
             </label>
             <textarea
               id="mensagem"
+              name="message"
               placeholder="Digite sua mensagem"
               className="w-full bg-white rounded px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff5403] resize-none"
               rows="4"
