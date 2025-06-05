@@ -35,7 +35,7 @@ export default function Contato() {
                 href="https://www.instagram.com/lucax.andrade_/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-125 transition duration-500"
+                className="hover:scale-115 transition duration-500"
               >
                 <i className="fab fa-instagram"></i>
               </a>
@@ -43,7 +43,7 @@ export default function Contato() {
                 href="https://github.com/lucas19fonseca"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-125 transition duration-500"
+                className="hover:scale-115 transition duration-500"
               >
                 <i className="fab fa-github"></i>
               </a>
@@ -51,7 +51,7 @@ export default function Contato() {
                 href="https://www.linkedin.com/in/lucas-andrade-5511022b3/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-125 transition duration-500"
+                className="hover:scale-115 transition duration-500"
               >
                 <i className="fab fa-linkedin"></i>
               </a>
@@ -59,7 +59,7 @@ export default function Contato() {
                 href="https://discord.com/channels/@me"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:scale-125 transition duration-500"
+                className="hover:scale-115 transition duration-500"
               >
                 <i className="fab fa-discord"></i>
               </a>
