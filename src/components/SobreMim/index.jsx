@@ -1,4 +1,4 @@
-import ImgDev from "../../assets/programador.png";
+import ImgDev from "../../assets/comum/programador.png";
 
 export default function SobreMim() {
   return (

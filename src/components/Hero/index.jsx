@@ -1,6 +1,6 @@
-import FotoLucas from "../../assets/lucas.jpg";
-import curriculo from "../../assets/curriculo.pdf"
-import Wave from "../Wave/index"
+import FotoLucas from "../../assets/comum/lucas.jpg";
+import curriculo from "../../assets/comum/curriculo.pdf"
+import Wave from "../Wave/index.jsx"
 
 
 export default function hero(){
