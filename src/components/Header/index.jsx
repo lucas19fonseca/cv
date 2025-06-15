@@ -44,7 +44,10 @@ export default function Header() {
   }, []);
 
   return (
-    <header className='bg-[#080831d9] backdrop-blur-md text-white text-2xl fixed w-full py-4 px-8 font-medium not-sm:hidden z-100'>
+    <header className='bg-[#080831d9] backdrop-blur-md text-white text-2xl fixed w-full py-4 px-8 font-medium z-100
+    md:text-2xl 
+    not-sm:hidden sm:text-xs
+    '>
       <div className='flex flex-row justify-between'>
         <div>
           <a id="lucas" href="#Lucas Andrade Fonseca" className='hover:text-[#ff5403] border-b-2 border-transparent hover:border-white transition duration-600'>

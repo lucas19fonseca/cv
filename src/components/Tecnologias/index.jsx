@@ -11,7 +11,6 @@ import Figma from "../../assets/tecnologias/figma.png"
 import Docker from "../../assets/tecnologias/docker.png"
 import Postman from "../../assets/tecnologias/postman.png"
 import Tw from "../../assets/tecnologias/tailwind.png"
-import Bt from "../../assets/tecnologias/bootstrap.png"
 
 export default function Tecnologia() {
     return (
@@ -72,10 +71,6 @@ export default function Tecnologia() {
                 <div className="text-center hover:scale-110 transition duration-600">
                     <img src={Tw} alt="tailwind" className="mx-auto h-12" />
                     <p>Tailwind</p>
-                </div>
-                <div className="text-center hover:scale-110 transition duration-600">
-                    <img src={Bt} alt="bootstrap" className="mx-auto h-12" />
-                    <p>BootStrap</p>
                 </div>
             </div>
         </section>
