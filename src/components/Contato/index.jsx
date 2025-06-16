@@ -20,7 +20,7 @@ export default function Contato() {
   };
 
   return (
-    <div className="flex justify-center pb-10">
+    <div className="flex justify-center pb-5">
       <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full max-w-6xl rounded-xl p-6 gap-8">
         {/* Contato info */}
         <div className="flex justify-center">

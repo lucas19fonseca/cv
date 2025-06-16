@@ -24,7 +24,7 @@ export default function Header() {
           const targetElement = document.querySelector(href);
           if (targetElement) {
             window.scrollTo({
-              top: targetElement.offsetTop - 190,
+              top: targetElement.offsetTop - 140,
               behavior: 'smooth'
             });
           }
@@ -44,9 +44,9 @@ export default function Header() {
   }, []);
 
   return (
-    <header className='bg-[#080831d9] backdrop-blur-md text-white text-2xl fixed w-full py-4 px-8 font-medium z-100
-    md:text-2xl 
-    not-sm:hidden sm:text-xs
+    <header className='bg-[#080831d9] backdrop-blur-md text-white text-2xl fixed w-full py-4 px-8 font-medium z-100 hidden
+    sm:text-sm
+    md:text-2xl md:block
     '>
       <div className='flex flex-row justify-between'>
         <div>

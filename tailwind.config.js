@@ -1,26 +1,23 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        Poppin: ['Poppins', 'sans-serif'],
+      animation: {
+        'wave-slow': 'waveFlow 15s ease-in-out infinite',
+        'wave-medium': 'waveFlow 12s ease-in-out infinite reverse',
+        'wave-fast': 'waveFlow 8s ease-in-out infinite'
       },
       keyframes: {
-        'move-wave': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
-        },
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-      },
-      animation: {
-        'wave-animation': 'move-wave 10s linear infinite',
-        fadeIn: 'fadeIn 1s ease-in forwards',
-      },
-    },
-  },
-  plugins: [],
+        waveFlow: {
+          '0%, 100%': { 
+            transform: 'translateX(0) translateY(0)',
+            'background-size': 'auto 95%'
+          },
+          '50%': { 
+            transform: 'translateX(-25%) translateY(10px)',
+            'background-size': 'auto 110%'
+          }
+        }
+      }
+    }
+  }
 }
