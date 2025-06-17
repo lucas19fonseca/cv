@@ -16,22 +16,22 @@ export default function Hero() {
                             md:justify-center md:mr-16 md:text-4xl
                             ">
                                 <li>
-                                    <a href="https://www.instagram.com/lucax.andrade_/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">
+                                    <a href="https://www.instagram.com/lucax.andrade_/" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition duration-300">
                                         <i className="fa-brands fa-instagram"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://github.com/lucas19fonseca" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">
+                                    <a href="https://github.com/lucas19fonseca" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition duration-300">
                                         <i className="fa-brands fa-github"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://www.linkedin.com/in/lucas-andrade-5511022b3/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">
+                                    <a href="https://www.linkedin.com/in/lucas-andrade-5511022b3/" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition duration-300">
                                         <i className="fa-brands fa-linkedin"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://discord.com/channels/@me" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">
+                                    <a href="https://discord.com/channels/@me" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition duration-300">
                                         <i className="fa-brands fa-discord"></i>
                                     </a>
                                 </li>
