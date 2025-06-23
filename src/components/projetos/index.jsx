@@ -6,15 +6,68 @@ import Tw from "../../assets/projetos/tailwclones.png";
 import Ponto from "../../assets/projetos/ponto.png";
 import Kubo from "../../assets/projetos/kubo-tela.png";
 
+// Correct icon imports
+import { FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJs, FaGithub, FaBootstrap } from 'react-icons/fa';
+import { SiTailwindcss, SiMongodb } from 'react-icons/si';
+import { DiGo } from 'react-icons/di'; // Alternative Golang icon
+
 export default function Projetos() {
   const [mostrarMais, setMostrarMais] = useState(false);
 
   const projetos = [
-    { nome: "Cuidado Simples", img: Cuidado, link: "https://github.com/lucas19fonseca/cuidado-simples" },
-    { nome: "Tailclones", img: Tw, link: "https://github.com/lucas19fonseca/cuidado-simples" },
-    { nome: "Kubo", img: Kubo, link: "https://github.com/lucas19fonseca/cuidado-simples" },
-    { nome: "Andrews shelf", img: shelf, link: "https://github.com/lucas19fonseca/cuidado-simples" },
-    { nome: "Folha de Ponto", img: Ponto, link: "https://github.com/lucas19fonseca/cuidado-simples" },
+    { 
+      nome: "Cuidado Simples", 
+      img: Cuidado, 
+      link: "https://github.com/lucas19fonseca/cuidado-simples",
+      descricao: "Farmácia online em html e css para fins de estudo.",
+      tecnologias: [
+        { nome: "HTML", icone: <FaHtml5/> },
+        { nome: "CSS", icone: <FaCss3Alt/> }
+      ]
+    },
+    { 
+      nome: "Tailclones", 
+      img: Tw, 
+      link: "https://github.com/lucas19fonseca/tailclones",
+      descricao: "Coleção de clones de interfaces populares construídos com Tailwind CSS para fins de estudo.",
+      tecnologias: [
+        { nome: "React", icone: <FaReact/> },
+        { nome: "Tailwind", icone: <SiTailwindcss/> }
+      ]
+    },
+    { 
+      nome: "Kubo", 
+      img: Kubo, 
+      link: "https://github.com/Kubo-Architecture",
+      descricao: "Plataforma de arquitetura 3D que permite visualização imersiva de projetos arquitetônicos.",
+      tecnologias: [
+        { nome: "MongoDB", icone: <SiMongodb/> },
+        { nome: "React", icone: <FaReact/> },
+        { nome: "Golang", icone: <DiGo/> }
+      ]
+    },
+    { 
+      nome: "Andrews shelf", 
+      img: shelf, 
+      link: "https://github.com/lucas19fonseca/Andrew-s-shelf",
+      descricao: "Sistema de gerenciamento de biblioteca pessoal com catalogação de livros e controle de empréstimos.",
+      tecnologias: [
+        { nome: "JavaScript", icone: <FaJs /> },
+        { nome: "CSS", icone: <FaCss3Alt/> },
+        { nome: "Bootstrap", icone: <FaBootstrap/> },
+        { nome: "HTML", icone: <FaHtml5/> }
+      ]
+    },
+    { 
+      nome: "Folha de Ponto", 
+      img: Ponto, 
+      link: "https://github.com/lucas19fonseca/ponto-eletronico",
+      descricao: "Sistema de controle de ponto eletrônico com relatórios e gestão de horas trabalhadas.",
+      tecnologias: [
+        { nome: "Node.js", icone: <FaNodeJs/> },
+        { nome: "JavaScript", icone: <FaJs /> },
+      ]
+    },
   ];
 
   const projetosParaMostrar = mostrarMais ? projetos : projetos.slice(0, 3);
@@ -32,28 +85,64 @@ export default function Projetos() {
           >
             {/* Imagem */}
             <div className="absolute top-0 left-0 w-full h-full rounded-2xl overflow-hidden">
-              <img src={projeto.img} alt="" className="w-full h-full object-cover rounded-2xl" />
-              <div className="absolute top-0 left-0 w-full h-full bg-[#080831] opacity-0 group-hover:opacity-100 transition duration-500"></div>
+              <img 
+                src={projeto.img} 
+                alt={`Imagem do projeto ${projeto.nome}`} 
+                className="w-full h-full object-cover rounded-2xl" 
+              />
+              <div className="absolute top-0 left-0 w-full h-full bg-[#080831] opacity-0 group-hover:opacity-130 transition duration-700"></div>
             </div>
 
             {/* Conteúdo no hover */}
             <div className="flex flex-col justify-center items-center text-center absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-all duration-500 p-4">
               <motion.h2
-                className="text-white text-2xl mb-4 flex items-center gap-3"
+                className="text-white text-2xl mb-2 flex items-center gap-3"
                 initial={{ y: 30 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.5 }}
               >
                 {projeto.nome}
-                <a href={projeto.link} target="_blank" rel="noreferrer" className="text-white text-[28px] hover:text-[#afafaf] transition">
-                  <i className="fab fa-github"></i>
+                <a 
+                  href={projeto.link} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="text-white text-[28px] hover:text-[#afafaf] transition"
+                  aria-label={`Link para o repositório do projeto ${projeto.nome}`}
+                >
+                  <FaGithub />
                 </a>
               </motion.h2>
-              <p className="text-white text-base text-justify">Conheça o projeto completo no GitHub.</p>
-              <div className="flex justify-center gap-6 mt-4 text-white text-[28px]">
-                <i className="fab fa-css3-alt hover:text-[#afafaf] transition"></i>
-                <i className="fab fa-html5 hover:text-[#afafaf] transition"></i>
-              </div>
+              
+              <motion.p 
+                className="text-white text-sm text-justify mb-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                {projeto.descricao}
+              </motion.p>
+              
+              <motion.div 
+                className="flex flex-wrap justify-center gap-3 mt-2 text-white text-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                {projeto.tecnologias.map((tech, i) => (
+                  <div 
+                    key={i} 
+                    className="flex flex-col items-center group/tech"
+                    title={tech.nome}
+                  >
+                    <div className="hover:text-[#afafaf] transition cursor-default">
+                      {tech.icone}
+                    </div>
+                    <span className="text-xs opacity-0 group-hover/tech:opacity-100 transition">
+                      {tech.nome}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
             </div>
           </motion.div>
         ))}

@@ -66,7 +66,7 @@ export default function Certificados() {
                 <img
                   src={Tw}
                   alt="curso Tailwind"
-                  className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg"
+                  className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg md:h-74"
                 />
               </motion.button>
             </motion.div>
