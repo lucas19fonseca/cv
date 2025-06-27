@@ -47,7 +47,7 @@ export default function Hero() {
                             <p className="text-white text-xl 
                             md:text-2xl md:w-158
                             ">
-                                Tenho 20 anos, sou estudante de <span className="text-[#0969CC] font-semibold bg-gradient-to-r from-[#0969CC] to-[#b7cce2] bg-clip-text text-transparent">Ciências da Computação!</span>
+                                Tenho 20 anos, sou estudante de <span className="text-[#0969CC] font-semibold bg-gradient-to-r from-[#0969Cd] to-[#b7cce2] bg-clip-text text-transparent">Ciências da Computação!</span>
                             </p>
                             
                             <div className="pt-4 w-full flex justify-center -ml-6">
