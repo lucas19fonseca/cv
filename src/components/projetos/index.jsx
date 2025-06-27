@@ -1,0 +1,173 @@
+import { useState } from "react";
+import { motion } from "framer-motion";
+import shelf from "../../assets/projetos/Andrews.png";
+import Cuidado from "../../assets/projetos/cuidado-simples.png";
+import Tw from "../../assets/projetos/tailwclones.png";
+import Ponto from "../../assets/projetos/ponto.png";
+import Kubo from "../../assets/projetos/kubo-tela.png";
+
+// Correct icon imports
+import { FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJs, FaGithub, FaBootstrap } from 'react-icons/fa';
+import { SiTailwindcss, SiMongodb } from 'react-icons/si';
+import { DiGo } from 'react-icons/di'; // Alternative Golang icon
+
+export default function Projetos() {
+  const [mostrarMais, setMostrarMais] = useState(false);
+
+  const projetos = [
+    { 
+      nome: "Cuidado Simples", 
+      img: Cuidado, 
+      link: "https://github.com/lucas19fonseca/cuidado-simples",
+      descricao: "Farmácia online em html e css para fins de estudo.",
+      tecnologias: [
+        { nome: "HTML", icone: <FaHtml5/> },
+        { nome: "CSS", icone: <FaCss3Alt/> }
+      ]
+    },
+    { 
+      nome: "Tailclones", 
+      img: Tw, 
+      link: "https://github.com/lucas19fonseca/tailclones",
+      descricao: "Coleção de clones de interfaces populares construídos com Tailwind CSS para fins de estudo.",
+      tecnologias: [
+        { nome: "React", icone: <FaReact/> },
+        { nome: "Tailwind", icone: <SiTailwindcss/> }
+      ]
+    },
+    { 
+      nome: "Kubo", 
+      img: Kubo, 
+      link: "https://github.com/Kubo-Architecture",
+      descricao: "Plataforma de arquitetura 3D que permite visualização imersiva de projetos arquitetônicos.",
+      tecnologias: [
+        { nome: "MongoDB", icone: <SiMongodb/> },
+        { nome: "React", icone: <FaReact/> },
+        { nome: "Golang", icone: <DiGo/> }
+      ]
+    },
+    { 
+      nome: "Andrews shelf", 
+      img: shelf, 
+      link: "https://github.com/lucas19fonseca/Andrew-s-shelf",
+      descricao: "Sistema de gerenciamento de biblioteca pessoal com catalogação de livros e controle de empréstimos.",
+      tecnologias: [
+        { nome: "JavaScript", icone: <FaJs /> },
+        { nome: "CSS", icone: <FaCss3Alt/> },
+        { nome: "Bootstrap", icone: <FaBootstrap/> },
+        { nome: "HTML", icone: <FaHtml5/> }
+      ]
+    },
+    { 
+      nome: "Folha de Ponto", 
+      img: Ponto, 
+      link: "https://github.com/lucas19fonseca/ponto-eletronico",
+      descricao: "Sistema de controle de ponto eletrônico com relatórios e gestão de horas trabalhadas.",
+      tecnologias: [
+        { nome: "Node.js", icone: <FaNodeJs/> },
+        { nome: "JavaScript", icone: <FaJs /> },
+      ]
+    },
+  ];
+
+  const projetosParaMostrar = mostrarMais ? projetos : projetos.slice(0, 3);
+
+  return (
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projetosParaMostrar.map((projeto, index) => (
+          <motion.div
+            key={index}
+            className="relative w-full h-[200px] bg-white rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.3)] overflow-hidden group"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, delay: index * 0.1 }}
+          >
+            {/* Imagem */}
+            <div className="absolute top-0 left-0 w-full h-full rounded-2xl overflow-hidden">
+              <img 
+                src={projeto.img} 
+                alt={`Imagem do projeto ${projeto.nome}`} 
+                className="w-full h-full object-cover rounded-2xl" 
+              />
+              <div className="absolute top-0 left-0 w-full h-full bg-[#080831] opacity-0 group-hover:opacity-130 transition duration-700"></div>
+            </div>
+
+            {/* Conteúdo no hover */}
+            <div className="flex flex-col justify-center items-center text-center absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-all duration-500 p-4">
+              <motion.h2
+                className="text-white text-2xl mb-2 flex items-center gap-3"
+                initial={{ y: 30 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                {projeto.nome}
+                <a 
+                  href={projeto.link} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="text-white text-[28px] hover:text-[#afafaf] transition"
+                  aria-label={`Link para o repositório do projeto ${projeto.nome}`}
+                >
+                  <FaGithub />
+                </a>
+              </motion.h2>
+              
+              <motion.p 
+                className="text-white text-sm text-justify mb-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                {projeto.descricao}
+              </motion.p>
+              
+              <motion.div 
+                className="flex flex-wrap justify-center gap-3 mt-2 text-white text-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                {projeto.tecnologias.map((tech, i) => (
+                  <div 
+                    key={i} 
+                    className="flex flex-col items-center group/tech"
+                    title={tech.nome}
+                  >
+                    <div className="hover:text-[#afafaf] transition cursor-default">
+                      {tech.icone}
+                    </div>
+                    <span className="text-xs opacity-0 group-hover/tech:opacity-100 transition">
+                      {tech.nome}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="flex justify-center mt-8 gap-4">
+        {!mostrarMais ? (
+          <motion.button
+            onClick={() => setMostrarMais(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-20 py-1 md:mt-4 text-lg md:text-2xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2"
+          >
+            Ver mais
+          </motion.button>
+        ) : (
+          <motion.button
+            onClick={() => setMostrarMais(false)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-[#080831] backdrop-blur-lg text-white rounded-3xl px-18 py-1 text-xl hover:scale-103 transition duration-500 bg-gradient-to-r from-[#0f0f5c] to-[#080831] hover:from-[#1a1a75] hover:to-[#0f0f5c] flex items-center gap-2">
+            Ver menos
+          </motion.button>
+        )}
+      </div>
+    </div>
+  );
+}
