@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import shelf from "../../assets/projetos/Andrews.png";
-import Cuidado from "../../assets/projetos/cuidado-simples.png";
 import Tw from "../../assets/projetos/tailwclones.png";
 import Ponto from "../../assets/projetos/ponto.png";
 import Kubo from "../../assets/projetos/kubo-tela.png";
+import Reactlb from "../../assets/projetos/react-lab.png";
+
 
 // Correct icon imports
 import { FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJs, FaGithub, FaBootstrap } from 'react-icons/fa';
@@ -16,13 +17,16 @@ export default function Projetos() {
 
   const projetos = [
     { 
-      nome: "Cuidado Simples", 
-      img: Cuidado, 
-      link: "https://github.com/lucas19fonseca/cuidado-simples",
-      descricao: "Farmácia online em html e css para fins de estudo.",
+      nome: "React Labs", 
+      img: Reactlb, 
+      link: "https://github.com/lucas19fonseca/react-labs",
+      descricao: "Todas as minhas atividades do curso de react reunidas em um único lugar.",
       tecnologias: [
         { nome: "HTML", icone: <FaHtml5/> },
-        { nome: "CSS", icone: <FaCss3Alt/> }
+        { nome: "CSS", icone: <FaCss3Alt/> },
+        { nome: "JavaScript", icone: <FaJs /> },
+        { nome: "React", icone: <FaReact/> },
+        { nome: "Tailwind", icone: <SiTailwindcss/> }
       ]
     },
     { 
@@ -64,7 +68,8 @@ export default function Projetos() {
       link: "https://github.com/lucas19fonseca/ponto-eletronico",
       descricao: "Sistema de controle de ponto eletrônico com relatórios e gestão de horas trabalhadas.",
       tecnologias: [
-        { nome: "Node.js", icone: <FaNodeJs/> },
+        { nome: "HTML", icone: <FaHtml5/> },
+        { nome: "CSS", icone: <FaCss3Alt/> },
         { nome: "JavaScript", icone: <FaJs /> },
       ]
     },

@@ -7,9 +7,9 @@ import Hero from "../Hero/index"
 
 export default function Main() {
   return (
-    <main className=" bg-[#f4f4f4]">
+    <main className=" bg-[#f4f4f4] min-w-[301px]">
       <Hero />
-      <div className="w-full flex justify-center pb-4 pt-3 md:pt-15">
+      <div className="w-full flex justify-center pb-4 pt-3 md:pt-15 ">
         <h1 className="font-medium  text-2xl md:text-3xl" id="sobre-mim">Sobre Mim</h1>
       </div>
       <SobreMim />

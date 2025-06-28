@@ -1,11 +1,12 @@
 .waves {
   position: relative;
   width: 100%;
+  margin-top: 8.5vh;
   height: 15vh;
-  margin-bottom: -7px;
+  margin-bottom: 0;
   min-height: 100px;
   max-height: 150px;
-  transform: translateY(45px);
+  /* Removido o transform: translateY(45px) que estava causando o problema */
 }
 
 .parallax > use {
@@ -43,7 +44,9 @@
 
 @media (max-width: 768px) {
   .waves {
-    height: 40px;
-    min-height: 40px;
+    margin-top: 12vh;
+    height: 7vh;
+    min-height: 80px;
+    max-height: 120px;
   }
 }

@@ -66,7 +66,7 @@ export default function Certificados() {
                 <img
                   src={Tw}
                   alt="curso Tailwind"
-                  className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg md:h-74"
+                  className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg "
                 />
               </motion.button>
             </motion.div>
@@ -96,7 +96,7 @@ export default function Certificados() {
             <div className="relative">
               <button
                 onClick={fecharModal}
-                className="absolute top-[-50px] right-[-60px] text-white text-7xl font-bold"
+                className="absolute md:top-[-50px] md:right-[-60px] text-white text-7xl font-bold"
               >
                 &times;
               </button>
