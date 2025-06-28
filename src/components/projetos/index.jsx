@@ -5,12 +5,11 @@ import Tw from "../../assets/projetos/tailwclones.png";
 import Ponto from "../../assets/projetos/ponto.png";
 import Kubo from "../../assets/projetos/kubo-tela.png";
 import Reactlb from "../../assets/projetos/react-lab.png";
+import Pac from "../../assets/projetos/pacman.png";
 
-
-// Correct icon imports
-import { FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJs, FaGithub, FaBootstrap } from 'react-icons/fa';
+import { FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJs, FaGithub, FaBootstrap, FaPython } from 'react-icons/fa';
 import { SiTailwindcss, SiMongodb } from 'react-icons/si';
-import { DiGo } from 'react-icons/di'; // Alternative Golang icon
+import { DiGo } from 'react-icons/di';
 
 export default function Projetos() {
   const [mostrarMais, setMostrarMais] = useState(false);
@@ -73,6 +72,15 @@ export default function Projetos() {
         { nome: "JavaScript", icone: <FaJs /> },
       ]
     },
+    { 
+      nome: "Pac Man", 
+      img: Pac, 
+      link: "https://github.com/lucas19fonseca/PacSurvivor",
+      descricao: "O Minimax ajuda o Pacman a prever movimentos ótimos, maximizando sua pontuação enquanto os fantasmas tentam minimizá-la. Com heurísticas inteligentes e poda Alpha-Beta, o agente toma decisões estratégicas para vencer.",
+      tecnologias: [
+        { nome: "Python", icone: <FaPython/> },
+      ]
+    },
   ];
 
   const projetosParaMostrar = mostrarMais ? projetos : projetos.slice(0, 3);
@@ -88,18 +96,18 @@ export default function Projetos() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: index * 0.1 }}
           >
-            {/* Imagem */}
-            <div className="absolute top-0 left-0 w-full h-full rounded-2xl overflow-hidden">
+            {/* Image container filling 100% without borders */}
+            <div className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden">
               <img 
                 src={projeto.img} 
                 alt={`Imagem do projeto ${projeto.nome}`} 
-                className="w-full h-full object-cover rounded-2xl" 
+                className="w-full h-full object-cover" 
               />
-              <div className="absolute top-0 left-0 w-full h-full bg-[#080831] opacity-0 group-hover:opacity-130 transition duration-700"></div>
+              <div className="absolute inset-0 bg-[#080831] opacity-0 group-hover:opacity-90 transition duration-700"></div>
             </div>
 
-            {/* Conteúdo no hover */}
-            <div className="flex flex-col justify-center items-center text-center absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-all duration-500 p-4">
+            {/* Hover content */}
+            <div className="flex flex-col justify-center items-center text-center absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 p-4">
               <motion.h2
                 className="text-white text-2xl mb-2 flex items-center gap-3"
                 initial={{ y: 30 }}
