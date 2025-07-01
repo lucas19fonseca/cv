@@ -24,7 +24,7 @@ export default function Header() {
           const targetElement = document.querySelector(href);
           if (targetElement) {
             window.scrollTo({
-              top: targetElement.offsetTop - 140,
+              top: targetElement.offsetTop -115,
               behavior: 'smooth'
             });
           }

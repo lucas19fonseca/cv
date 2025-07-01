@@ -20,17 +20,17 @@ export default function Contato() {
   };
 
   return (
-    <div className="flex justify-center pb-5 ">
-      <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full max-w-6xl rounded-xl p-6 gap-8">
+    <div className="flex justify-center pb-5 px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full  rounded-xl p-6 gap-8">
         {/* Contato info */}
-        <div className="flex justify-center">
+        <div className="flex justify-center 2xl:justify-start">
           <div className="text-white">
             <h4 className="text-[#ff5403] text-xl md:text-2xl font-Poppin mb-3 mt-6 md:mt-10 md:ml-29">
               Entre em contato
             </h4>
 
             {/* Redes sociais */}
-            <div className="text-2xl ml-7 md:ml-36 flex gap-4 mb-4">
+            <div className="text-2xl ml-7 md:ml-36 flex gap-4 mb-4 ">
               <a
                 href="https://www.instagram.com/lucax.andrade_/"
                 target="_blank"
@@ -66,7 +66,7 @@ export default function Contato() {
             </div>
 
             {/* Lista de contatos */}
-            <div className="mt-10 md:mt-20 md:mr-45 ">
+            <div className="mt-10 md:mt-20 md:mr-45 w-full">
               <ul className="space-y-3 text-base md:text-xl ">
                 <li>
                   <i className="fas fa-envelope mr-2"></i>lucas19fonseca@gmail.com

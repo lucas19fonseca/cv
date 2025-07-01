@@ -20,7 +20,7 @@ export default function Certificados() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8 mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-8 mt-10">
         <motion.button onClick={() => abrirModal(ReactCert)}>
           <img
             src={ReactCert}
@@ -48,7 +48,7 @@ export default function Certificados() {
         <AnimatePresence>
           {mostrarMais && (
             <motion.div
-              className="col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+              className="col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
@@ -96,7 +96,7 @@ export default function Certificados() {
             <div className="relative">
               <button
                 onClick={fecharModal}
-                className="absolute md:top-[-50px] md:right-[-60px] text-white text-7xl font-bold"
+                className="absolute -top-24 right-1 md:top-[-50px] md:right-[-60px] text-white text-7xl font-bold"
               >
                 &times;
               </button>

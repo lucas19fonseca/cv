@@ -86,12 +86,12 @@ export default function Projetos() {
   const projetosParaMostrar = mostrarMais ? projetos : projetos.slice(0, 3);
 
   return (
-    <div className="max-w-7xl mx-auto px-6">
+    <div className="max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projetosParaMostrar.map((projeto, index) => (
           <motion.div
             key={index}
-            className="relative w-full h-[200px] bg-white rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.3)] overflow-hidden group"
+            className="relative w-full h-[210px] bg-white rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.3)] overflow-hidden group"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: index * 0.1 }}
