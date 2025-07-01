@@ -3,7 +3,7 @@ import ImgDev from "../../assets/comum/programador.png";
 export default function SobreMim() {
   return (
 
-    <div className="flex flex-col md:flex-row justify-center items-center gap-6 p-4 max-w-6xl mx-auto min-w-[301px]">
+    <div className="flex flex-col md:flex-row justify-center items-center gap-6 p-4 max-w-6xl mx-auto min-w-[301px] px-8 md:px-0">
       <figure>
         <img
           src={ImgDev}
