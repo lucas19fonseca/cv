@@ -21,7 +21,7 @@ export default function Contato() {
 
   return (
     <div className="flex justify-center pb-5 px-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full  rounded-xl p-6 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full  rounded-xl p-6 gap-8 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
         {/* Contato info */}
         <div className="flex justify-center 2xl:justify-start">
           <div className="text-white">

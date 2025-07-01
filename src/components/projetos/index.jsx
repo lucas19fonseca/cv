@@ -87,17 +87,17 @@ export default function Projetos() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-8 md:px-0">
         {projetosParaMostrar.map((projeto, index) => (
           <motion.div
             key={index}
-            className="relative w-full h-[210px] bg-white rounded-2xl shadow-[0_0_15px_rgba(0,0,0,0.3)] overflow-hidden group"
+            className="relative w-full  h-[180px] md:h-[210px] bg-white rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden group"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: index * 0.1 }}
           >
             {/* Image container filling 100% without borders */}
-            <div className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 w-full h-full rounded-xl overflow-hidden">
               <img 
                 src={projeto.img} 
                 alt={`Imagem do projeto ${projeto.nome}`} 
