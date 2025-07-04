@@ -11,6 +11,8 @@ import Figma from "../../assets/tecnologias/figma.png"
 import Docker from "../../assets/tecnologias/docker.png"
 import Postman from "../../assets/tecnologias/postman.png"
 import Tw from "../../assets/tecnologias/tailwind.png"
+import Fire from "../../assets/tecnologias/Firebase.png"
+
 
 export default function Tecnologia() {
     return (
@@ -32,6 +34,14 @@ export default function Tecnologia() {
                     <div className="text-center hover:scale-110 transition duration-600">
                         <img src={React} alt="React" className="mx-auto h-12" />
                         <p>React</p>
+                    </div>
+                    <div className="text-center hover:scale-110 transition duration-600">
+                        <img src={Tw} alt="tailwind" className="mx-auto h-12" />
+                        <p>Tailwind</p>
+                    </div>
+                    <div className="text-center hover:scale-110 transition duration-600">
+                        <img src={Figma} alt="Figma" className="mx-auto h-12" />
+                        <p>Figma</p>
                     </div>
                     <div className="text-center hover:scale-110 transition duration-600">
                         <img src={Py} alt="Python" className="mx-auto h-12" />
@@ -58,8 +68,8 @@ export default function Tecnologia() {
                         <p>MySQL</p>
                     </div>
                     <div className="text-center hover:scale-110 transition duration-600">
-                        <img src={Figma} alt="Figma" className="mx-auto h-12" />
-                        <p>Figma</p>
+                        <img src={Fire} alt="Firebase" className="mx-auto h-12" />
+                        <p>FireBase</p>
                     </div>
                     <div className="text-center hover:scale-110 transition duration-600">
                         <img src={Docker} alt="docker" className="mx-auto h-12" />
@@ -68,11 +78,7 @@ export default function Tecnologia() {
                     <div className="text-center hover:scale-110 transition duration-600">
                         <img src={Postman} alt="postman" className="mx-auto h-12" />
                         <p>Postman</p>
-                    </div>
-                    <div className="text-center hover:scale-110 transition duration-600">
-                        <img src={Tw} alt="tailwind" className="mx-auto h-12" />
-                        <p>Tailwind</p>
-                    </div>
+                    </div>    
                 </div>
             </section>
         </div>
