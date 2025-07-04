@@ -46,7 +46,7 @@ export default function Header() {
   return (
     <header className='bg-[#080831d9] backdrop-blur-md text-white text-2xl fixed w-full py-4 px-8 font-medium z-100 hidden
     sm:text-sm
-    md:text-2xl md:block
+    md:text-2xl lg:block
     '>
       <div className='flex flex-row justify-between'>
         <div>

@@ -86,8 +86,8 @@ export default function Projetos() {
   const projetosParaMostrar = mostrarMais ? projetos : projetos.slice(0, 3);
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-8 md:px-0">
+    <div className="max-w-8xl px-8 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
         {projetosParaMostrar.map((projeto, index) => (
           <motion.div
             key={index}

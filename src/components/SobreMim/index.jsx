@@ -3,7 +3,7 @@ import ImgDev from "../../assets/comum/programador.png";
 export default function SobreMim() {
   return (
 
-    <div className="flex flex-col  lg:flex-row justify-center items-center gap-6 p-4 max-w-6xl mx-auto min-w-[301px] px-8 md:px-0">
+    <div className="flex flex-col w-full  lg:flex-row justify-center items-center gap-6 p-4 max-w-6xl mx-auto min-w-[301px] px-8 md:px-0">
       <figure>
         <img
           src={ImgDev}
@@ -12,7 +12,7 @@ export default function SobreMim() {
         />
       </figure>
       <p className="text-xs md:text-base text-justify font-Poppin max-w-xl">
-        Olá! Meu nome é Lucas Andrade, tenho 20 anos e estou no 5º semestre de Ciências da Computação. Sou uma
+        Olá! Meu nome é Lucas Andrade, tenho 21 anos e estou no 6º semestre de Ciências da Computação. Sou uma
         pessoa comunicativa, com facilidade para trabalhar em equipe e colaborar em projetos, o que contribui positivamente
         no ambiente acadêmico. <br /><br />
         Meu principal objetivo é crescer profissionalmente na área de tecnologia, contribuindo com
