@@ -66,7 +66,7 @@ export default function Contato() {
             </div>
 
             {/* Lista de contatos */}
-            <div className="mt-10 md:mt-20 md:mr-45 w-full">
+            <div className="mt-10 md:mt-20 w-full">
               <ul className="space-y-3 text-base md:text-xl ">
                 <li>
                   <i className="fas fa-envelope mr-2"></i>lucas19fonseca@gmail.com
