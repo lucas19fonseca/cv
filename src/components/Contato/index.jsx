@@ -25,7 +25,7 @@ export default function Contato() {
         {/* Contato info */}
         <div className="flex justify-center md:justify-start">
           <div className="text-white ">
-            <div className="flex justify-center ">
+            <div className="flex justify-center">
               <h4 className="text-[#ff5403] text-xl md:text-2xl font-Poppin mb-3 mt-6 md:mt-10">
                 Entre em contato
               </h4>
