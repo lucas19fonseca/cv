@@ -1,1 +1,1 @@
-refiz o cv usando react e tailwind
+refiz o cv usando react e tailwindcss
