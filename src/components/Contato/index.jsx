@@ -23,14 +23,16 @@ export default function Contato() {
     <div className="flex justify-center pb-5 px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full  rounded-xl p-6 gap-8 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
         {/* Contato info */}
-        <div className="flex justify-center 2xl:justify-start">
-          <div className="text-white">
-            <h4 className="text-[#ff5403] text-xl md:text-2xl font-Poppin mb-3 mt-6 md:mt-10 md:ml-29">
-              Entre em contato
-            </h4>
+        <div className="flex justify-center md:justify-start">
+          <div className="text-white ">
+            <div className="flex justify-center ">
+              <h4 className="text-[#ff5403] text-xl md:text-2xl font-Poppin mb-3 mt-6 md:mt-10">
+                Entre em contato
+              </h4>
+            </div>
 
             {/* Redes sociais */}
-            <div className="text-2xl ml-7 md:ml-36 flex gap-4 mb-4 ">
+            <div className="text-2xl ml-7 flex justify-center gap-4 mb-4 ">
               <a
                 href="https://www.instagram.com/lucax.andrade_/"
                 target="_blank"
