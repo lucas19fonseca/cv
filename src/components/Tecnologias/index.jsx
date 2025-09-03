@@ -12,6 +12,7 @@ import Docker from "../../assets/tecnologias/docker.png"
 import Postman from "../../assets/tecnologias/postman.png"
 import Tw from "../../assets/tecnologias/tailwind.png"
 import Fire from "../../assets/tecnologias/Firebase.png"
+import Bi from "../../assets/tecnologias/Bi.svg"
 
 
 export default function Tecnologia() {
@@ -78,6 +79,10 @@ export default function Tecnologia() {
                     <div className="text-center hover:scale-110 transition duration-600">
                         <img src={Postman} alt="postman" className="mx-auto h-12" />
                         <p>Postman</p>
+                    </div>    
+                    <div className="text-center hover:scale-110 transition duration-600">
+                        <img src={Bi} alt="power bi" className="mx-auto h-12" />
+                        <p>Power Bi</p>
                     </div>    
                 </div>
             </section>
