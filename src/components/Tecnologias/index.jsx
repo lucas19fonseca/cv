@@ -13,7 +13,7 @@ import Postman from "../../assets/tecnologias/postman.png"
 import Tw from "../../assets/tecnologias/tailwind.png"
 import Fire from "../../assets/tecnologias/Firebase.png"
 import Bi from "../../assets/tecnologias/Bi.svg"
-import Linux from "../../assets/tecnologias/Linux.png"
+import Ubuntu from "../../assets/tecnologias/Ubuntu.png"
 
 
 export default function Tecnologia() {
@@ -86,8 +86,8 @@ export default function Tecnologia() {
                         <p>Power Bi</p>
                     </div>    
                     <div className="text-center hover:scale-110 transition duration-600">
-                        <img src={Linux} alt="power bi" className="mx-auto h-12" />
-                        <p>Linux</p>
+                        <img src={Ubuntu} alt="power bi" className="mx-auto h-12" />
+                        <p>Ubuntu</p>
                     </div>    
                 </div>
             </section>
