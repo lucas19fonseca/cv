@@ -13,7 +13,7 @@ import Postman from "../../assets/tecnologias/postman.png"
 import Tw from "../../assets/tecnologias/tailwind.png"
 import Fire from "../../assets/tecnologias/Firebase.png"
 import Bi from "../../assets/tecnologias/Bi.svg"
-import Ubuntu from "../../assets/tecnologias/Ubuntu.png"
+import Ubuntu from "../../assets/tecnologias/ubuntu.png"
 
 
 export default function Tecnologia() {
