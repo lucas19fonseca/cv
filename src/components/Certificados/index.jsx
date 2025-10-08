@@ -71,7 +71,7 @@ export default function Certificados() {
                 />
               </motion.button>
               
-              <motion.button onClick={() => abrirModal(Tw)}>
+              <motion.button onClick={() => abrirModal(Linux)}>
                 <img
                   src={Linux}
                   alt="curso linux"
