@@ -5,6 +5,7 @@ import Py from "../../assets/certificados/py.jpeg";
 import Js from "../../assets/certificados/java.jpeg";
 import Git from "../../assets/certificados/git-certificado.png";
 import Tw from "../../assets/certificados/curso-tw.jpg";
+import Linux from "../../assets/certificados/curso-linux.jpg";
 
 export default function Certificados() {
   const [mostrarMais, setMostrarMais] = useState(false);
@@ -66,6 +67,14 @@ export default function Certificados() {
                 <img
                   src={Tw}
                   alt="curso Tailwind"
+                  className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg "
+                />
+              </motion.button>
+              
+              <motion.button onClick={() => abrirModal(Tw)}>
+                <img
+                  src={Linux}
+                  alt="curso linux"
                   className="w-full cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] rounded-lg "
                 />
               </motion.button>
