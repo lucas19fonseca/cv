@@ -1,5 +1,5 @@
 import FotoLucas from "../../assets/comum/lucas.jpg";
-import curriculo from "../../assets/comum/curriculo.pdf";
+import curriculo from "../../assets/comum/Lucas_Andrade_web_junior.pdf";
 import Wave from "../Wave/index.jsx";
 
 export default function Hero() {
