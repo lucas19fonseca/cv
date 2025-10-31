@@ -1,24 +1,95 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import emailjs from "emailjs-com";
 
 export default function Contato() {
   const form = useRef();
+  const [modalAberto, setModalAberto] = useState(false);
+  const [modalTipo, setModalTipo] = useState(""); // "sucesso" ou "erro"
+  const validarEmail = (email) => {
+    // Lista de domínios falsos/temporários comuns
+    const dominiosFalsos = [
+      'tempmail.com',
+      'guerrillamail.com',
+      '10minutemail.com',
+      'throwaway.email',
+      'maildrop.cc',
+      'mailinator.com',
+      'trashmail.com',
+      'yopmail.com',
+      'fakeinbox.com',
+      'temp-mail.org'
+    ];
+
+    // Pega o domínio do email
+    const dominio = email.split('@')[1]?.toLowerCase();
+
+    // Verifica se é um domínio falso
+    if (dominiosFalsos.includes(dominio)) {
+      return false;
+    }
+
+    // Verifica padrões suspeitos (emails muito curtos ou aleatórios)
+    const parteLocal = email.split('@')[0];
+
+    // Se tem menos de 3 caracteres antes do @
+    if (parteLocal.length < 3) {
+      return false;
+    }
+
+    // Verifica se tem caracteres repetidos demais (ex: aaaa@, bbbb@)
+    const caracteresUnicos = new Set(parteLocal.toLowerCase()).size;
+    if (caracteresUnicos <= 2 && parteLocal.length > 4) {
+      return false;
+    }
+
+    return true;
+  };
 
   const enviarEmail = (e) => {
     e.preventDefault();
-
+    const emailInput = form.current.email.value;
+    if (!validarEmail(emailInput)) {
+      setModalTipo("erro");
+      setModalAberto(true);
+      return;
+    }
     emailjs
       .sendForm("service_ey0v7lf", "template_9pmqr9p", form.current, "3Q1UnYYGtaM4UmNuS")
       .then(() => {
-        alert("Mensagem enviada com sucesso!");
+        setModalTipo("sucesso");
+        setModalAberto(true);
         form.current.reset();
       })
       .catch((error) => {
         console.log("Erro ao enviar", error);
-        alert("Erro ao enviar mensagem.");
+        setModalTipo("erro");
+        setModalAberto(true);
       });
   };
 
+  const fecharModal = () => {
+    setModalAberto(false);
+  };
+
+  // Fecha o modal automaticamente após 4 segundos
+  useEffect(() => {
+    if (modalAberto) {
+      const timer = setTimeout(() => {
+        setModalAberto(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [modalAberto]);
+  useEffect(() => {
+    if (modalAberto) {
+      const timer = setTimeout(() => {
+        setModalAberto(false);
+      }, 3000); // 4 segundos
+
+      return () => clearTimeout(timer);
+    }
+  }, [modalAberto]);
   return (
     <div className="flex justify-center pb-5 px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full  rounded-xl p-6 gap-8 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
@@ -66,6 +137,7 @@ export default function Contato() {
                 <i className="fab fa-discord"></i>
               </a>
             </div>
+
 
             {/* Lista de contatos */}
             <div className="mt-10 md:mt-20 w-full">
@@ -141,6 +213,69 @@ export default function Contato() {
             </button>
           </div>
         </form>
+        {/* Modal */}
+        {modalAberto && (
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-10000">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
+              <div className="text-center">
+                {modalTipo === "sucesso" ? (
+                  <>
+                    <div className="mb-4">
+                      <i className="fas fa-check-circle text-6xl text-green-500"></i>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                      Sucesso!
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Sua mensagem foi enviada com sucesso! Entrarei em contato em breve.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="mb-4">
+                      <i className="fas fa-times-circle text-6xl text-red-500"></i>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                      Ops! Algo deu errado
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Não foi possível enviar sua mensagem. Tente novamente mais tarde.
+                    </p>
+                  </>
+                )}
+                <button
+                  onClick={fecharModal}
+                  className="bg-[#ff5403] text-white px-8 py-2 rounded-lg font-semibold hover:bg-[#e64a03] transition duration-300"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {modalAberto && modalTipo === "erro" && (
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
+              <div className="text-center">
+                <div className="mb-4">
+                  <i className="fas fa-times-circle text-6xl text-red-500"></i>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  Ops! Algo deu errado
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Não foi possível enviar sua mensagem. Tente novamente mais tarde.
+                </p>
+                <button
+                  onClick={fecharModal}
+                  className="bg-[#ff5403] text-white px-8 py-2 rounded-lg font-semibold hover:bg-[#e64a03] transition duration-300"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
