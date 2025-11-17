@@ -10,7 +10,7 @@ export default function Header() {
     // === ANIMAÇÃO DO HEADER ===
     const ctx = gsap.context(() => {
       gsap.from(headerRef.current, {
-        y: 20,
+        y: -20,
         opacity: 0,
         duration: 1,
         ease: "power3.out",
