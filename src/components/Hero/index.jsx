@@ -1,16 +1,43 @@
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 import FotoLucas from "../../assets/comum/lucas.jpg";
 import curriculo from "../../assets/comum/Lucas_Andrade_web_junior.pdf";
 import Wave from "../Wave/index.jsx";
 
 export default function Hero() {
+
+    const heroRef = useRef(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            gsap.from(heroRef.current, {
+                y: 30,
+                opacity: 0,
+                duration: 1,
+                delay: 0.4,
+                ease: "power3.out"
+            });
+        });
+
+        return () => ctx.revert();
+    }, []);
+
+
+
     return (
-        <div className="bg-[#080831] min-h-screen flex flex-col relative overflow-hidden">
+        <div className="bg-[#080831] min-h-screen flex flex-col relative overflow-hidden ">
+
             {/* Conteúdo principal */}
-            <div className="flex-grow flex items-center justify-center pt-16 pb-32 lg:pt-0 lg:pb-0">
+            <div
+                ref={heroRef}
+                className="flex-grow flex items-center justify-center pt-16 pb-32 lg:pt-0 lg:pb-0"
+            >
                 <div className="container mx-auto px-4">
-                    {/* Layout Mobile/Tablet - Coluna única (até lg) */}
+
+                    {/* Layout Mobile/Tablet */}
                     <div className="lg:hidden flex flex-col items-center space-y-8 text-center">
-                        {/* Ícones sociais - Mobile/Tablet primeiro */}
+
+                        {/* Ícones sociais */}
                         <div className="w-full flex justify-center">
                             <ul className="flex justify-center gap-5 text-3xl md:text-4xl text-white">
                                 <li className="hover:scale-110 transition duration-300">
@@ -36,7 +63,7 @@ export default function Hero() {
                             </ul>
                         </div>
 
-                        {/* Foto - Mobile/Tablet */}
+                        {/* Foto */}
                         <div className="flex justify-center w-full">
                             <img
                                 src={FotoLucas}
@@ -45,21 +72,21 @@ export default function Hero() {
                             />
                         </div>
 
-                        {/* Nome - Mobile/Tablet */}
+                        {/* Nome */}
                         <div className="w-full flex justify-center">
                             <h1 className="text-4xl md:text-5xl font-medium text-white">
                                 Olá! Eu sou o <span className="text-[#0969CC] font-semibold bg-gradient-to-r from-[#0969CC] to-[#b7cce2] bg-clip-text text-transparent">Lucas Andrade</span>
                             </h1>
                         </div>
 
-                        {/* Curso - Mobile/Tablet */}
+                        {/* Curso */}
                         <div className="w-full flex justify-center">
                             <p className="text-white text-xl md:text-2xl px-4">
                                 Tenho 20 anos, sou estudante de <span className="text-[#0969CC] font-semibold bg-gradient-to-r from-[#0969CC] to-[#b7cce2] bg-clip-text text-transparent">Ciências da Computação!</span>
                             </p>
                         </div>
 
-                        {/* Botão - Mobile/Tablet */}
+                        {/* Botão */}
                         <div className="pt-6 w-full flex justify-center">
                             <a
                                 href={curriculo}
@@ -74,11 +101,11 @@ export default function Hero() {
                         </div>
                     </div>
 
-                    {/* Layout Desktop - Grid (só lg em diante) */}
+                    {/* Layout Desktop */}
                     <div className="hidden lg:grid grid-cols-2 items-center gap-8">
-                        {/* Conteúdo do lado esquerdo - Desktop */}
+
+                        {/* Texto lado esquerdo */}
                         <div className="space-y-6 text-center lg:text-left">
-                            {/* Ícones sociais - Desktop */}
                             <div className="w-full flex justify-center">
                                 <ul className="flex justify-center gap-5 text-4xl text-white lg:justify-center lg:mr-16">
                                     <li className="hover:scale-110 transition duration-300">
@@ -104,21 +131,19 @@ export default function Hero() {
                                 </ul>
                             </div>
 
-                            {/* Nome - Desktop */}
                             <div className="w-full flex justify-center">
                                 <h1 className="text-6xl font-medium text-white">
-                                    Olá! Eu sou o <br/><span className="text-[#0969CC] font-semibold bg-gradient-to-r from-[#0969CC] to-[#b7cce2] bg-clip-text text-transparent">Lucas Andrade</span>
+                                    Olá! Eu sou o <br />
+                                    <span className="text-[#0969CC] font-semibold bg-gradient-to-r from-[#0969CC] to-[#b7cce2] bg-clip-text text-transparent">Lucas Andrade</span>
                                 </h1>
                             </div>
 
-                            {/* Curso - Desktop */}
                             <div className="w-full flex justify-center lg:w-160">
                                 <p className="text-white text-2xl ">
                                     Tenho 20 anos, sou estudante de <span className="text-[#0969CC] font-semibold bg-gradient-to-r from-[#0969CC] to-[#b7cce2] bg-clip-text text-transparent">Ciências da Computação!</span>
                                 </p>
                             </div>
 
-                            {/* Botão - Desktop */}
                             <div className="pt-6 w-full flex justify-center">
                                 <a
                                     href={curriculo}
@@ -133,7 +158,7 @@ export default function Hero() {
                             </div>
                         </div>
 
-                        {/* Imagem do lado direito - Desktop */}
+                        {/* Foto lado direito */}
                         <div className="flex justify-center lg:justify-end">
                             <img
                                 src={FotoLucas}
