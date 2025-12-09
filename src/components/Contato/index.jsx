@@ -36,20 +36,20 @@ export default function Contato() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Animação da seção
+            // Animação da seção - REMOVIDO EFEITO DE FADE IN BRANCO
             gsap.from(sectionRef.current, {
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top 80%",
                     toggleActions: "play none none reverse"
                 },
-                y: 50,
+                y: 30,
                 opacity: 0,
-                duration: 1,
+                duration: 0.8,
                 ease: "power3.out"
             });
 
-            // Animação dos elementos de info
+            // Animação dos elementos de info - ANIMAÇÃO MAIS SUAVE
             if (infoRef.current) {
                 gsap.from(infoRef.current.children, {
                     scrollTrigger: {
@@ -57,16 +57,15 @@ export default function Contato() {
                         start: "top 85%",
                         toggleActions: "play none none reverse"
                     },
-                    x: -50,
+                    y: 30,
                     opacity: 0,
-                    stagger: 0.2,
-                    duration: 0.8,
-                    delay: 0.2,
-                    ease: "power3.out"
+                    stagger: 0.15,
+                    duration: 0.6,
+                    ease: "power2.out"
                 });
             }
 
-            // Animação do formulário
+            // Animação do formulário - SEM DELAY LONGO
             if (formRef.current) {
                 gsap.from(formRef.current, {
                     scrollTrigger: {
@@ -74,10 +73,9 @@ export default function Contato() {
                         start: "top 85%",
                         toggleActions: "play none none reverse"
                     },
-                    x: 50,
+                    y: 30,
                     opacity: 0,
-                    duration: 1,
-                    delay: 0.4,
+                    duration: 0.8,
                     ease: "power3.out"
                 });
             }
@@ -147,7 +145,6 @@ export default function Contato() {
     const fecharModal = () => {
         setModalAberto(false);
         if (modalTipo === "sucesso") {
-            // Reset do formulário se sucesso
             form.current.reset();
         }
     };
@@ -180,11 +177,11 @@ export default function Contato() {
             ref={sectionRef}
             className="py-20 md:py-32 relative overflow-hidden"
         >
-            {/* Background effects */}
+            {/* Background effects - JÁ VISÍVEL DESDE O INÍCIO */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent opacity-30" />
             
-            {/* Grid pattern */}
+            {/* Grid pattern - VISÍVEL IMEDIATAMENTE */}
             <div className="absolute inset-0 opacity-5">
                 <div className="w-full h-full" style={{
                     backgroundImage: `
@@ -196,10 +193,10 @@ export default function Contato() {
             </div>
 
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
-                {/* Section header */}
+                {/* Section header - SEM ANIMAÇÃO DE ENTRADA BRANCA */}
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center gap-3 mb-4">
-                        <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-400 rounded-full animate-pulse"></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-400 rounded-full"></div>
                         <span className="text-green-400 font-mono text-sm tracking-widest">CONTACT</span>
                     </div>
                     
@@ -213,7 +210,7 @@ export default function Contato() {
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
-                    {/* Contact Info */}
+                    {/* Contact Info - JÁ VISÍVEL SEM FLASH */}
                     <div ref={infoRef}>
                         <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8 mb-8">
                             <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
@@ -273,17 +270,10 @@ export default function Contato() {
                                     </a>
                                 ))}
                             </div>
-                            
-                            <div className="mt-6 pt-6 border-t border-gray-800">
-                                <p className="text-sm text-gray-500 text-center">
-                                    <i className="fas fa-bolt text-yellow-400 mr-2"></i>
-                                    Resposta rápida garantida
-                                </p>
-                            </div>
                         </div>
                     </div>
 
-                    {/* Contact Form */}
+                    {/* Contact Form - JÁ VISÍVEL SEM FLASH */}
                     <div ref={formRef}>
                         <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8">
                             <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
@@ -363,23 +353,8 @@ export default function Contato() {
                                             </div>
                                         )}
                                     </button>
-                                    
-                                    <p className="text-xs text-gray-500 mt-3 text-center">
-                                        <i className="fas fa-shield-alt mr-1"></i>
-                                        Seus dados estão seguros • Resposta em até 24h
-                                    </p>
                                 </div>
                             </form>
-                        </div>
-
-                        {/* Status info */}
-                        <div className="mt-6 bg-gray-900/30 border border-gray-800 rounded-xl p-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <span className="text-sm text-gray-400">
-                                    Disponível para novas oportunidades
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>

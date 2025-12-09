@@ -115,20 +115,20 @@ export default function Projetos() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Animação da seção
+            // Animação da seção - REMOVIDO O EFEITO DE FADE IN BRANCO
             gsap.from(sectionRef.current, {
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top 80%",
                     toggleActions: "play none none reverse"
                 },
-                y: 50,
+                y: 30,
                 opacity: 0,
-                duration: 1,
+                duration: 0.8,
                 ease: "power3.out"
             });
 
-            // Animação dos projetos
+            // Animação dos projetos - ANIMAÇÃO MAIS SUAVE
             if (projectsRef.current) {
                 gsap.from(projectsRef.current.children, {
                     scrollTrigger: {
@@ -136,17 +136,15 @@ export default function Projetos() {
                         start: "top 85%",
                         toggleActions: "play none none reverse"
                     },
-                    y: 50,
+                    y: 30,
                     opacity: 0,
-                    scale: 0.9,
-                    stagger: 0.1,
-                    duration: 0.8,
-                    delay: 0.2,
-                    ease: "back.out(1.7)"
+                    stagger: 0.15,
+                    duration: 0.6,
+                    ease: "power2.out"
                 });
             }
 
-            // Animação do botão
+            // Animação do botão - REMOVIDO DELAY LONGO
             if (buttonRef.current) {
                 gsap.from(buttonRef.current, {
                     scrollTrigger: {
@@ -156,9 +154,8 @@ export default function Projetos() {
                     },
                     y: 20,
                     opacity: 0,
-                    duration: 0.8,
-                    delay: 0.6,
-                    ease: "power3.out"
+                    duration: 0.6,
+                    ease: "power2.out"
                 });
             }
         });
@@ -190,11 +187,11 @@ export default function Projetos() {
             ref={sectionRef}
             className="py-20 md:py-32 relative overflow-hidden"
         >
-            {/* Background effects */}
+            {/* Background effects - AGORA JÁ COM FUNDO VISÍVEL IMEDIATAMENTE */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
             
-            {/* Grid pattern */}
+            {/* Grid pattern - VISÍVEL DESDE O INÍCIO */}
             <div className="absolute inset-0 opacity-5">
                 <div className="w-full h-full" style={{
                     backgroundImage: `
@@ -206,10 +203,10 @@ export default function Projetos() {
             </div>
 
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
-                {/* Section header */}
+                {/* Section header - SEM ANIMAÇÃO DE ENTRADA BRANCA */}
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center gap-3 mb-4">
-                        <div className="w-3 h-3 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full animate-pulse"></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full"></div>
                         <span className="text-blue-400 font-mono text-sm tracking-widest">PORTFOLIO</span>
                     </div>
                     
@@ -222,7 +219,7 @@ export default function Projetos() {
                     </p>
                 </div>
 
-                {/* Projects grid */}
+                {/* Projects grid - CONTENT JÁ VISÍVEL */}
                 <div 
                     ref={projectsRef}
                     className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"

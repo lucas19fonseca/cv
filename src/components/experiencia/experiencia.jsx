@@ -89,20 +89,20 @@ export default function Experiencia() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Animação da seção
+            // Animação da seção - REMOVIDO EFEITO DE FADE IN BRANCO
             gsap.from(sectionRef.current, {
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: "top 80%",
                     toggleActions: "play none none reverse"
                 },
-                y: 50,
+                y: 30,
                 opacity: 0,
-                duration: 1,
+                duration: 0.8,
                 ease: "power3.out"
             });
 
-            // Animação da linha do tempo
+            // Animação da linha do tempo - ANIMAÇÃO MAIS SUAVE
             if (timelineRef.current) {
                 gsap.from(timelineRef.current, {
                     scrollTrigger: {
@@ -110,13 +110,14 @@ export default function Experiencia() {
                         start: "top 85%",
                         toggleActions: "play none none reverse"
                     },
-                    height: 0,
-                    duration: 1.5,
+                    scaleY: 0,
+                    transformOrigin: "top center",
+                    duration: 1.2,
                     ease: "power3.out"
                 });
             }
 
-            // Animação dos cards
+            // Animação dos cards - SEM EFEITO DE FLASH BRANCO
             if (cardsRef.current) {
                 gsap.from(cardsRef.current.children, {
                     scrollTrigger: {
@@ -124,11 +125,11 @@ export default function Experiencia() {
                         start: "top 80%",
                         toggleActions: "play none none reverse"
                     },
-                    x: -50,
+                    y: 30,
                     opacity: 0,
-                    stagger: 0.2,
-                    duration: 0.8,
-                    ease: "power3.out"
+                    stagger: 0.15,
+                    duration: 0.6,
+                    ease: "power2.out"
                 });
             }
         });
@@ -142,11 +143,11 @@ export default function Experiencia() {
             ref={sectionRef}
             className="py-20 md:py-32 relative overflow-hidden"
         >
-            {/* Background effects */}
+            {/* Background effects - JÁ VISÍVEL DESDE O INÍCIO */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-30" />
             
-            {/* Grid pattern */}
+            {/* Grid pattern - VISÍVEL IMEDIATAMENTE */}
             <div className="absolute inset-0 opacity-5">
                 <div className="w-full h-full" style={{
                     backgroundImage: `
@@ -158,10 +159,10 @@ export default function Experiencia() {
             </div>
 
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
-                {/* Section header */}
+                {/* Section header - SEM ANIMAÇÃO DE ENTRADA BRANCA */}
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center gap-3 mb-4">
-                        <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full animate-pulse"></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full"></div>
                         <span className="text-emerald-400 font-mono text-sm tracking-widest">JOURNEY</span>
                     </div>
                     
@@ -175,11 +176,11 @@ export default function Experiencia() {
                 </div>
 
                 <div className="relative max-w-6xl mx-auto">
-                    {/* Timeline line */}
+                    {/* Timeline line - VISÍVEL SEM ANIMAÇÃO DE HEIGHT */}
                     <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-1 h-full">
                         <div 
                             ref={timelineRef}
-                            className="absolute top-0 left-0 w-full h-0 bg-gradient-to-b from-emerald-500 via-cyan-400 to-transparent"
+                            className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-emerald-500 via-cyan-400 to-transparent"
                         ></div>
                         
                         {/* Timeline nodes */}
@@ -194,7 +195,7 @@ export default function Experiencia() {
                         ))}
                     </div>
 
-                    {/* Experience cards */}
+                    {/* Experience cards - JÁ VISÍVEIS SEM FLASH */}
                     <div ref={cardsRef} className="space-y-16">
                         {experiencias.map((exp, index) => (
                             <div 
@@ -302,12 +303,12 @@ export default function Experiencia() {
                         </div>
                         <div className="flex items-center gap-3">
                             <span className="text-sm text-gray-400">Atual</span>
-                            <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
                         </div>
                     </div>
                 </div>
 
-                {/* Skills summary */}
+                {/* Skills summary - SEM ANIMAÇÃO DE ENTRADA */}
                 <div className="mt-20 grid md:grid-cols-3 gap-8">
                     <div className="bg-gradient-to-br from-gray-900/50 to-gray-950/50 border border-gray-800 rounded-2xl p-6 hover:border-emerald-500/30 transition-all duration-300">
                         <div className="flex items-center gap-3 mb-4">

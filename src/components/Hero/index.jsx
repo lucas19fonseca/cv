@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') {
 export default function HomeHero() {
     const heroRef = useRef(null);
     const headerRef = useRef(null);
-    const titleRef = useRef(null);
+    const titleContainerRef = useRef(null);
     const imageRef = useRef(null);
     const socialRef = useRef(null);
     const btnRef = useRef(null);
@@ -52,8 +52,8 @@ export default function HomeHero() {
         { id: 'home-hero', label: 'Início' },
         { id: 'sobre-mim', label: 'Sobre' },
         { id: 'tecnologias', label: 'Tech' },
-        { id: 'experiencia', label: 'Experiência' },
         { id: 'projetos', label: 'Projetos' },
+        { id: 'experiencia', label: 'Experiência' },
         { id: 'certificados', label: 'Certificados' },
         { id: 'contato', label: 'Contato' }
     ];
@@ -86,7 +86,7 @@ export default function HomeHero() {
             particlesRef.current.appendChild(particle);
         };
 
-        for (let i = 0; i < 30; i++) { // Reduzido para melhor performance
+        for (let i = 0; i < 30; i++) {
             createParticle();
         }
 
@@ -98,8 +98,8 @@ export default function HomeHero() {
     }, []);
 
     useEffect(() => {
-        // Animação de entrada do header
-        const headerCtx = gsap.context(() => {
+        const ctx = gsap.context(() => {
+            // Animação de entrada do header
             gsap.from(headerRef.current, {
                 y: -100,
                 opacity: 0,
@@ -107,10 +107,8 @@ export default function HomeHero() {
                 ease: "power4.out",
                 delay: 0.3
             });
-        });
 
-        // Animação da hero section
-        const heroCtx = gsap.context(() => {
+            // Animação principal usando timeline
             const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
             // Foto com efeito especial
@@ -133,56 +131,45 @@ export default function HomeHero() {
                 }
             }
 
-            // Título
-            if (titleRef.current) {
-                const originalText = titleRef.current.textContent;
-                titleRef.current.textContent = '';
-                
-                // Animação de digitação
-                let i = 0;
-                const typeWriter = () => {
-                    if (i < originalText.length) {
-                        titleRef.current.textContent += originalText.charAt(i);
-                        i++;
-                        setTimeout(typeWriter, 30);
-                    }
-                };
-                setTimeout(typeWriter, 500);
+            // Animação do título
+            if (titleContainerRef.current) {
+                tl.from(titleContainerRef.current, {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.8,
+                    ease: "power3.out"
+                }, 0.5);
             }
 
             // Ícones sociais
             if (socialRef.current && socialRef.current.children) {
-                gsap.from(socialRef.current.children, {
-                    y: 30,
-                    opacity: 0,
-                    stagger: 0.1,
-                    duration: 0.8,
-                    delay: 0.8,
-                    ease: "back.out(1.7)"
-                });
-            }
-
-            // Botão
-            if (btnRef.current) {
-                gsap.from(btnRef.current, {
+                tl.from(socialRef.current.children, {
                     y: 20,
                     opacity: 0,
-                    scale: 0.9,
-                    duration: 1,
-                    delay: 1.2,
-                    ease: "elastic.out(1, 0.5)"
-                });
+                    stagger: 0.1,
+                    duration: 0.6,
+                    ease: "back.out(1.7)"
+                }, 0.8);
+            }
+
+            // Botão PRINCIPAL - ANIMAÇÃO CORRIGIDA
+            if (btnRef.current) {
+                tl.from(btnRef.current, {
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.8,
+                    ease: "back.out(1.7)"
+                }, 1.0);
             }
 
             // Wave animation
             if (waveRef.current) {
-                gsap.from(waveRef.current, {
+                tl.from(waveRef.current, {
                     y: 100,
                     opacity: 0,
                     duration: 1.5,
-                    delay: 0.5,
                     ease: "power2.out"
-                });
+                }, 0.5);
             }
         });
 
@@ -190,7 +177,6 @@ export default function HomeHero() {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
             
-            // Detectar seção ativa
             const sections = menuItems.map(item => item.id);
             let current = '';
             
@@ -217,7 +203,6 @@ export default function HomeHero() {
                         e.preventDefault();
                         const targetElement = document.querySelector(href);
                         if (targetElement) {
-                            // Fechar menu mobile se aberto
                             setIsMenuOpen(false);
                             
                             gsap.to(window, {
@@ -240,8 +225,7 @@ export default function HomeHero() {
         setupSmoothScroll();
 
         return () => {
-            headerCtx.revert();
-            heroCtx.revert();
+            ctx.revert(); // CORRIGIDO: Limpar todas as animações
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
@@ -275,7 +259,6 @@ export default function HomeHero() {
                         className="group flex items-center gap-2 sm:gap-3"
                         onClick={closeMenu}
                     >
-                        {/* Símbolo tech */}
                         <div className="relative">
                             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 flex items-center justify-center">
                                 <div className="w-4 h-4 sm:w-5 sm:h-5 border border-blue-500/50 rounded flex items-center justify-center">
@@ -284,9 +267,8 @@ export default function HomeHero() {
                             </div>
                         </div>
                         
-                        {/* Texto */}
                         <div>
-                            <span className="text-white font-medium text-sm sm:text-base tracking-tight block">LUCAS ANDRADE</span>
+                            <span className="text-white font-medium text-sm sm:text-base tracking-tight block">LUCAS ANDRADE FONSECA</span>
                             <span className="text-gray-500 text-[10px] sm:text-[11px] font-normal tracking-widest block">• DEVELOPER</span>
                         </div>
                     </a>
@@ -372,40 +354,6 @@ export default function HomeHero() {
         </header>
     );
 
-    // Componente Wave
-    const Wave = () => (
-        <div 
-            ref={waveRef}
-            className="waves absolute bottom-0 w-full overflow-hidden pointer-events-none"
-            style={{ 
-                height: '15vh',
-                minHeight: '145px',
-                maxHeight: '200px',
-            }}
-        >
-            <svg 
-                className="w-full h-full"
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 24 150 28" 
-                preserveAspectRatio="none" 
-                shapeRendering="auto"
-            >
-                <defs>
-                    <path 
-                        id="gentle-wave" 
-                        d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" 
-                    />
-                </defs>
-                <g className="parallax">
-                    <use href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
-                    <use href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
-                    <use href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
-                    <use href="#gentle-wave" x="48" y="7" fill="#E2E2E2" />
-                </g>
-            </svg>
-        </div>
-    );
-
     return (
         <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#080831] via-[#0a0a2a] to-[#001233]">
             {/* Efeitos de fundo */}
@@ -431,27 +379,24 @@ export default function HomeHero() {
             {/* Hero Section */}
             <div
                 ref={heroRef}
-                className="relative z-10 flex items-center justify-center min-h-screen pt-16 pb-32 sm:pb-24"
+                className="relative z-20 flex items-center justify-center min-h-screen pt-16 pb-20"
                 id="home-hero"
             >
                 <div className="container mx-auto px-4 sm:px-6 relative">
-                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 xl:gap-20">
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 xl:gap-16">
                         
                         {/* Conteúdo de texto (esquerda) */}
                         <div className="w-full lg:w-1/2 text-center lg:text-left order-2 lg:order-1">
                             {/* Indicador de console */}
-                            <div className="mb-6 lg:mb-8 lg:ml-0">
+                            <div className="mb-4 lg:mb-6 lg:ml-0">
                                 <span className="text-[#0969CC] font-mono text-sm sm:text-base">
                                     $ whoami
                                 </span>
                             </div>
 
                             {/* Nome */}
-                            <div className="mb-6 lg:mb-8">
-                                <h1 
-                                    ref={titleRef}
-                                    className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight"
-                                >
+                            <div ref={titleContainerRef} className="mb-6 lg:mb-8">
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-6xl font-bold text-white leading-tight">
                                     Olá! Eu sou o <br className="hidden sm:block" />
                                     <span className="font-black bg-gradient-to-r from-[#0969CC] via-cyan-400 to-[#0969CC] bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient">
                                         Lucas Andrade
@@ -460,8 +405,8 @@ export default function HomeHero() {
                             </div>
 
                             {/* Descrição */}
-                            <div className="mb-8 lg:mb-12">
-                                <p className="text-white/90 text-lg sm:text-xl lg:text-2xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                            <div className="mb-6 lg:mb-8">
+                                <p className="text-white/90 text-lg sm:text-xl lg:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
                                     Desenvolvedor Full Stack & Estudante de{" "}
                                     <span className="text-[#0969CC] font-semibold relative">
                                         Ciências da Computação
@@ -471,72 +416,115 @@ export default function HomeHero() {
                             </div>
 
                             {/* Ícones sociais */}
-                            <div ref={socialRef} className="mb-8 lg:mb-12">
-                                <ul className="flex justify-center lg:justify-start gap-4 sm:gap-6 text-xl sm:text-2xl">
+                            <div ref={socialRef} className="mb-8 lg:mb-10">
+                                <ul className="flex justify-center lg:justify-start gap-4 sm:gap-5 text-xl sm:text-xl">
                                     {socialLinks.map((social, index) => (
                                         <li key={index} className="group">
                                             <a
                                                 href={social.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 flex items-center justify-center rounded-xl lg:rounded-2xl bg-gradient-to-br from-gray-900/30 to-black/30 border border-[#0969CC]/20 hover:border-[#0969CC]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(9,105,204,0.4)]"
+                                                className="relative w-11 h-11 sm:w-12 sm:h-12 lg:w-12 lg:h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-gray-900/30 to-black/30 border border-[#0969CC]/20 hover:border-[#0969CC]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(9,105,204,0.4)]"
                                                 title={social.label}
                                                 aria-label={social.label}
                                             >
-                                                <i className={`fa-brands fa-${social.icon} text-white/80 group-hover:text-white text-base sm:text-xl lg:text-2xl transition-colors duration-300`} />
+                                                <i className={`fa-brands fa-${social.icon} text-white/80 group-hover:text-white text-lg sm:text-xl transition-colors duration-300`} />
                                             </a>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
 
-                            {/* Botão */}
-                            <div className="flex justify-center lg:justify-start">
+                            {/* Botão ÚNICO e centralizado - COM ANIMAÇÃO GARANTIDA */}
+                            <div className="flex justify-center lg:justify-start pt-4">
                                 <a
                                     ref={btnRef}
                                     href={curriculo}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group relative bg-gradient-to-r from-[#0969CC] to-cyan-600 text-white rounded-full px-6 py-3.5 sm:px-8 sm:py-4 lg:px-10 lg:py-5 text-base sm:text-lg lg:text-xl font-bold shadow-lg sm:shadow-xl lg:shadow-2xl hover:shadow-[0_0_30px_rgba(9,105,204,0.5)] transition-all duration-500 inline-flex items-center gap-2 sm:gap-3 lg:gap-4 backdrop-blur-sm border border-[#0969CC]/30 hover:border-white/30 min-w-[180px] sm:min-w-[200px] lg:min-w-[240px] justify-center"
+                                    className="group relative bg-gradient-to-r from-[#0969CC] to-cyan-600 text-white rounded-full px-8 py-4 sm:px-8 sm:py-4 lg:px-10 lg:py-4 text-base sm:text-lg lg:text-lg font-bold shadow-xl hover:shadow-[0_0_30px_rgba(9,105,204,0.6)] transition-all duration-500 inline-flex items-center gap-3 sm:gap-3 lg:gap-4 backdrop-blur-sm border border-[#0969CC]/30 hover:border-white/30 min-w-[200px] sm:min-w-[220px] lg:min-w-[240px] justify-center animate-fade-in"
                                 >
                                     <span className="relative z-10 tracking-wide">Baixar Currículo</span>
-                                    <i className="fa-solid fa-download text-sm sm:text-base lg:text-lg group-hover:translate-y-0.5 transition-transform duration-300" />
+                                    <i className="fa-solid fa-download text-base sm:text-lg lg:text-lg group-hover:translate-y-0.5 transition-transform duration-300" />
+                                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600/0 via-blue-600/20 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    {/* Glow effect */}
+                                    <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600/20 to-cyan-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                 </a>
                             </div>
                         </div>
 
-                        {/* Foto (direita) */}
-                        <div ref={imageRef} className="w-full lg:w-1/2 order-1 lg:order-2 mb-8 lg:mb-0 flex justify-center">
+                        {/* Foto (direita) limpa */}
+                        <div ref={imageRef} className="w-full lg:w-1/2 order-1 lg:order-2 mb-8 lg:mb-0 flex justify-center relative">
                             <div className="relative">
                                 {/* Efeito de brilho */}
-                                <div className="absolute -inset-4 sm:-inset-6 bg-gradient-to-r from-[#0969CC] to-cyan-500 rounded-full opacity-20 blur-xl animate-pulse" />
+                                <div className="absolute -inset-4 sm:-inset-5 bg-gradient-to-r from-[#0969CC] to-cyan-500 rounded-full opacity-20 blur-xl animate-pulse" />
                                 
                                 {/* Container da foto */}
-                                <div className="relative rounded-full overflow-hidden border-2 sm:border-3 lg:border-4 border-[#0969CC]/20 p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-gray-900 to-black shadow-xl sm:shadow-2xl">
+                                <div className="relative rounded-full overflow-hidden border-2 sm:border-3 lg:border-3 border-[#0969CC]/20 p-1.5 sm:p-2 lg:p-2 bg-gradient-to-br from-gray-900 to-black shadow-xl sm:shadow-2xl">
                                     <img
                                         src={FotoLucas}
                                         alt="Lucas Andrade - Desenvolvedor Full Stack"
-                                        className="rounded-full w-64 h-64 sm:w-80 sm:h-80 lg:w-[23rem] lg:h-[23rem] xl:w-[25rem] xl:h-[25rem] object-cover relative z-10"
+                                        className="rounded-full w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 object-cover relative z-10"
                                         loading="eager"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0969CC]/10 to-transparent animate-scan" />
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            <Wave />
-            
-            {/* Scroll indicator */}
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden lg:block animate-bounce">
-                <div className="flex flex-col items-center gap-2">
-                    <span className="text-gray-400 text-sm tracking-widest">SCROLL</span>
-                    <div className="w-[1px] h-12 bg-gradient-to-b from-[#0969CC] to-transparent"></div>
-                </div>
+            {/* Wave - COM z-index BAIXO */}
+            <div 
+                ref={waveRef}
+                className="waves absolute bottom-0 w-full overflow-hidden pointer-events-none z-10"
+                style={{ 
+                    height: '15vh',
+                    minHeight: '145px',
+                    maxHeight: '200px',
+                }}
+            >
+                <svg 
+                    className="w-full h-full"
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 24 150 28" 
+                    preserveAspectRatio="none" 
+                    shapeRendering="auto"
+                >
+                    <defs>
+                        <path 
+                            id="gentle-wave" 
+                            d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" 
+                        />
+                    </defs>
+                    <g className="parallax">
+                        <use href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                        <use href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                        <use href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                        <use href="#gentle-wave" x="48" y="7" fill="#E2E2E2" />
+                    </g>
+                </svg>
             </div>
+
+            {/* CSS inline para animação fallback */}
+            <style jsx>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+                .animate-fade-in {
+                    animation: fadeIn 0.8s ease-out forwards;
+                    animation-delay: 1s;
+                    opacity: 0;
+                }
+            `}</style>
         </div>
     );
 }
