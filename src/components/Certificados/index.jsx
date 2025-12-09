@@ -242,29 +242,6 @@ export default function Certificados() {
                     </p>
                 </div>
 
-                {/* Stats bar */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">{certificados.length}</div>
-                        <div className="text-sm text-gray-400">Certificados</div>
-                    </div>
-                    
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">50+</div>
-                        <div className="text-sm text-gray-400">Horas de Curso</div>
-                    </div>
-                    
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">4</div>
-                        <div className="text-sm text-gray-400">Plataformas</div>
-                    </div>
-                    
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">2</div>
-                        <div className="text-sm text-gray-400">Anos</div>
-                    </div>
-                </div>
-
                 {/* Certificates grid */}
                 <div 
                     ref={certificatesRef}
@@ -362,41 +339,38 @@ export default function Certificados() {
                 </div>
 
                 {/* Show more/less button */}
-                <div className="text-center mt-12" ref={buttonRef}>
-                    <button
-                        onClick={() => setMostrarMais(!mostrarMais)}
-                        className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-yellow-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
-                    >
-                        <span className="relative z-10 flex items-center gap-3">
-                            {mostrarMais ? (
-                                <>
-                                    <i className="fas fa-chevron-up"></i>
-                                    Ver menos certificados
-                                </>
-                            ) : (
-                                <>
-                                    <i className="fas fa-chevron-down"></i>
-                                    Ver todos os certificados
-                                </>
-                            )}
-                        </span>
+                {certificados.length > 3 && (
+                    <div className="text-center mt-12" ref={buttonRef}>
+                        <button
+                            onClick={() => setMostrarMais(!mostrarMais)}
+                            className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-yellow-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                {mostrarMais ? (
+                                    <>
+                                        <i className="fas fa-chevron-up"></i>
+                                        Ver menos certificados
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-chevron-down"></i>
+                                        Ver mais certificados
+                                    </>
+                                )}
+                            </span>
+                            
+                            {/* Glow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/0 via-yellow-600/10 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </button>
                         
-                        {/* Glow effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/0 via-yellow-600/10 to-yellow-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        {/* Count badge */}
-                        <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-300 text-gray-900 text-xs flex items-center justify-center font-bold">
-                            {mostrarMais ? certificados.length : certificados.length - 3}
-                        </span>
-                    </button>
-                    
-                    <p className="text-gray-500 text-sm mt-4">
-                        {mostrarMais 
-                            ? `Mostrando todos os ${certificados.length} certificados` 
-                            : `Mostrando ${certificados.slice(0, 3).length} de ${certificados.length} certificados`
-                        }
-                    </p>
-                </div>
+                        <p className="text-gray-500 text-sm mt-4">
+                            {mostrarMais 
+                                ? `Mostrando todos os certificados` 
+                                : `Mostrando 3 certificados`
+                            }
+                        </p>
+                    </div>
+                )}
 
                 {/* Learning note */}
                 <div className="mt-16 text-center border-t border-gray-800/30 pt-8">

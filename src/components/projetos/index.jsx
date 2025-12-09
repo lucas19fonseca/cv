@@ -110,7 +110,8 @@ export default function Projetos() {
         },
     ];
 
-    const projetosParaMostrar = mostrarMais ? projetos : projetos.filter(p => p.destaque);
+    const projetosIniciais = 3;
+    const projetosParaMostrar = mostrarMais ? projetos : projetos.slice(0, projetosIniciais);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -221,29 +222,6 @@ export default function Projetos() {
                     </p>
                 </div>
 
-                {/* Projects stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">{projetos.length}</div>
-                        <div className="text-sm text-gray-400">Projetos</div>
-                    </div>
-                    
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">3</div>
-                        <div className="text-sm text-gray-400">Destaques</div>
-                    </div>
-                    
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">{new Set(projetos.flatMap(p => p.tecnologias.map(t => t.nome))).size}</div>
-                        <div className="text-sm text-gray-400">Tecnologias</div>
-                    </div>
-                    
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 text-center">
-                        <div className="text-2xl md:text-3xl font-bold text-white mb-2">100%</div>
-                        <div className="text-sm text-gray-400">Open Source</div>
-                    </div>
-                </div>
-
                 {/* Projects grid */}
                 <div 
                     ref={projectsRef}
@@ -325,7 +303,6 @@ export default function Projetos() {
                                     <div className="mt-4 pt-4 border-t border-gray-800">
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-xs text-gray-500 font-medium">TECNOLOGIAS</span>
-                                            <span className="text-xs text-gray-500">{projeto.tecnologias.length} techs</span>
                                         </div>
                                         
                                         <div className="flex flex-wrap gap-2">
@@ -373,42 +350,39 @@ export default function Projetos() {
                     ))}
                 </div>
 
-                {/* Show more/less button */}
-                <div className="text-center mt-12" ref={buttonRef}>
-                    <button
-                        onClick={() => setMostrarMais(!mostrarMais)}
-                        className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
-                    >
-                        <span className="relative z-10 flex items-center gap-3">
-                            {mostrarMais ? (
-                                <>
-                                    <i className="fas fa-chevron-up"></i>
-                                    Ver menos projetos
-                                </>
-                            ) : (
-                                <>
-                                    <i className="fas fa-chevron-down"></i>
-                                    Ver todos os projetos
-                                </>
-                            )}
-                        </span>
+                {/* Show more/less button - Mostrar apenas se houver mais de 3 projetos */}
+                {projetos.length > projetosIniciais && (
+                    <div className="text-center mt-12" ref={buttonRef}>
+                        <button
+                            onClick={() => setMostrarMais(!mostrarMais)}
+                            className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                {mostrarMais ? (
+                                    <>
+                                        <i className="fas fa-chevron-up"></i>
+                                        Ver menos projetos
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-chevron-down"></i>
+                                        Ver mais projetos
+                                    </>
+                                )}
+                            </span>
+                            
+                            {/* Glow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </button>
                         
-                        {/* Glow effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        {/* Count badge */}
-                        <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs flex items-center justify-center font-bold">
-                            {mostrarMais ? projetos.length : projetos.length - 3}
-                        </span>
-                    </button>
-                    
-                    <p className="text-gray-500 text-sm mt-4">
-                        {mostrarMais 
-                            ? `Mostrando todos os ${projetos.length} projetos` 
-                            : `Mostrando ${projetos.filter(p => p.destaque).length} de ${projetos.length} projetos`
-                        }
-                    </p>
-                </div>
+                        <p className="text-gray-500 text-sm mt-4">
+                            {mostrarMais 
+                                ? `Mostrando todos os projetos` 
+                                : `Mostrando ${projetosIniciais} de ${projetos.length} projetos`
+                            }
+                        </p>
+                    </div>
+                )}
 
                 {/* GitHub note */}
                 <div className="mt-16 text-center border-t border-gray-800/30 pt-8">
