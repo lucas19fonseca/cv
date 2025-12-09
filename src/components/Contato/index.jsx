@@ -1,282 +1,456 @@
 import { useRef, useState, useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import emailjs from "emailjs-com";
 
+// Registrar plugin GSAP
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
+
 export default function Contato() {
-  const form = useRef();
-  const [modalAberto, setModalAberto] = useState(false);
-  const [modalTipo, setModalTipo] = useState(""); // "sucesso" ou "erro"
-  const validarEmail = (email) => {
-    // Lista de domínios falsos/temporários comuns
-    const dominiosFalsos = [
-      'tempmail.com',
-      'guerrillamail.com',
-      '10minutemail.com',
-      'throwaway.email',
-      'maildrop.cc',
-      'mailinator.com',
-      'trashmail.com',
-      'yopmail.com',
-      'fakeinbox.com',
-      'temp-mail.org'
+    const form = useRef();
+    const sectionRef = useRef(null);
+    const formRef = useRef(null);
+    const infoRef = useRef(null);
+    const modalRef = useRef(null);
+    
+    const [modalAberto, setModalAberto] = useState(false);
+    const [modalTipo, setModalTipo] = useState(""); // "sucesso" ou "erro"
+    const [modalTitulo, setModalTitulo] = useState("");
+    const [modalMensagem, setModalMensagem] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const contactInfo = [
+        { icon: "fas fa-envelope", label: "Email", value: "lucas19fonseca@gmail.com", link: "mailto:lucas19fonseca@gmail.com" },
+        { icon: "fas fa-phone", label: "Telefone", value: "+55 (61) 98346-2252", link: "tel:+5561983462252" },
+        { icon: "fas fa-map-marker-alt", label: "Localização", value: "Brasília, DF", link: null },
     ];
 
-    // Pega o domínio do email
-    const dominio = email.split('@')[1]?.toLowerCase();
+    const socialLinks = [
+        { icon: "fab fa-github", label: "GitHub", url: "https://github.com/lucas19fonseca", color: "from-gray-700 to-gray-900" },
+        { icon: "fab fa-linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/lucas-andrade-5511022b3/", color: "from-blue-700 to-blue-900" },
+        { icon: "fab fa-instagram", label: "Instagram", url: "https://www.instagram.com/lucax.andrade_/", color: "from-pink-600 to-purple-600" },
+        { icon: "fab fa-discord", label: "Discord", url: "https://discord.com/channels/@me", color: "from-indigo-600 to-blue-600" },
+    ];
 
-    // Verifica se é um domínio falso
-    if (dominiosFalsos.includes(dominio)) {
-      return false;
-    }
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // Animação da seção
+            gsap.from(sectionRef.current, {
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
 
-    // Verifica padrões suspeitos (emails muito curtos ou aleatórios)
-    const parteLocal = email.split('@')[0];
+            // Animação dos elementos de info
+            if (infoRef.current) {
+                gsap.from(infoRef.current.children, {
+                    scrollTrigger: {
+                        trigger: infoRef.current,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    x: -50,
+                    opacity: 0,
+                    stagger: 0.2,
+                    duration: 0.8,
+                    delay: 0.2,
+                    ease: "power3.out"
+                });
+            }
 
-    // Se tem menos de 3 caracteres antes do @
-    if (parteLocal.length < 3) {
-      return false;
-    }
+            // Animação do formulário
+            if (formRef.current) {
+                gsap.from(formRef.current, {
+                    scrollTrigger: {
+                        trigger: formRef.current,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    x: 50,
+                    opacity: 0,
+                    duration: 1,
+                    delay: 0.4,
+                    ease: "power3.out"
+                });
+            }
+        });
 
-    // Verifica se tem caracteres repetidos demais (ex: aaaa@, bbbb@)
-    const caracteresUnicos = new Set(parteLocal.toLowerCase()).size;
-    if (caracteresUnicos <= 2 && parteLocal.length > 4) {
-      return false;
-    }
+        return () => ctx.revert();
+    }, []);
 
-    return true;
-  };
+    const validarEmail = (email) => {
+        const dominiosFalsos = [
+            'tempmail.com', 'guerrillamail.com', '10minutemail.com',
+            'throwaway.email', 'maildrop.cc', 'mailinator.com',
+            'trashmail.com', 'yopmail.com', 'fakeinbox.com', 'temp-mail.org'
+        ];
 
-  const enviarEmail = (e) => {
-    e.preventDefault();
-    const emailInput = form.current.email.value;
-    if (!validarEmail(emailInput)) {
-      setModalTipo("erro");
-      setModalAberto(true);
-      return;
-    }
-    emailjs
-      .sendForm("service_ey0v7lf", "template_9pmqr9p", form.current, "3Q1UnYYGtaM4UmNuS")
-      .then(() => {
-        setModalTipo("sucesso");
-        setModalAberto(true);
-        form.current.reset();
-      })
-      .catch((error) => {
-        console.log("Erro ao enviar", error);
-        setModalTipo("erro");
-        setModalAberto(true);
-      });
-  };
+        const dominio = email.split('@')[1]?.toLowerCase();
+        const parteLocal = email.split('@')[0];
 
-  const fecharModal = () => {
-    setModalAberto(false);
-  };
+        if (!dominio || !parteLocal) return false;
+        if (dominiosFalsos.includes(dominio)) return false;
+        if (parteLocal.length < 3) return false;
 
-  // Fecha o modal automaticamente após 4 segundos
-  useEffect(() => {
-    if (modalAberto) {
-      const timer = setTimeout(() => {
+        const caracteresUnicos = new Set(parteLocal.toLowerCase()).size;
+        if (caracteresUnicos <= 2 && parteLocal.length > 4) return false;
+
+        return true;
+    };
+
+    const enviarEmail = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        const emailInput = form.current.email.value;
+        if (!validarEmail(emailInput)) {
+            setModalTipo("erro");
+            setModalTitulo("Email inválido");
+            setModalMensagem("Por favor, use um endereço de email válido e permanente.");
+            setModalAberto(true);
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            await emailjs.sendForm(
+                "service_ey0v7lf",
+                "template_9pmqr9p",
+                form.current,
+                "3Q1UnYYGtaM4UmNuS"
+            );
+            
+            setModalTipo("sucesso");
+            setModalTitulo("Mensagem enviada!");
+            setModalMensagem("Obrigado pelo contato! Responderei em breve.");
+            setModalAberto(true);
+            form.current.reset();
+        } catch (error) {
+            console.error("Erro ao enviar:", error);
+            setModalTipo("erro");
+            setModalTitulo("Erro ao enviar");
+            setModalMensagem("Ocorreu um erro ao enviar sua mensagem. Tente novamente.");
+            setModalAberto(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const fecharModal = () => {
         setModalAberto(false);
-      }, 3000);
+        if (modalTipo === "sucesso") {
+            // Reset do formulário se sucesso
+            form.current.reset();
+        }
+    };
 
-      return () => clearTimeout(timer);
-    }
-  }, [modalAberto]);
-  useEffect(() => {
-    if (modalAberto) {
-      const timer = setTimeout(() => {
-        setModalAberto(false);
-      }, 3000); // 4 segundos
+    // Fechar modal com ESC
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.key === 'Escape' && modalAberto) {
+                fecharModal();
+            }
+        };
 
-      return () => clearTimeout(timer);
-    }
-  }, [modalAberto]);
-  return (
-    <div className="flex justify-center pb-5 px-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 bg-[#080831] w-full  rounded-xl p-6 gap-8 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-        {/* Contato info */}
-        <div className="flex justify-center md:justify-start">
-          <div className="text-white ">
-            <div className="flex justify-center">
-              <h4 className="text-[#ff5403] text-xl md:text-2xl font-Poppin mb-3 mt-6 md:mt-10">
-                Entre em contato
-              </h4>
-            </div>
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [modalAberto]);
 
-            {/* Redes sociais */}
-            <div className="text-2xl ml-7 flex justify-center gap-4 mb-4 ">
-              <a
-                href="https://www.instagram.com/lucax.andrade_/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:scale-115 transition duration-500"
-              >
-                <i className="fab fa-instagram"></i>
-              </a>
-              <a
-                href="https://github.com/lucas19fonseca"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:scale-115 transition duration-500"
-              >
-                <i className="fab fa-github"></i>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/lucas-andrade-5511022b3/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:scale-115 transition duration-500"
-              >
-                <i className="fab fa-linkedin"></i>
-              </a>
-              <a
-                href="https://discord.com/channels/@me"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:scale-115 transition duration-500"
-              >
-                <i className="fab fa-discord"></i>
-              </a>
-            </div>
+    // Fechar modal automaticamente após sucesso
+    useEffect(() => {
+        if (modalAberto && modalTipo === "sucesso") {
+            const timer = setTimeout(() => {
+                fecharModal();
+            }, 4000);
+            return () => clearTimeout(timer);
+        }
+    }, [modalAberto, modalTipo]);
 
-
-            {/* Lista de contatos */}
-            <div className="mt-10 md:mt-20 w-full">
-              <ul className="space-y-3 text-base md:text-xl ">
-                <li>
-                  <i className="fas fa-envelope mr-2"></i>lucas19fonseca@gmail.com
-                </li>
-                <li>
-                  <i className="fas fa-phone mr-2"></i>+55 (61) 98346-2252
-                </li>
-                <li>
-                  <i className="fas fa-map-marker-alt mr-2"></i>Brasília, DF
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Formulário */}
-        <form
-          ref={form}
-          onSubmit={enviarEmail}
-          className="bg-[#f4f4f4] rounded p-4 space-y-4 w-full"
+    return (
+        <section 
+            id="contato"
+            ref={sectionRef}
+            className="py-20 md:py-32 relative overflow-hidden"
         >
-          <div>
-            <label htmlFor="nome" className="block text-sm font-medium text-gray-700">
-              Nome
-            </label>
-            <input
-              id="nome"
-              type="text"
-              name="name"
-              placeholder="Seu nome"
-              className="w-full bg-white rounded px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff5403]"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="Seu email"
-              className="w-full bg-white rounded px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff5403]"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="mensagem" className="block text-sm font-medium text-gray-700">
-              Mensagem
-            </label>
-            <textarea
-              id="mensagem"
-              name="message"
-              placeholder="Digite sua mensagem"
-              className="w-full bg-white rounded px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ff5403] resize-none"
-              rows="4"
-              required
-            ></textarea>
-          </div>
-
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="bg-[#ff5403] text-white rounded-2xl px-6 py-2 font-semibold hover:scale-105 transition duration-400"
-            >
-              Enviar Mensagem
-            </button>
-          </div>
-        </form>
-        {/* Modal */}
-        {modalAberto && (
-          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-10000">
-            <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
-              <div className="text-center">
-                {modalTipo === "sucesso" ? (
-                  <>
-                    <div className="mb-4">
-                      <i className="fas fa-check-circle text-6xl text-green-500"></i>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                      Sucesso!
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      Sua mensagem foi enviada com sucesso! Entrarei em contato em breve.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <div className="mb-4">
-                      <i className="fas fa-times-circle text-6xl text-red-500"></i>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                      Ops! Algo deu errado
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      Não foi possível enviar sua mensagem. Tente novamente mais tarde.
-                    </p>
-                  </>
-                )}
-                <button
-                  onClick={fecharModal}
-                  className="bg-[#ff5403] text-white px-8 py-2 rounded-lg font-semibold hover:bg-[#e64a03] transition duration-300"
-                >
-                  Fechar
-                </button>
-              </div>
+            {/* Background effects */}
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent opacity-30" />
+            
+            {/* Grid pattern */}
+            <div className="absolute inset-0 opacity-5">
+                <div className="w-full h-full" style={{
+                    backgroundImage: `
+                        linear-gradient(90deg, rgba(34, 197, 94, 0.3) 1px, transparent 1px),
+                        linear-gradient(180deg, rgba(34, 197, 94, 0.3) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '50px 50px'
+                }}></div>
             </div>
-          </div>
-        )}
-        {modalAberto && modalTipo === "erro" && (
-          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all">
-              <div className="text-center">
-                <div className="mb-4">
-                  <i className="fas fa-times-circle text-6xl text-red-500"></i>
+
+            <div className="container mx-auto px-4 lg:px-8 relative z-10">
+                {/* Section header */}
+                <div className="text-center mb-16">
+                    <div className="inline-flex items-center justify-center gap-3 mb-4">
+                        <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-emerald-400 rounded-full animate-pulse"></div>
+                        <span className="text-green-400 font-mono text-sm tracking-widest">CONTACT</span>
+                    </div>
+                    
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+                        Vamos <span className="bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">Conversar</span>
+                    </h2>
+                    
+                    <p className="text-gray-400 mt-6 text-lg max-w-2xl mx-auto">
+                        Estou disponível para novas oportunidades, projetos interessantes ou apenas uma conversa sobre tecnologia
+                    </p>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                  Ops! Algo deu errado
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Não foi possível enviar sua mensagem. Tente novamente mais tarde.
-                </p>
-                <button
-                  onClick={fecharModal}
-                  className="bg-[#ff5403] text-white px-8 py-2 rounded-lg font-semibold hover:bg-[#e64a03] transition duration-300"
-                >
-                  Fechar
-                </button>
-              </div>
+
+                <div className="grid lg:grid-cols-2 gap-12 items-start">
+                    {/* Contact Info */}
+                    <div ref={infoRef}>
+                        <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8 mb-8">
+                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                <i className="fas fa-info-circle text-green-400"></i>
+                                Informações de Contato
+                            </h3>
+                            
+                            <div className="space-y-6">
+                                {contactInfo.map((info, index) => (
+                                    <div key={index} className="group">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center group-hover:border-green-500 transition-all duration-300">
+                                                <i className={`${info.icon} text-green-400 text-xl`}></i>
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-gray-400">{info.label}</p>
+                                                {info.link ? (
+                                                    <a 
+                                                        href={info.link}
+                                                        className="text-white font-medium hover:text-green-400 transition-colors duration-300"
+                                                    >
+                                                        {info.value}
+                                                    </a>
+                                                ) : (
+                                                    <p className="text-white font-medium">{info.value}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Social Links */}
+                        <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8">
+                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                <i className="fas fa-share-alt text-green-400"></i>
+                                Conecte-se
+                            </h3>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                {socialLinks.map((social, index) => (
+                                    <a
+                                        key={index}
+                                        href={social.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`group relative p-4 rounded-xl border border-gray-700 bg-gradient-to-br from-gray-800/50 to-gray-900/50 hover:border-green-500 transition-all duration-300 overflow-hidden`}
+                                    >
+                                        <div className="relative z-10 flex flex-col items-center text-center">
+                                            <i className={`${social.icon} text-2xl text-white mb-2`}></i>
+                                            <span className="text-sm text-gray-300">{social.label}</span>
+                                        </div>
+                                        
+                                        {/* Hover effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/5 to-emerald-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    </a>
+                                ))}
+                            </div>
+                            
+                            <div className="mt-6 pt-6 border-t border-gray-800">
+                                <p className="text-sm text-gray-500 text-center">
+                                    <i className="fas fa-bolt text-yellow-400 mr-2"></i>
+                                    Resposta rápida garantida
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Contact Form */}
+                    <div ref={formRef}>
+                        <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8">
+                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                <i className="fas fa-paper-plane text-green-400"></i>
+                                Envie uma Mensagem
+                            </h3>
+                            
+                            <form
+                                ref={form}
+                                onSubmit={enviarEmail}
+                                className="space-y-6"
+                            >
+                                <div className="group">
+                                    <label htmlFor="nome" className="block text-sm font-medium text-gray-400 mb-2 group-hover:text-green-400 transition-colors duration-300">
+                                        <i className="fas fa-user mr-2"></i>
+                                        Nome
+                                    </label>
+                                    <input
+                                        id="nome"
+                                        type="text"
+                                        name="name"
+                                        placeholder="Como posso te chamar?"
+                                        className="w-full bg-gray-800/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="group">
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2 group-hover:text-green-400 transition-colors duration-300">
+                                        <i className="fas fa-envelope mr-2"></i>
+                                        Email
+                                    </label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        placeholder="seu@email.com"
+                                        className="w-full bg-gray-800/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all duration-300"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="group">
+                                    <label htmlFor="mensagem" className="block text-sm font-medium text-gray-400 mb-2 group-hover:text-green-400 transition-colors duration-300">
+                                        <i className="fas fa-comment-alt mr-2"></i>
+                                        Mensagem
+                                    </label>
+                                    <textarea
+                                        id="mensagem"
+                                        name="message"
+                                        placeholder="Conte-me sobre seu projeto ou ideia..."
+                                        className="w-full bg-gray-800/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 resize-none transition-all duration-300"
+                                        rows="5"
+                                        required
+                                    ></textarea>
+                                </div>
+
+                                <div className="pt-4">
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-300 ${
+                                            isLoading 
+                                                ? 'bg-gray-700 cursor-not-allowed' 
+                                                : 'bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 hover:shadow-[0_0_30px_rgba(34,197,94,0.3)]'
+                                        }`}
+                                    >
+                                        {isLoading ? (
+                                            <div className="flex items-center justify-center gap-3">
+                                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                <span>Enviando...</span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center justify-center gap-3">
+                                                <i className="fas fa-paper-plane"></i>
+                                                <span>Enviar Mensagem</span>
+                                            </div>
+                                        )}
+                                    </button>
+                                    
+                                    <p className="text-xs text-gray-500 mt-3 text-center">
+                                        <i className="fas fa-shield-alt mr-1"></i>
+                                        Seus dados estão seguros • Resposta em até 24h
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+
+                        {/* Status info */}
+                        <div className="mt-6 bg-gray-900/30 border border-gray-800 rounded-xl p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <span className="text-sm text-gray-400">
+                                    Disponível para novas oportunidades
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+
+            {/* Modal */}
+            {modalAberto && (
+                <div 
+                    ref={modalRef}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                    onClick={(e) => {
+                        if (e.target === modalRef.current) {
+                            fecharModal();
+                        }
+                    }}
+                >
+                    <div className={`relative max-w-md w-full rounded-2xl overflow-hidden shadow-2xl transform transition-all ${
+                        modalTipo === "sucesso" 
+                            ? 'bg-gradient-to-br from-gray-900 to-green-900/20' 
+                            : 'bg-gradient-to-br from-gray-900 to-red-900/20'
+                    } border ${modalTipo === "sucesso" ? 'border-green-500/30' : 'border-red-500/30'}`}>
+                        
+                        {/* Close button */}
+                        <button
+                            onClick={fecharModal}
+                            className="absolute top-4 right-4 text-white/60 hover:text-white text-xl transition-colors duration-300 z-10"
+                        >
+                            <i className="fas fa-times"></i>
+                        </button>
+                        
+                        {/* Modal content */}
+                        <div className="p-8 text-center">
+                            <div className="mb-6">
+                                <div className={`w-20 h-20 rounded-full ${modalTipo === "sucesso" ? 'bg-green-500/20' : 'bg-red-500/20'} flex items-center justify-center mx-auto`}>
+                                    <i className={`fas fa-${modalTipo === "sucesso" ? 'check' : 'exclamation'}-circle text-4xl ${
+                                        modalTipo === "sucesso" ? 'text-green-400' : 'text-red-400'
+                                    }`}></i>
+                                </div>
+                            </div>
+                            
+                            <h3 className="text-2xl font-bold text-white mb-3">
+                                {modalTitulo}
+                            </h3>
+                            
+                            <p className="text-gray-300 mb-8">
+                                {modalMensagem}
+                            </p>
+                            
+                            <button
+                                onClick={fecharModal}
+                                className={`px-8 py-3 rounded-lg font-medium text-white transition-colors duration-300 ${
+                                    modalTipo === "sucesso" 
+                                        ? 'bg-green-600 hover:bg-green-500' 
+                                        : 'bg-red-600 hover:bg-red-500'
+                                }`}
+                            >
+                                {modalTipo === "sucesso" ? 'Ótimo!' : 'Entendi'}
+                            </button>
+                            
+                            {modalTipo === "sucesso" && (
+                                <div className="mt-6 pt-6 border-t border-gray-800">
+                                    <p className="text-sm text-gray-400">
+                                        <i className="fas fa-clock mr-2"></i>
+                                        Fechando automaticamente em 4 segundos...
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </section>
+    );
 }
