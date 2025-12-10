@@ -35,7 +35,7 @@ export default function Experiencia() {
             id: 2,
             cargo: "Desenvolvedor Frontend Freelancer",
             empresa: "Projetos Autônomos",
-            periodo: "2020 - Atual",
+            periodo: "2025",
             local: "Remoto",
             tipo: "Freelance/Projetos",
             descricao: [
@@ -177,13 +177,7 @@ export default function Experiencia() {
                         </div>
                     ))}
                 </div>
-                {/* Footer note - Minimalista */}
-                <div className="mt-12 text-center">
-                    <p className="text-gray-500 dark:text-gray-400 text-sm flex items-center justify-center gap-2">
-                        <i className="fas fa-arrow-right text-blue-500"></i>
-                        Em constante evolução técnica e profissional
-                    </p>
-                </div>
+               
             </div>
         </section>
     );

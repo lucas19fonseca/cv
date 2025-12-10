@@ -338,14 +338,6 @@ export default function Tecnologia() {
                         </div>
                     </div>
                 </div>
-
-                {/* Footer note */}
-                <div className="mt-12 text-center" style={{ opacity: 1 }}>
-                    <p className="text-gray-500 text-sm">
-                        <i className="fas fa-sync-alt mr-2 text-blue-400"></i>
-                        Stack em constante evolução
-                    </p>
-                </div>
             </div>
         </section>
     );

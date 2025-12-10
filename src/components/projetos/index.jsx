@@ -37,7 +37,6 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact/>, color: "text-cyan-400" },
                 { nome: "Tailwind", icone: <SiTailwindcss/>, color: "text-teal-400" }
             ],
-            categoria: "frontend",
             destaque: true
         },
         { 
@@ -50,7 +49,6 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact/>, color: "text-cyan-400" },
                 { nome: "Tailwind", icone: <SiTailwindcss/>, color: "text-teal-400" }
             ],
-            categoria: "frontend",
             destaque: true
         },
         { 
@@ -64,7 +62,6 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact/>, color: "text-cyan-400" },
                 { nome: "Golang", icone: <DiGo/>, color: "text-cyan-600" }
             ],
-            categoria: "fullstack",
             destaque: true
         },
         { 
@@ -79,7 +76,6 @@ export default function Projetos() {
                 { nome: "Bootstrap", icone: <FaBootstrap/>, color: "text-purple-500" },
                 { nome: "HTML", icone: <FaHtml5/>, color: "text-orange-500" }
             ],
-            categoria: "frontend",
             destaque: false
         },
         { 
@@ -93,7 +89,6 @@ export default function Projetos() {
                 { nome: "CSS", icone: <FaCss3Alt/>, color: "text-blue-500" },
                 { nome: "JavaScript", icone: <FaJs />, color: "text-yellow-400" },
             ],
-            categoria: "frontend",
             destaque: false
         },
         { 
@@ -105,7 +100,6 @@ export default function Projetos() {
             tecnologias: [
                 { nome: "Python", icone: <FaPython/>, color: "text-blue-600" },
             ],
-            categoria: "algoritmos",
             destaque: true
         },
     ];
@@ -162,24 +156,6 @@ export default function Projetos() {
 
         return () => ctx.revert();
     }, [mostrarMais]);
-
-    const getCategoryColor = (category) => {
-        switch(category) {
-            case 'frontend': return 'bg-gradient-to-r from-blue-500 to-cyan-500';
-            case 'fullstack': return 'bg-gradient-to-r from-purple-500 to-pink-500';
-            case 'algoritmos': return 'bg-gradient-to-r from-green-500 to-emerald-500';
-            default: return 'bg-gradient-to-r from-gray-600 to-gray-500';
-        }
-    };
-
-    const getCategoryText = (category) => {
-        switch(category) {
-            case 'frontend': return 'Frontend';
-            case 'fullstack': return 'Full Stack';
-            case 'algoritmos': return 'Algoritmos';
-            default: return 'Outros';
-        }
-    };
 
     return (
         <section 
@@ -245,14 +221,7 @@ export default function Projetos() {
                                     {/* Overlay gradient */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
                                     
-                                    {/* Category badge */}
-                                    <div className="absolute top-4 left-4">
-                                        <span className={`px-3 py-1.5 rounded-full text-xs font-medium text-white ${getCategoryColor(projeto.categoria)}`}>
-                                            {getCategoryText(projeto.categoria)}
-                                        </span>
-                                    </div>
-                                    
-                                    {/* GitHub link */}
+                                    {/* GitHub link - AGORA SEM CATEGORIA */}
                                     <div className="absolute top-4 right-4">
                                         <a 
                                             href={projeto.link}
@@ -373,10 +342,7 @@ export default function Projetos() {
                         </button>
                         
                         <p className="text-gray-500 text-sm mt-4">
-                            {mostrarMais 
-                                ? `Mostrando todos os projetos` 
-                                : `Mostrando ${projetosIniciais} de ${projetos.length} projetos`
-                            }
+                           
                         </p>
                     </div>
                 )}

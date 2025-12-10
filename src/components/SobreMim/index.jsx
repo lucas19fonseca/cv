@@ -356,22 +356,6 @@ export default function SobreMim() {
                         </div>
                     </div>
                 </div>
-
-                {/* Info adicional maior */}
-                <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-12 md:mt-16 pt-8 md:pt-12 border-t border-gray-300/30">
-                    <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm border border-gray-300/50 rounded-xl px-4 py-3 shadow-lg shadow-blue-100/30 hover:shadow-blue-200/50 transition-all duration-300">
-                        <div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 animate-pulse"></div>
-                        <span className="text-sm md:text-base text-gray-700 font-medium">Disponível para oportunidades</span>
-                    </div>
-                    <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm border border-gray-300/50 rounded-xl px-4 py-3 shadow-lg shadow-blue-100/30 hover:shadow-cyan-100/50 transition-all duration-300">
-                        <i className="fas fa-map-marker-alt text-blue-500"></i>
-                        <span className="text-sm md:text-base text-gray-700">Brasília, DF</span>
-                    </div>
-                    <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm border border-gray-300/50 rounded-xl px-4 py-3 shadow-lg shadow-blue-100/30 hover:shadow-purple-100/50 transition-all duration-300">
-                        <i className="fas fa-graduation-cap text-purple-500"></i>
-                        <span className="text-sm md:text-base text-gray-700">UniCEUB</span>
-                    </div>
-                </div>
             </div>
 
             {/* Estilos CSS para animações */}

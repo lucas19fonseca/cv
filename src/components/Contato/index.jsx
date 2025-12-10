@@ -22,9 +22,24 @@ export default function Contato() {
     const [isLoading, setIsLoading] = useState(false);
 
     const contactInfo = [
-        { icon: "fas fa-envelope", label: "Email", value: "lucas19fonseca@gmail.com", link: "mailto:lucas19fonseca@gmail.com" },
-        { icon: "fas fa-phone", label: "Telefone", value: "+55 (61) 98346-2252", link: "tel:+5561983462252" },
-        { icon: "fas fa-map-marker-alt", label: "Localização", value: "Brasília, DF", link: null },
+        { 
+            icon: "fas fa-envelope", 
+            label: "Email", 
+            value: "lucas19fonseca@gmail.com", 
+            link: "mailto:lucas19fonseca@gmail.com" 
+        },
+        { 
+            icon: "fab fa-whatsapp", // Ícone do WhatsApp
+            label: "Telefone", 
+            value: "+55 (61) 98346-2252", 
+            link: "https://wa.me/5561983462252" // Link do WhatsApp
+        },
+        { 
+            icon: "fas fa-map-marker-alt", 
+            label: "Localização", 
+            value: "Brasília, DF", 
+            link: null 
+        },
     ];
 
     const socialLinks = [
@@ -222,17 +237,32 @@ export default function Contato() {
                                 {contactInfo.map((info, index) => (
                                     <div key={index} className="group">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center group-hover:border-blue-500 transition-all duration-300">
-                                                <i className={`${info.icon} text-blue-400 text-xl`}></i>
+                                            <div className={`w-12 h-12 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center group-hover:border-blue-500 transition-all duration-300 ${
+                                                info.icon.includes('whatsapp') ? 'group-hover:border-green-500' : ''
+                                            }`}>
+                                                <i className={`${info.icon} text-blue-400 text-xl ${
+                                                    info.icon.includes('whatsapp') ? 'group-hover:text-green-400' : ''
+                                                }`}></i>
                                             </div>
                                             <div>
                                                 <p className="text-sm text-gray-400">{info.label}</p>
                                                 {info.link ? (
                                                     <a 
                                                         href={info.link}
-                                                        className="text-white font-medium hover:text-blue-400 transition-colors duration-300"
+                                                        target={info.icon.includes('whatsapp') ? "_blank" : "_self"}
+                                                        rel={info.icon.includes('whatsapp') ? "noopener noreferrer" : ""}
+                                                        className={`text-white font-medium transition-colors duration-300 ${
+                                                            info.icon.includes('whatsapp') 
+                                                                ? 'hover:text-green-400' 
+                                                                : 'hover:text-blue-400'
+                                                        }`}
                                                     >
                                                         {info.value}
+                                                        {info.icon.includes('whatsapp') && (
+                                                            <span className="ml-2 text-xs text-green-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                <i className="fab fa-whatsapp"></i> WhatsApp
+                                                            </span>
+                                                        )}
                                                     </a>
                                                 ) : (
                                                     <p className="text-white font-medium">{info.value}</p>

@@ -302,10 +302,7 @@ export default function Certificados() {
                         </button>
                         
                         <p className="text-gray-500 text-sm mt-4">
-                            {mostrarMais 
-                                ? `Mostrando todos os certificados` 
-                                : `Mostrando 3 certificados`
-                            }
+                            
                         </p>
                     </div>
                 )}
