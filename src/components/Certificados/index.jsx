@@ -310,13 +310,7 @@ export default function Certificados() {
                     </div>
                 )}
 
-                {/* Learning note */}
-                <div className="mt-16 text-center border-t border-gray-800/30 pt-8">
-                    <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
-                        <i className="fas fa-brain text-lg text-blue-400"></i>
-                        Aprendizado contínuo é fundamental para evolução na tecnologia • Sempre estudando!
-                    </p>
-                </div>
+               
             </div>
 
             {/* Modal */}
