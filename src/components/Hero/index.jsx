@@ -57,7 +57,7 @@ export default function HomeHero() {
     const menuItems = [
         { id: 'home-hero', label: 'Início' },
         { id: 'sobre-mim', label: 'Sobre' },
-        { id: 'tecnologias', label: 'Tech' },
+        { id: 'tecnologias', label: 'Tecnologias ' },
         { id: 'projetos', label: 'Projetos' },
         { id: 'experiencia', label: 'Experiência' },
         { id: 'certificados', label: 'Certificados' },
