@@ -18,6 +18,12 @@ export default function HomeHero() {
     const btnRef = useRef(null);
     const particlesRef = useRef(null);
     const waveRef = useRef(null);
+    const menuRef = useRef(null);
+    
+    // Refs para as linhas do hamburguer
+    const topLineRef = useRef(null);
+    const middleLineRef = useRef(null);
+    const bottomLineRef = useRef(null);
     
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('');
@@ -58,6 +64,66 @@ export default function HomeHero() {
         { id: 'contato', label: 'Contato' }
     ];
 
+    // Animação do hamburguer para X - VERSÃO CORRIGIDA
+    useEffect(() => {
+        if (!topLineRef.current || !middleLineRef.current || !bottomLineRef.current) return;
+
+        const topLine = topLineRef.current;
+        const middleLine = middleLineRef.current;
+        const bottomLine = bottomLineRef.current;
+
+        if (isMenuOpen) {
+            // Animação para X (menu aberto)
+            gsap.to(topLine, {
+                rotation: 45,
+                y: 8, // Ajuste fino para posicionamento
+                duration: 0.3,
+                ease: "power2.out",
+                overwrite: true
+            });
+            
+            gsap.to(middleLine, {
+                opacity: 0,
+                duration: 0.2,
+                ease: "power2.out",
+                overwrite: true
+            });
+            
+            gsap.to(bottomLine, {
+                rotation: -45,
+                y: -8, // Ajuste fino para posicionamento
+                duration: 0.3,
+                ease: "power2.out",
+                overwrite: true
+            });
+        } else {
+            // Animação para hamburguer (menu fechado)
+            gsap.to(topLine, {
+                rotation: 0,
+                y: 0,
+                duration: 0.3,
+                ease: "power2.out",
+                overwrite: true
+            });
+            
+            gsap.to(middleLine, {
+                opacity: 1,
+                duration: 0.2,
+                delay: 0.1,
+                ease: "power2.out",
+                overwrite: true
+            });
+            
+            gsap.to(bottomLine, {
+                rotation: 0,
+                y: 0,
+                duration: 0.3,
+                ease: "power2.out",
+                overwrite: true
+            });
+        }
+    }, [isMenuOpen]);
+
     // Criar partículas flutuantes
     useEffect(() => {
         if (typeof window === 'undefined' || !particlesRef.current) return;
@@ -96,6 +162,55 @@ export default function HomeHero() {
             }
         };
     }, []);
+
+    // Animação do menu dropdown
+    useEffect(() => {
+        if (!menuRef.current || typeof window === 'undefined') return;
+
+        if (isMenuOpen) {
+            // Animação de abertura do menu
+            gsap.fromTo(menuRef.current,
+                {
+                    height: 0,
+                    opacity: 0,
+                    y: -20
+                },
+                {
+                    height: 'auto',
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: "power2.out"
+                }
+            );
+
+            // Animar os itens do menu
+            const menuItems = menuRef.current.querySelectorAll('li');
+            gsap.fromTo(menuItems,
+                {
+                    opacity: 0,
+                    x: -20
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    stagger: 0.1,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    delay: 0.1
+                }
+            );
+        } else {
+            // Animação de fechamento do menu
+            gsap.to(menuRef.current, {
+                height: 0,
+                opacity: 0,
+                y: -20,
+                duration: 0.3,
+                ease: "power2.in"
+            });
+        }
+    }, [isMenuOpen]);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -230,7 +345,7 @@ export default function HomeHero() {
         };
     }, []);
 
-    // Toggle menu mobile
+    // Toggle menu mobile com animação GSAP
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -261,15 +376,17 @@ export default function HomeHero() {
                     >
                         <div className="relative">
                             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 flex items-center justify-center">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 border border-blue-500/50 rounded flex items-center justify-center">
-                                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full"></div>
-                                </div>
+                                {/* Ícone de fragmento de código usando Font Awesome */}
+                                <i className="fas fa-code text-blue-500 text-sm"></i>
                             </div>
                         </div>
                         
-                        <div>
+                        <div className="hidden sm:block">
                             <span className="text-white font-medium text-sm sm:text-base tracking-tight block">LUCAS ANDRADE FONSECA</span>
                             <span className="text-gray-500 text-[10px] sm:text-[11px] font-normal tracking-widest block">• DEVELOPER</span>
+                        </div>
+                        <div className="block sm:hidden">
+                            <span className="text-white font-medium text-xs tracking-tight">LUCAS</span>
                         </div>
                     </a>
 
@@ -301,40 +418,69 @@ export default function HomeHero() {
                         </ul>
                     </nav>
                     
-                    {/* Menu mobile clean */}
+                    {/* Menu mobile hamburger - VERSÃO CORRIGIDA */}
                     <button 
-                        className="lg:hidden group z-50"
+                        className="lg:hidden group z-50 relative w-10 h-10 flex items-center justify-center"
                         onClick={toggleMenu}
                         aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
                     >
-                        <div className="w-8 h-8 flex flex-col items-center justify-center gap-1.5">
-                            <div className={`w-6 h-[2px] bg-gray-500 group-hover:bg-white transition-all duration-300 ${isMenuOpen ? 'translate-y-2 rotate-45' : ''}`}></div>
-                            <div className={`w-6 h-[2px] bg-gray-500 group-hover:bg-white transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></div>
-                            <div className={`w-6 h-[2px] bg-gray-500 group-hover:bg-white transition-all duration-300 ${isMenuOpen ? '-translate-y-2 -rotate-45' : ''}`}></div>
+                        {/* Container para as linhas */}
+                        <div className="relative w-6 h-6 flex items-center justify-center">
+                            {/* Linha superior */}
+                            <div 
+                                ref={topLineRef}
+                                className="absolute w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full"
+                                style={{
+                                    transformOrigin: 'center'
+                                }}
+                            />
+                            
+                            {/* Linha do meio */}
+                            <div 
+                                ref={middleLineRef}
+                                className="absolute w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full"
+                                style={{
+                                    transformOrigin: 'center'
+                                }}
+                            />
+                            
+                            {/* Linha inferior */}
+                            <div 
+                                ref={bottomLineRef}
+                                className="absolute w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full"
+                                style={{
+                                    transformOrigin: 'center'
+                                }}
+                            />
                         </div>
                     </button>
                 </div>
             </div>
             
             {/* Menu mobile dropdown */}
-            <div className={`lg:hidden absolute top-full left-0 w-full bg-gray-950/95 backdrop-blur-lg border-b border-gray-800/30 transition-all duration-300 ${
-                isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
-            }`}>
-                <ul className="py-4 px-4 space-y-3">
+            <div 
+                ref={menuRef}
+                className={`lg:hidden absolute top-full left-0 w-full bg-gray-950/98 backdrop-blur-lg border-b border-gray-800/30 overflow-hidden`}
+                style={{ display: isMenuOpen ? 'block' : 'none' }}
+            >
+                <ul className="py-4 px-4 space-y-2">
                     {menuItems.map((item, index) => {
                         const isActive = activeSection === item.id;
                         return (
                             <li key={index}>
                                 <a 
                                     href={`#${item.id}`}
-                                    className={`block py-2.5 text-sm font-medium tracking-wider uppercase transition-all duration-300 ${
+                                    className={`block py-3 px-4 text-sm font-medium tracking-wider uppercase rounded-lg transition-all duration-300 ${
                                         isActive 
-                                            ? 'text-white pl-4 border-l-4 border-blue-500' 
-                                            : 'text-gray-500 hover:text-white hover:pl-4 hover:border-l-4 border-gray-700'
+                                            ? 'text-white bg-blue-900/30 border-l-4 border-blue-500' 
+                                            : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
                                     }`}
                                     onClick={closeMenu}
                                 >
-                                    {item.label}
+                                    <span className="flex items-center gap-3">
+                                        <i className={`fas ${getIconForMenuItem(item.id)} text-xs ${isActive ? 'text-blue-400' : 'text-gray-500'}`}></i>
+                                        {item.label}
+                                    </span>
                                 </a>
                             </li>
                         );
@@ -353,6 +499,20 @@ export default function HomeHero() {
             </div>
         </header>
     );
+
+    // Função auxiliar para obter ícones do menu
+    const getIconForMenuItem = (id) => {
+        switch(id) {
+            case 'home-hero': return 'fa-home';
+            case 'sobre-mim': return 'fa-user';
+            case 'tecnologias': return 'fa-code';
+            case 'projetos': return 'fa-folder';
+            case 'experiencia': return 'fa-briefcase';
+            case 'certificados': return 'fa-certificate';
+            case 'contato': return 'fa-envelope';
+            default: return 'fa-circle';
+        }
+    };
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#080831] via-[#0a0a2a] to-[#001233]">
@@ -379,24 +539,17 @@ export default function HomeHero() {
             {/* Hero Section */}
             <div
                 ref={heroRef}
-                className="relative z-20 flex items-center justify-center min-h-screen pt-16 pb-20"
+                className="relative z-20 flex items-center justify-center min-h-screen pt-16 pb-20 px-4"
                 id="home-hero"
             >
-                <div className="container mx-auto px-4 sm:px-6 relative">
-                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 xl:gap-16">
+                <div className="container mx-auto relative">
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 xl:gap-16">
                         
                         {/* Conteúdo de texto (esquerda) */}
                         <div className="w-full lg:w-1/2 text-center lg:text-left order-2 lg:order-1">
-                            {/* Indicador de console */}
-                            <div className="mb-4 lg:mb-6 lg:ml-0">
-                                <span className="text-[#0969CC] font-mono text-sm sm:text-base">
-                                    $ whoami
-                                </span>
-                            </div>
-
                             {/* Nome */}
                             <div ref={titleContainerRef} className="mb-6 lg:mb-8">
-                                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-6xl font-bold text-white leading-tight">
+                                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
                                     Olá! Eu sou o <br className="hidden sm:block" />
                                     <span className="font-black bg-gradient-to-r from-[#0969CC] via-cyan-400 to-[#0969CC] bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient">
                                         Lucas Andrade
@@ -406,7 +559,7 @@ export default function HomeHero() {
 
                             {/* Descrição */}
                             <div className="mb-6 lg:mb-8">
-                                <p className="text-white/90 text-lg sm:text-xl lg:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                                <p className="text-white/90 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
                                     Desenvolvedor Full Stack & Estudante de{" "}
                                     <span className="text-[#0969CC] font-semibold relative">
                                         Ciências da Computação
@@ -417,35 +570,35 @@ export default function HomeHero() {
 
                             {/* Ícones sociais */}
                             <div ref={socialRef} className="mb-8 lg:mb-10">
-                                <ul className="flex justify-center lg:justify-start gap-4 sm:gap-5 text-xl sm:text-xl">
+                                <ul className="flex justify-center lg:justify-start gap-3 sm:gap-4 lg:gap-5">
                                     {socialLinks.map((social, index) => (
                                         <li key={index} className="group">
                                             <a
                                                 href={social.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="relative w-11 h-11 sm:w-12 sm:h-12 lg:w-12 lg:h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-gray-900/30 to-black/30 border border-[#0969CC]/20 hover:border-[#0969CC]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(9,105,204,0.4)]"
+                                                className="relative w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-gray-900/30 to-black/30 border border-[#0969CC]/20 hover:border-[#0969CC]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(9,105,204,0.4)]"
                                                 title={social.label}
                                                 aria-label={social.label}
                                             >
-                                                <i className={`fa-brands fa-${social.icon} text-white/80 group-hover:text-white text-lg sm:text-xl transition-colors duration-300`} />
+                                                <i className={`fa-brands fa-${social.icon} text-white/80 group-hover:text-white text-base sm:text-lg lg:text-xl transition-colors duration-300`} />
                                             </a>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
 
-                            {/* Botão ÚNICO e centralizado - COM ANIMAÇÃO GARANTIDA */}
+                            {/* Botão ÚNICO */}
                             <div className="flex justify-center lg:justify-start pt-4">
                                 <a
                                     ref={btnRef}
                                     href={curriculo}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group relative bg-gradient-to-r from-[#0969CC] to-cyan-600 text-white rounded-full px-8 py-4 sm:px-8 sm:py-4 lg:px-10 lg:py-4 text-base sm:text-lg lg:text-lg font-bold shadow-xl hover:shadow-[0_0_30px_rgba(9,105,204,0.6)] transition-all duration-500 inline-flex items-center gap-3 sm:gap-3 lg:gap-4 backdrop-blur-sm border border-[#0969CC]/30 hover:border-white/30 min-w-[200px] sm:min-w-[220px] lg:min-w-[240px] justify-center animate-fade-in"
+                                    className="group relative bg-gradient-to-r from-[#0969CC] to-cyan-600 text-white rounded-full px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-4 text-sm sm:text-base lg:text-lg font-bold shadow-xl hover:shadow-[0_0_30px_rgba(9,105,204,0.6)] transition-all duration-500 inline-flex items-center gap-2 sm:gap-3 lg:gap-4 backdrop-blur-sm border border-[#0969CC]/30 hover:border-white/30 min-w-[180px] sm:min-w-[200px] lg:min-w-[240px] justify-center animate-fade-in"
                                 >
                                     <span className="relative z-10 tracking-wide">Baixar Currículo</span>
-                                    <i className="fa-solid fa-download text-base sm:text-lg lg:text-lg group-hover:translate-y-0.5 transition-transform duration-300" />
+                                    <i className="fa-solid fa-download text-sm sm:text-base lg:text-lg group-hover:translate-y-0.5 transition-transform duration-300" />
                                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600/0 via-blue-600/20 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                     {/* Glow effect */}
                                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600/20 to-cyan-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -457,14 +610,14 @@ export default function HomeHero() {
                         <div ref={imageRef} className="w-full lg:w-1/2 order-1 lg:order-2 mb-8 lg:mb-0 flex justify-center relative">
                             <div className="relative">
                                 {/* Efeito de brilho */}
-                                <div className="absolute -inset-4 sm:-inset-5 bg-gradient-to-r from-[#0969CC] to-cyan-500 rounded-full opacity-20 blur-xl animate-pulse" />
+                                <div className="absolute -inset-3 sm:-ins-4 lg:-inset-5 bg-gradient-to-r from-[#0969CC] to-cyan-500 rounded-full opacity-20 blur-xl animate-pulse" />
                                 
                                 {/* Container da foto */}
                                 <div className="relative rounded-full overflow-hidden border-2 sm:border-3 lg:border-3 border-[#0969CC]/20 p-1.5 sm:p-2 lg:p-2 bg-gradient-to-br from-gray-900 to-black shadow-xl sm:shadow-2xl">
                                     <img
                                         src={FotoLucas}
                                         alt="Lucas Andrade - Desenvolvedor Full Stack"
-                                        className="rounded-full w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 object-cover relative z-10"
+                                        className="rounded-full w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 xl:w-80 xl:h-80 object-cover relative z-10"
                                         loading="eager"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0969CC]/10 to-transparent animate-scan" />
@@ -475,14 +628,14 @@ export default function HomeHero() {
                 </div>
             </div>
 
-            {/* Wave - COM z-index BAIXO */}
+            {/* Wave */}
             <div 
                 ref={waveRef}
                 className="waves absolute bottom-0 w-full overflow-hidden pointer-events-none z-10"
                 style={{ 
                     height: '15vh',
-                    minHeight: '145px',
-                    maxHeight: '200px',
+                    minHeight: '120px',
+                    maxHeight: '180px',
                 }}
             >
                 <svg 
@@ -507,8 +660,8 @@ export default function HomeHero() {
                 </svg>
             </div>
 
-            {/* CSS inline para animação fallback */}
-            <style jsx>{`
+            {/* CSS inline para animação */}
+            <style jsx global>{`
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
@@ -519,10 +672,59 @@ export default function HomeHero() {
                         transform: scale(1);
                     }
                 }
+                
                 .animate-fade-in {
                     animation: fadeIn 0.8s ease-out forwards;
                     animation-delay: 1s;
                     opacity: 0;
+                }
+                
+                /* Estilos específicos para as linhas do hambúrguer */
+                .hamburger-line {
+                    position: absolute;
+                    left: 0;
+                    width: 24px;
+                    height: 2px;
+                    background-color: #9CA3AF;
+                    border-radius: 9999px;
+                    transition: all 0.3s ease;
+                    transform-origin: center;
+                }
+                
+                .hamburger-line.top {
+                    top: 8px;
+                }
+                
+                .hamburger-line.middle {
+                    top: 15px;
+                }
+                
+                .hamburger-line.bottom {
+                    top: 22px;
+                }
+                
+                /* Estados para animação do hambúrguer */
+                .hamburger-open .hamburger-line.top {
+                    transform: rotate(45deg) translate(4px, 4px);
+                }
+                
+                .hamburger-open .hamburger-line.middle {
+                    opacity: 0;
+                }
+                
+                .hamburger-open .hamburger-line.bottom {
+                    transform: rotate(-45deg) translate(4px, -4px);
+                }
+                
+                /* Melhorias para mobile */
+                @media (max-width: 640px) {
+                    .waves {
+                        min-height: 100px !important;
+                    }
+                    
+                    .hero-content {
+                        padding-top: 4rem !important;
+                    }
                 }
             `}</style>
         </div>
