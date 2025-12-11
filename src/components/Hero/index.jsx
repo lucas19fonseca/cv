@@ -655,7 +655,7 @@ export default function HomeHero() {
                         <use href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
                         <use href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
                         <use href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
-                        <use href="#gentle-wave" x="48" y="7" fill="#E2E2E2" />
+                        <use href="#gentle-wave" x="48" y="7" fill="#ffffff" />
                     </g>
                 </svg>
             </div>

@@ -32,6 +32,7 @@ export default function Projetos() {
     const sectionRef = useRef(null);
     const projectsRef = useRef(null);
     const buttonRef = useRef(null);
+    const animationsInitialized = useRef(false);
 
     // Função para gerar imagem do GitHub
     const getGitHubImage = (repoName) => {
@@ -53,7 +54,7 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Tailclones",
@@ -67,7 +68,7 @@ export default function Projetos() {
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
                 { nome: "Vite", icone: <SiVite />, color: "text-purple-500" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Kubo",
@@ -81,7 +82,7 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
                 { nome: "Golang", icone: <DiGo />, color: "text-cyan-600" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Pac Man AI",
@@ -93,7 +94,7 @@ export default function Projetos() {
             tecnologias: [
                 { nome: "Python", icone: <FaPython />, color: "text-blue-600" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Portfólio React",
@@ -108,7 +109,7 @@ export default function Projetos() {
                 { nome: "GSAP", icone: <FaJs />, color: "text-green-500" },
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "PlixGames",
@@ -122,7 +123,7 @@ export default function Projetos() {
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Chris - Landing Page",
@@ -171,7 +172,7 @@ export default function Projetos() {
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
                 { nome: "Vite", icone: <SiVite />, color: "text-purple-500" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "ListFy",
@@ -228,7 +229,7 @@ export default function Projetos() {
                 { nome: "CSS", icone: <FaCss3Alt />, color: "text-blue-500" },
                 { nome: "Bootstrap", icone: <FaBootstrap />, color: "text-purple-500" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Andrews shelf",
@@ -268,48 +269,58 @@ export default function Projetos() {
         return 0;
     });
 
-    const projetosIniciais = 6;
+    const projetosIniciais = 3;
+    const hasMoreProjects = projetosOrdenados.length > projetosIniciais;
     const projetosParaMostrar = mostrarMais
         ? projetosOrdenados
         : projetosOrdenados.slice(0, projetosIniciais);
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Animação da seção
-            gsap.from(sectionRef.current, {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse",
-                },
-                y: 30,
-                opacity: 0,
-                duration: 0.8,
-                ease: "power3.out",
-            });
+        if (typeof window === "undefined") return;
 
-            // Animação dos projetos
-            if (projectsRef.current) {
-                gsap.from(projectsRef.current.children, {
+        const ctx = gsap.context(() => {
+            // Animação da seção (apenas na primeira vez)
+            if (sectionRef.current && !animationsInitialized.current) {
+                gsap.from(sectionRef.current, {
                     scrollTrigger: {
-                        trigger: projectsRef.current,
-                        start: "top 85%",
+                        trigger: sectionRef.current,
+                        start: "top 80%",
                         toggleActions: "play none none reverse",
                     },
                     y: 30,
                     opacity: 0,
-                    stagger: 0.1,
-                    duration: 0.6,
-                    ease: "power2.out",
+                    duration: 0.8,
+                    ease: "power3.out",
                 });
+                animationsInitialized.current = true;
             }
 
-            // Animação do botão
-            if (buttonRef.current) {
+            // Animação dos projetos (sempre executa quando projetos mudam)
+            if (projectsRef.current) {
+                const children = Array.from(projectsRef.current.children);
+                if (children.length > 0) {
+                    gsap.from(children, {
+                        scrollTrigger: {
+                            trigger: projectsRef.current,
+                            start: "top 85%",
+                            toggleActions: "play none none reverse",
+                        },
+                        y: 30,
+                        opacity: 0,
+                        stagger: 0.1,
+                        duration: 0.6,
+                        ease: "power2.out",
+                    });
+                }
+            }
+
+            // Animação do botão (apenas se existir e ainda não estiver visível)
+            if (buttonRef.current && hasMoreProjects) {
                 gsap.from(buttonRef.current, {
                     scrollTrigger: {
                         trigger: buttonRef.current,
-                        start: "top 90%",
+                        start: "top 95%",
+                        end: "bottom 80%",
                         toggleActions: "play none none reverse",
                     },
                     y: 20,
@@ -321,7 +332,7 @@ export default function Projetos() {
         });
 
         return () => ctx.revert();
-    }, [mostrarMais]);
+    }, [mostrarMais, hasMoreProjects]); // Dependências otimizadas
 
     return (
         <section
@@ -339,9 +350,9 @@ export default function Projetos() {
                     className="w-full h-full"
                     style={{
                         backgroundImage: `
- linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
- linear-gradient(180deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
- `,
+              linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
+              linear-gradient(180deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
+            `,
                         backgroundSize: "50px 50px",
                     }}
                 ></div>
@@ -392,32 +403,6 @@ export default function Projetos() {
 
                                     {/* Overlay gradient */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
-
-                                    {/* Links */}
-                                    <div className="absolute top-4 right-4 flex gap-2">
-                                        <a
-                                            href={projeto.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="w-10 h-10 rounded-full bg-gray-900/90 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-white hover:bg-gray-800 hover:border-blue-500 transition-all duration-300"
-                                            aria-label={`Ver código do projeto ${projeto.nome} no GitHub`}
-                                            title="Ver código no GitHub"
-                                        >
-                                            <FaGithub className="text-lg" />
-                                        </a>
-                                        {projeto.demo && (
-                                            <a
-                                                href={projeto.demo}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 rounded-full bg-gray-900/90 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-white hover:bg-gray-800 hover:border-green-500 transition-all duration-300"
-                                                aria-label={`Ver demo do projeto ${projeto.nome}`}
-                                                title="Ver demo ao vivo"
-                                            >
-                                                <FaExternalLinkAlt className="text-sm" />
-                                            </a>
-                                        )}
-                                    </div>
 
                                     {/* Hover effect */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -494,13 +479,17 @@ export default function Projetos() {
                     ))}
                 </div>
 
-                {/* Show more/less button */}
-                {projetos.length > projetosIniciais && (
-                    <div className="text-center mt-12" ref={buttonRef}>
+                {/* Show more/less button - Renderização simplificada */}
+                {hasMoreProjects && (
+                    <div className="text-center mt-12">
                         <button
+                            ref={buttonRef}
                             onClick={() => setMostrarMais(!mostrarMais)}
                             className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
                         >
+                            {/* Glow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            
                             <span className="relative z-10 flex items-center gap-3">
                                 {mostrarMais ? (
                                     <>
@@ -514,23 +503,14 @@ export default function Projetos() {
                                     </>
                                 )}
                             </span>
-
-                            {/* Glow effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         </button>
-
-                        <p className="text-gray-500 text-sm mt-4">
-                            {mostrarMais
-                                ? `Mostrando todos os ${projetos.length} projetos`
-                                : `Mostrando ${projetosParaMostrar.length} de ${projetos.length} projetos`}
-                        </p>
                     </div>
                 )}
 
                 {/* GitHub note */}
                 <div className="mt-16 text-center border-t border-gray-800/30 pt-8">
                     <p className="text-gray-500 text-sm flex items-center justify-center gap-2 mb-4">
-                        <i className="fab fa-github text-lg"></i>
+                        <FaGithub className="text-lg" />
                         Todos os projetos são open-source e estão disponíveis no GitHub
                     </p>
                 </div>
