@@ -1,13 +1,26 @@
 import { useState } from 'react'
 import './index.css'
-import Main from '../src/components/Main/index'
-
+import SobreMim from "./components/SobreMim/index";
+import Tecnologia from "./components/Tecnologias/index";
+import Certificados from "./components/Certificados/index";
+import Contato from "./components/Contato/index";
+import Projetos from "./components/projetos/index";
+import Experiencia from "./components/experiencia/experiencia";
+import Hero from "./components/Hero/index";
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <div>
-      <Main/>
+      <main className="min-w-[301px]">
+        <Hero />
+        <SobreMim />
+        <Tecnologia />
+        <Projetos />
+        <Experiencia />
+        <Certificados />
+        <Contato />
+      </main>
     </div>
   )
 }
