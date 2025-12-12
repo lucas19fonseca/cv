@@ -425,32 +425,23 @@ export default function HomeHero() {
                         aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
                     >
                         {/* Container para as linhas */}
-                        <div className="relative w-6 h-6 flex items-center justify-center">
+                        <div className="relative w-6 h-6 flex flex-col items-center justify-center gap-1.5">
                             {/* Linha superior */}
                             <div 
                                 ref={topLineRef}
-                                className="absolute w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full"
-                                style={{
-                                    transformOrigin: 'center'
-                                }}
+                                className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
                             />
                             
                             {/* Linha do meio */}
                             <div 
                                 ref={middleLineRef}
-                                className="absolute w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full"
-                                style={{
-                                    transformOrigin: 'center'
-                                }}
+                                className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
                             />
                             
                             {/* Linha inferior */}
                             <div 
                                 ref={bottomLineRef}
-                                className="absolute w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full"
-                                style={{
-                                    transformOrigin: 'center'
-                                }}
+                                className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
                             />
                         </div>
                     </button>
