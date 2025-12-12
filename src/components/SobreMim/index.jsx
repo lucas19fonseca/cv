@@ -73,64 +73,117 @@ export default function SobreMim() {
     }, []);
 
     useEffect(() => {
+        // Forçar visibilidade inicial
+        if (sectionRef.current) {
+            gsap.set(sectionRef.current, { opacity: 1, visibility: "visible" });
+        }
+
         const ctx = gsap.context(() => {
-            gsap.from(sectionRef.current, {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
+            // Animação da seção - OTIMIZADA
+            gsap.fromTo(sectionRef.current,
+                {
+                    y: 40,
+                    opacity: 0
                 },
-                y: 30,
-                opacity: 0,
-                duration: 0.8,
-                ease: "power3.out"
-            });
-
-            if (imageRef.current) {
-                gsap.from(imageRef.current, {
-                    x: -50,
-                    opacity: 0,
-                    duration: 1,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: imageRef.current,
-                        start: "top 80%",
-                        toggleActions: "play none none reverse"
-                    }
-                });
-            }
-
-            if (textRef.current) {
-                gsap.from(textRef.current, {
-                    x: 30,
-                    opacity: 0,
-                    duration: 1,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: textRef.current,
-                        start: "top 80%",
-                        toggleActions: "play none none reverse"
-                    }
-                });
-            }
-
-            if (buttonRef.current) {
-                gsap.from(buttonRef.current, {
-                    scale: 0.8,
-                    opacity: 0,
+                {
+                    y: 0,
+                    opacity: 1,
                     duration: 0.8,
-                    delay: 0.3,
-                    ease: "back.out(1.7)",
+                    ease: "power3.out",
                     scrollTrigger: {
-                        trigger: buttonRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
+                        trigger: sectionRef.current,
+                        start: "top 85%", // Mais perto do topo
+                        end: "bottom 70%",
+                        toggleActions: "play none none none",
+                        markers: false,
+                        immediateRender: false
                     }
-                });
+                }
+            );
+
+            // Animação da imagem - MAIS RÁPIDA
+            if (imageRef.current) {
+                gsap.fromTo(imageRef.current,
+                    {
+                        x: -30,
+                        opacity: 0
+                    },
+                    {
+                        x: 0,
+                        opacity: 1,
+                        duration: 0.7,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: imageRef.current,
+                            start: "top 85%", // Mais perto
+                            end: "top 60%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
             }
+
+            // Animação do texto - MAIS RÁPIDA
+            if (textRef.current) {
+                gsap.fromTo(textRef.current,
+                    {
+                        x: 20,
+                        opacity: 0
+                    },
+                    {
+                        x: 0,
+                        opacity: 1,
+                        duration: 0.7,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: textRef.current,
+                            start: "top 85%", // Mais perto
+                            end: "top 60%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
+            }
+
+            // Animação do botão - APARECE MAIS CEDO E RÁPIDO
+            if (buttonRef.current) {
+                gsap.fromTo(buttonRef.current,
+                    {
+                        scale: 0.9,
+                        opacity: 0,
+                        y: 20
+                    },
+                    {
+                        scale: 1,
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5, // Mais rápido
+                        delay: 0.1, // Delay menor
+                        ease: "back.out(1.5)", // Mais suave
+                        scrollTrigger: {
+                            trigger: buttonRef.current,
+                            start: "top 90%", // MUITO mais perto
+                            end: "top 70%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
+            }
+
+            // Atualizar ScrollTrigger para evitar bugs
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 100);
         });
 
-        return () => ctx.revert();
+        return () => {
+            ctx.revert();
+            // Limpar triggers para evitar memory leaks
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        };
     }, []);
 
     return (
@@ -138,6 +191,11 @@ export default function SobreMim() {
             id="sobre-mim"
             ref={sectionRef}
             className="min-h-[80vh] w-full flex items-center justify-center py-16 md:py-24 relative overflow-hidden"
+            style={{ 
+                opacity: 1,
+                visibility: 'visible',
+                willChange: 'transform, opacity'
+            }}
         >
             {/* ============ NOVO BACKGROUND MODERNO ============ */}
             <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50/30">

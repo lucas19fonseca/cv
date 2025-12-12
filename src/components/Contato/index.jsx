@@ -29,10 +29,10 @@ export default function Contato() {
             link: "mailto:lucas19fonseca@gmail.com" 
         },
         { 
-            icon: "fab fa-whatsapp", // Ícone do WhatsApp
+            icon: "fab fa-whatsapp",
             label: "Telefone", 
             value: "+55 (61) 98346-2252", 
-            link: "https://wa.me/5561983462252" // Link do WhatsApp
+            link: "https://wa.me/5561983462252"
         },
         { 
             icon: "fas fa-map-marker-alt", 
@@ -50,53 +50,92 @@ export default function Contato() {
     ];
 
     useEffect(() => {
+        // Forçar visibilidade inicial
+        if (sectionRef.current) {
+            gsap.set(sectionRef.current, { opacity: 1, visibility: "visible" });
+        }
+
         const ctx = gsap.context(() => {
-            // Animação da seção
-            gsap.from(sectionRef.current, {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
+            // Animação otimizada da seção - INÍCIO MAIS CEDO
+            gsap.fromTo(sectionRef.current,
+                {
+                    y: 40,
+                    opacity: 0
                 },
-                y: 30,
-                opacity: 0,
-                duration: 0.8,
-                ease: "power3.out"
-            });
-
-            // Animação dos elementos de info
-            if (infoRef.current) {
-                gsap.from(infoRef.current.children, {
-                    scrollTrigger: {
-                        trigger: infoRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
-                    },
-                    y: 30,
-                    opacity: 0,
-                    stagger: 0.15,
-                    duration: 0.6,
-                    ease: "power2.out"
-                });
-            }
-
-            // Animação do formulário
-            if (formRef.current) {
-                gsap.from(formRef.current, {
-                    scrollTrigger: {
-                        trigger: formRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
-                    },
-                    y: 30,
-                    opacity: 0,
+                {
+                    y: 0,
+                    opacity: 1,
                     duration: 0.8,
-                    ease: "power3.out"
-                });
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top 90%", // Início antecipado
+                        end: "bottom 70%",
+                        toggleActions: "play none none none", // Só anima uma vez
+                        markers: false,
+                        immediateRender: false // IMPORTANTE: evita renderização prematura
+                    }
+                }
+            );
+
+            // Animação dos elementos de info - MAIS RÁPIDA
+            if (infoRef.current) {
+                gsap.fromTo(infoRef.current.children,
+                    {
+                        y: 30,
+                        opacity: 0
+                    },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.6,
+                        stagger: 0.1, // Stagger mais rápido
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: infoRef.current,
+                            start: "top 85%",
+                            end: "top 60%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
             }
+
+            // Animação do formulário - SINCRONIZADA
+            if (formRef.current) {
+                gsap.fromTo(formRef.current,
+                    {
+                        y: 40,
+                        opacity: 0
+                    },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.7,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: formRef.current,
+                            start: "top 85%",
+                            end: "top 60%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
+            }
+
+            // Atualizar ScrollTrigger para evitar bugs
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 100);
         });
 
-        return () => ctx.revert();
+        return () => {
+            ctx.revert();
+            // Limpar triggers para evitar memory leaks
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        };
     }, []);
 
     const validarEmail = (email) => {
@@ -190,7 +229,12 @@ export default function Contato() {
         <section 
             id="contato"
             ref={sectionRef}
-            className="py-20 md:py-32 relative overflow-hidden"
+            className="py-20 md:py-32 relative overflow-hidden min-h-[600px]"
+            style={{ 
+                opacity: 1,
+                willChange: 'transform, opacity',
+                visibility: 'visible'
+            }}
         >
             {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
@@ -226,8 +270,8 @@ export default function Contato() {
 
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
                     {/* Contact Info */}
-                    <div ref={infoRef}>
-                        <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8 mb-8">
+                    <div ref={infoRef} className="space-y-8">
+                        <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8">
                             <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                 <i className="fas fa-info-circle text-blue-400"></i>
                                 Informações de Contato

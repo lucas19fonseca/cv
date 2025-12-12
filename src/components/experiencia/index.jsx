@@ -52,48 +52,82 @@ export default function Experiencia() {
     ];
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Animação suave da seção
-            gsap.from(sectionRef.current, {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                },
-                y: 20,
-                opacity: 0,
-                duration: 0.6,
-                ease: "power2.out"
-            });
+        // Forçar pré-renderização para evitar flash branco
+        if (sectionRef.current) {
+            gsap.set(sectionRef.current, { opacity: 1, visibility: "visible" });
+        }
 
-            // Animação dos cards
-            if (cardsRef.current) {
-                gsap.from(cardsRef.current.children, {
+        const ctx = gsap.context(() => {
+            // Animação da seção inteira - INÍCIO ANTECIPADO
+            gsap.fromTo(sectionRef.current,
+                {
+                    y: 30,
+                    opacity: 0
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.7,
+                    ease: "power2.out",
                     scrollTrigger: {
-                        trigger: cardsRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
+                        trigger: sectionRef.current,
+                        start: "top 95%", // Começa mais cedo
+                        end: "bottom 80%",
+                        toggleActions: "play none none none", // Só anima uma vez
+                        markers: false,
+                        immediateRender: false // Evita renderização prematura
+                    }
+                }
+            );
+
+            // Animação dos cards - MAIS RÁPIDA
+            if (cardsRef.current) {
+                gsap.fromTo(cardsRef.current.children,
+                    {
+                        y: 25,
+                        opacity: 0
                     },
-                    y: 20,
-                    opacity: 0,
-                    stagger: 0.2,
-                    duration: 0.5,
-                    ease: "power2.out"
-                });
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.6,
+                        stagger: 0.1, // Stagger mais rápido
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: cardsRef.current,
+                            start: "top 90%",
+                            end: "top 60%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
             }
+
+            // Forçar atualização do ScrollTrigger
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 100);
         });
 
-        return () => ctx.revert();
+        return () => {
+            ctx.revert();
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        };
     }, []);
 
     return (
         <section 
             id="experiencia"
             ref={sectionRef}
-            className="py-16 md:py-24 relative"
+            className="py-16 md:py-24 relative min-h-[300px]"
+            style={{ 
+                opacity: 1,
+                willChange: 'transform, opacity'
+            }}
         >
-            {/* Background minimalista */}
-            <div className="absolute inset-0 bg-gray-50 dark:bg-gray-900" />
+            {/* Background - com opacidade inicial */}
+            <div className="absolute inset-0 bg-gray-50 dark:bg-gray-900 opacity-100" />
             
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
                 {/* Section header - Minimalista */}
@@ -117,6 +151,7 @@ export default function Experiencia() {
                         <div 
                             key={exp.id}
                             className="group relative"
+                            style={{ opacity: 1 }}
                         >
                             {/* Card */}
                             <div className="relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-700">
@@ -177,7 +212,6 @@ export default function Experiencia() {
                         </div>
                     ))}
                 </div>
-               
             </div>
         </section>
     );

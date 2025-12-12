@@ -24,6 +24,8 @@ export default function Certificados() {
     const buttonRef = useRef(null);
     const modalRef = useRef(null);
     const modalContentRef = useRef(null);
+    
+    const animationsInitialized = useRef(false);
 
     const certificados = [
         { 
@@ -80,54 +82,103 @@ export default function Certificados() {
     const certificadosParaMostrar = mostrarMais ? certificados : certificados.slice(0, 3);
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Animação da seção
-            gsap.from(sectionRef.current, {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse"
-                },
-                y: 30,
-                opacity: 0,
-                duration: 0.8,
-                ease: "power3.out"
+        // Forçar visibilidade inicial para evitar flash branco
+        if (sectionRef.current) {
+            gsap.set(sectionRef.current, { 
+                opacity: 1, 
+                visibility: "visible",
+                autoAlpha: 1 
             });
+        }
 
-            // Animação dos certificados
+        const ctx = gsap.context(() => {
+            // Animação otimizada da seção
+            gsap.fromTo(sectionRef.current,
+                {
+                    y: 40,
+                    opacity: 0
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top 90%", // MAIS CEDO
+                        end: "bottom 70%",
+                        toggleActions: "play none none none", // Só anima uma vez
+                        markers: false,
+                        immediateRender: false, // IMPORTANTE: evita renderização prematura
+                        onEnter: () => {
+                            animationsInitialized.current = true;
+                        }
+                    }
+                }
+            );
+
+            // Animação otimizada dos certificados
             if (certificatesRef.current) {
-                gsap.from(certificatesRef.current.children, {
-                    scrollTrigger: {
-                        trigger: certificatesRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
+                gsap.fromTo(certificatesRef.current.children,
+                    {
+                        y: 30,
+                        opacity: 0
                     },
-                    y: 30,
-                    opacity: 0,
-                    stagger: 0.15,
-                    duration: 0.6,
-                    ease: "power2.out"
-                });
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.6,
+                        stagger: 0.1, // Stagger mais rápido
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: certificatesRef.current,
+                            start: "top 85%", // MAIS CEDO
+                            end: "top 60%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
             }
 
-            // Animação do botão
-            if (buttonRef.current) {
-                gsap.from(buttonRef.current, {
-                    scrollTrigger: {
-                        trigger: buttonRef.current,
-                        start: "top 90%",
-                        toggleActions: "play none none reverse"
+            // Animação otimizada do botão
+            if (buttonRef.current && certificados.length > 3) {
+                gsap.fromTo(buttonRef.current,
+                    {
+                        y: 25,
+                        opacity: 0,
+                        scale: 0.95
                     },
-                    y: 20,
-                    opacity: 0,
-                    duration: 0.6,
-                    ease: "power2.out"
-                });
+                    {
+                        y: 0,
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: buttonRef.current,
+                            start: "top 90%", // MAIS CEDO
+                            end: "top 70%",
+                            toggleActions: "play none none none",
+                            immediateRender: false
+                        }
+                    }
+                );
             }
+
+            // Forçar atualização do ScrollTrigger após um delay
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 100);
+
         });
 
-        return () => ctx.revert();
-    }, [mostrarMais]);
+        return () => {
+            ctx.revert();
+            // Limpar todos os triggers para evitar memory leaks
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        };
+    }, [mostrarMais, certificados.length]);
 
     const abrirModal = (certificado) => {
         setCertificadoSelecionado(certificado);
@@ -188,7 +239,12 @@ export default function Certificados() {
         <section 
             id="certificados"
             ref={sectionRef}
-            className="py-20 md:py-32 relative overflow-hidden"
+            className="py-20 md:py-32 relative overflow-hidden min-h-[400px]"
+            style={{ 
+                opacity: 1,
+                visibility: 'visible',
+                willChange: 'transform, opacity'
+            }}
         >
             {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
@@ -244,6 +300,7 @@ export default function Certificados() {
                                         src={certificado.img} 
                                         alt={certificado.titulo}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        loading="lazy"
                                     />
                                     
                                     {/* Overlay gradient */}
@@ -300,14 +357,8 @@ export default function Certificados() {
                             {/* Glow effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         </button>
-                        
-                        <p className="text-gray-500 text-sm mt-4">
-                            
-                        </p>
                     </div>
                 )}
-
-               
             </div>
 
             {/* Modal */}
