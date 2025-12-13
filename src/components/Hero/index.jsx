@@ -549,7 +549,9 @@ export default function HomeHero() {
                             </div>
 
                             {/* Descrição */}
-                            <div className="mb-6 lg:mb-8">
+                            <div
+                              ref={titleContainerRef}
+                             className=" mb-6 lg:mb-8">
                                 <p className="text-white/90 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
                                     Desenvolvedor Full Stack & Estudante de{" "}
                                     <span className="text-[#0969CC] font-semibold relative">

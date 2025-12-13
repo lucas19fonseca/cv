@@ -17,8 +17,7 @@ import List from "../../assets/projetos/list.png";
 import Plix from "../../assets/projetos/plix.png";
 import Spider from "../../assets/projetos/spider.png";
 import Lucas from "../../assets/projetos/lucas.png";
-// Import para o Pac Man se tiver - se não, comente ou remova
-// import Pac from "../../assets/projetos/pacman.png";
+import VemComigo from "../../assets/projetos/vem-comigo.png";
 
 import {
     FaReact,
@@ -51,7 +50,6 @@ export default function Projetos() {
         "React Labs": Reactlb,
         "Tailclones": Tw,
         "Kubo": Kubo,
-        // "Pac Man AI": Pac, // Descomente se tiver a imagem
         "Andrews shelf": shelf,
         "Folha de Ponto": Ponto,
         "Chris - Landing Page": Chris,
@@ -62,18 +60,41 @@ export default function Projetos() {
         "Eixo": Eixo,
         "Spiderverse": Spider,
         "PlixGames": Plix,
-        "Portfólio React": Lucas, // Usei a imagem Lucas para o portfólio
+        "Portfólio React": Lucas,
+        "Vem Comigo": VemComigo,
+    };
+
+    // Links dos sites para cada projeto
+    const siteLinks = {
+        "React Labs": "https://react-labss.vercel.app/",
+        "Tailclones": "https://tailclones.vercel.app/",
+        "Kubo": "https://kubo-frontend.vercel.app/",
+        "Vem Comigo": "https://vem-comigo.vercel.app/",
+        "Portfólio React": "https://lucas-andrade.vercel.app/",
+        "Andrews shelf": "https://andrew-s-shelf.vercel.app/",
+        "PlixGames": "https://lucas19fonseca.github.io/PlixGames/",
+        "Chris - Landing Page": "https://christian-miranda.vercel.app/",
+        "Diego - Landing Page": "https://diego-soares.vercel.app/",
+        "Dell - Landing Page": "https://dell-massoterapia.vercel.app/",
+        "ListFy": "https://list-fy.vercel.app/",
+        "Let Let Go": "https://leticia-andrade.vercel.app/",
+        "Eixo": "https://eixo.vercel.app/",
+        "Spiderverse": "https://lucas19fonseca.github.io/spiderverse-bootstrap/",
+        "Folha de Ponto": "https://lucas19fonseca.github.io/ponto-eletronico/",
     };
 
     // Função para obter imagem - prioriza local, depois GitHub
     const getImagemProjeto = (nomeProjeto, repoName) => {
-        // Verifica se temos imagem local
         if (imagensLocais[nomeProjeto]) {
             return imagensLocais[nomeProjeto];
         }
         
-        // Fallback para imagem do GitHub
         return `https://opengraph.githubassets.com/1/lucas19fonseca/${repoName}`;
+    };
+
+    // Função para obter link do site
+    const getSiteLink = (nomeProjeto) => {
+        return siteLinks[nomeProjeto] || null;
     };
 
     const projetos = [
@@ -81,7 +102,7 @@ export default function Projetos() {
             nome: "React Labs",
             img: getImagemProjeto("React Labs", "react-labs"),
             link: "https://github.com/lucas19fonseca/react-labs",
-            demo: null,
+            site: getSiteLink("React Labs"),
             descricao: "Todas as minhas atividades do curso de react reunidas em um único lugar.",
             tecnologias: [
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
@@ -96,7 +117,7 @@ export default function Projetos() {
             nome: "Tailclones",
             img: getImagemProjeto("Tailclones", "tailclones"),
             link: "https://github.com/lucas19fonseca/tailclones",
-            demo: null,
+            site: getSiteLink("Tailclones"),
             descricao: "Coleção de clones de interfaces populares construídos com Tailwind CSS para fins de estudo.",
             tecnologias: [
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
@@ -109,7 +130,7 @@ export default function Projetos() {
             nome: "Kubo",
             img: getImagemProjeto("Kubo", "Kubo-Architecture"),
             link: "https://github.com/Kubo-Architecture",
-            demo: null,
+            site: getSiteLink("Kubo"),
             descricao: "Plataforma de arquitetura 3D que permite visualização imersiva de projetos arquitetônicos.",
             tecnologias: [
                 { nome: "MongoDB", icone: <SiMongodb />, color: "text-green-500" },
@@ -119,10 +140,25 @@ export default function Projetos() {
             destaque: false,
         },
         {
+            nome: "Vem Comigo",
+            img: getImagemProjeto("Vem Comigo", "vem-comigo"),
+            link: "https://github.com/lucas19fonseca/vem-comigo",
+            site: getSiteLink("Vem Comigo"),
+            descricao: "Projeto educacional em escolas públicas do DF com foco em saúde mental, combate ao bullying e promoção do bem-estar entre estudantes.",
+            tecnologias: [
+                { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
+                { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
+                { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
+                { nome: "GSAP", icone: <FaJs />, color: "text-green-500" },
+                { nome: "n8n", icone: <FaJs />, color: "text-purple-400" },
+            ],
+            destaque: false,
+        },
+        {
             nome: "Portfólio React",
             img: getImagemProjeto("Portfólio React", "cv"),
             link: "https://github.com/lucas19fonseca/cv",
-            demo: "https://cv-lucas.vercel.app/",
+            site: getSiteLink("Portfólio React"),
             descricao: "Meu portfólio pessoal desenvolvido com React, Tailwind CSS e animações GSAP.",
             tecnologias: [
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
@@ -136,7 +172,7 @@ export default function Projetos() {
             nome: "Andrews shelf",
             img: getImagemProjeto("Andrews shelf", "Andrew-s-shelf"),
             link: "https://github.com/lucas19fonseca/Andrew-s-shelf",
-            demo: null,
+            site: getSiteLink("Andrews shelf"),
             descricao: "Sistema de gerenciamento de biblioteca pessoal com catalogação de livros e controle de empréstimos.",
             tecnologias: [
                 { nome: "JavaScript", icone: <FaJs />, color: "text-yellow-400" },
@@ -150,7 +186,7 @@ export default function Projetos() {
             nome: "PlixGames",
             img: getImagemProjeto("PlixGames", "PlixGames"),
             link: "https://github.com/lucas19fonseca/PlixGames",
-            demo: null,
+            site: getSiteLink("PlixGames"),
             descricao: "Plataforma de desenvolvimento de jogos com inteligência artificial (em desenvolvimento).",
             tecnologias: [
                 { nome: "JavaScript", icone: <FaJs />, color: "text-yellow-400" },
@@ -163,7 +199,7 @@ export default function Projetos() {
             nome: "Chris - Landing Page",
             img: getImagemProjeto("Chris - Landing Page", "cv-chris"),
             link: "https://github.com/lucas19fonseca/cv-chris",
-            demo: null,
+            site: getSiteLink("Chris - Landing Page"),
             descricao: "Landing page freelance desenvolvida com Tailwind CSS e animações GSAP.",
             tecnologias: [
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
@@ -177,7 +213,7 @@ export default function Projetos() {
             nome: "Diego - Landing Page",
             img: getImagemProjeto("Diego - Landing Page", "cv-diego"),
             link: "https://github.com/lucas19fonseca/cv-diego",
-            demo: null,
+            site: getSiteLink("Diego - Landing Page"),
             descricao: "Landing page freelance com design moderno e animações suaves usando GSAP.",
             tecnologias: [
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
@@ -195,7 +231,7 @@ export default function Projetos() {
             nome: "Dell - Landing Page",
             img: getImagemProjeto("Dell - Landing Page", "landingPage-Dell"),
             link: "https://github.com/lucas19fonseca/landingPage-Dell",
-            demo: null,
+            site: getSiteLink("Dell - Landing Page"),
             descricao: "Landing page freelance para a marca Dell desenvolvida com React e Tailwind CSS.",
             tecnologias: [
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
@@ -209,7 +245,7 @@ export default function Projetos() {
             nome: "ListFy",
             img: getImagemProjeto("ListFy", "ListFy"),
             link: "https://github.com/lucas19fonseca/ListFy",
-            demo: null,
+            site: getSiteLink("ListFy"),
             descricao: "Projeto Vibe Code - Aplicação para criação e gerenciamento de listas interativas.",
             tecnologias: [
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
@@ -223,7 +259,7 @@ export default function Projetos() {
             nome: "Let Let Go",
             img: getImagemProjeto("Let Let Go", "let-let-go"),
             link: "https://github.com/lucas19fonseca/let-let-go",
-            demo: null,
+            site: getSiteLink("Let Let Go"),
             descricao: "Landing page freelance com design responsivo e interações JavaScript.",
             tecnologias: [
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
@@ -236,7 +272,7 @@ export default function Projetos() {
             nome: "Eixo",
             img: getImagemProjeto("Eixo", "Eixo"),
             link: "https://github.com/lucas19fonseca/Eixo",
-            demo: null,
+            site: getSiteLink("Eixo"),
             descricao: "Projeto web com foco em design responsivo e experiência do usuário.",
             tecnologias: [
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
@@ -249,7 +285,7 @@ export default function Projetos() {
             nome: "Spiderverse",
             img: getImagemProjeto("Spiderverse", "spiderverse-bootstrap"),
             link: "https://github.com/lucas19fonseca/spiderverse-bootstrap",
-            demo: null,
+            site: getSiteLink("Spiderverse"),
             descricao: "Site responsivo inspirado no universo do Aranhaverso, desenvolvido com Bootstrap 5.",
             tecnologias: [
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
@@ -262,7 +298,7 @@ export default function Projetos() {
             nome: "Folha de Ponto",
             img: getImagemProjeto("Folha de Ponto", "ponto-eletronico"),
             link: "https://github.com/lucas19fonseca/ponto-eletronico",
-            demo: null,
+            site: getSiteLink("Folha de Ponto"),
             descricao: "Sistema de controle de ponto eletrônico com relatórios e gestão de horas trabalhadas.",
             tecnologias: [
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
@@ -290,7 +326,6 @@ export default function Projetos() {
         if (typeof window === "undefined") return;
 
         const ctx = gsap.context(() => {
-            // Animação da seção (apenas na primeira vez)
             if (sectionRef.current && !animationsInitialized.current) {
                 gsap.from(sectionRef.current, {
                     scrollTrigger: {
@@ -306,7 +341,6 @@ export default function Projetos() {
                 animationsInitialized.current = true;
             }
 
-            // Animação dos projetos (sempre executa quando projetos mudam)
             if (projectsRef.current) {
                 const children = Array.from(projectsRef.current.children);
                 if (children.length > 0) {
@@ -325,7 +359,6 @@ export default function Projetos() {
                 }
             }
 
-            // Animação do botão (apenas se existir e ainda não estiver visível)
             if (buttonRef.current && hasMoreProjects) {
                 gsap.from(buttonRef.current, {
                     scrollTrigger: {
@@ -411,15 +444,29 @@ export default function Projetos() {
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                         loading="lazy"
                                         onError={(e) => {
-                                            e.target.src = `https://opengraph.githubassets.com/1/lucas19fonseca/${projeto.link.split('/').pop()}`;
+                                            const repoName = projeto.link.split('/').pop() || 
+                                                          projeto.nome.toLowerCase().replace(/\s+/g, '-');
+                                            e.target.src = `https://opengraph.githubassets.com/1/lucas19fonseca/${repoName}`;
                                         }}
                                     />
 
                                     {/* Overlay gradient */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
 
-
-
+                                    {/* Site link badge (se disponível) */}
+                                    {projeto.site && (
+                                        <div className="absolute top-4 right-4">
+                                            <a
+                                                href={projeto.site}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs font-medium rounded-lg hover:opacity-90 transition-opacity"
+                                            >
+                                                <FaExternalLinkAlt className="text-xs" />
+                                                Ver Site
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Project content */}
@@ -499,7 +546,7 @@ export default function Projetos() {
 
                 {/* Show more/less button */}
                 {hasMoreProjects && (
-                    <div className="text-center mt-12">
+                    <div ref={buttonRef} className="text-center mt-12">
                         <button
                             onClick={() => setMostrarMais(!mostrarMais)}
                             className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
@@ -532,6 +579,10 @@ export default function Projetos() {
                     </p>
                 </div>
             </div>
+            
+            {/* Fim da section - elementos decorativos corrigidos */}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
+            <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-gray-900 to-transparent" />
         </section>
     );
 }

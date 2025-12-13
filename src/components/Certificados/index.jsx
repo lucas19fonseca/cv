@@ -16,15 +16,9 @@ if (typeof window !== 'undefined') {
 
 export default function Certificados() {
     const [mostrarMais, setMostrarMais] = useState(false);
-    const [imagemModal, setImagemModal] = useState(null);
-    const [certificadoSelecionado, setCertificadoSelecionado] = useState(null);
     const sectionRef = useRef(null);
     const certificatesRef = useRef(null);
     const buttonRef = useRef(null);
-    const modalRef = useRef(null);
-    const modalContentRef = useRef(null);
-    
-    const animationsInitialized = useRef(false);
 
     const certificados = [
         { 
@@ -32,66 +26,62 @@ export default function Certificados() {
             img: ReactCert, 
             titulo: "React.js - Fundamentos",
             descricao: "Fundamentos do React.js incluindo componentes, hooks, state management e práticas modernas de desenvolvimento.",
-            habilidades: ["Componentes", "Hooks", "State Management", "JSX", "React Router"]
+            destaque: false
         },
         { 
             id: 2,
             img: Py, 
             titulo: "Python Essentials",
             descricao: "Conceitos essenciais de Python, estruturas de dados, funções e desenvolvimento de scripts.",
-            habilidades: ["Estruturas de Dados", "Funções", "OOP", "Scripting", "Bibliotecas"]
+            destaque: false
         },
         { 
             id: 3,
             img: Git, 
             titulo: "Git & GitHub Mastery",
             descricao: "Controle de versão, branching strategies, GitHub Actions e workflows colaborativos.",
-            habilidades: ["Versionamento", "Branching", "Merge", "GitHub Actions", "CI/CD"]
+            destaque: false
         },
         { 
             id: 4,
             img: Js, 
             titulo: "JavaScript Moderno",
             descricao: "ES6+, promises, async/await, manipulação de DOM e padrões modernos de JavaScript.",
-            habilidades: ["ES6+", "Promises", "Async/Await", "DOM", "Modern Patterns"]
         },
         { 
             id: 5,
             img: Tw, 
-            titulo: "Tailwind CSS",
+            titulo: "Tailwind CSS Pro",
             descricao: "Framework CSS utility-first, design responsivo e componentes reutilizáveis.",
-            habilidades: ["Utility-First", "Responsive Design", "Components", "Customization", "Plugins"]
         },
         { 
             id: 6,
             img: Linux, 
             titulo: "Linux Administration",
             descricao: "Administração de sistemas Linux, shell scripting e configuração de servidores.",
-            habilidades: ["Shell Scripting", "System Admin", "Servers", "Security", "Networking"]
         },
         { 
             id: 7,
             img: Prompt, 
             titulo: "AI & Prompt Engineering",
             descricao: "Engenharia de prompts, utilização de IA generativa e ferramentas de produtividade.",
-            habilidades: ["Prompt Design", "AI Tools", "Productivity", "Automation", "Best Practices"]
         }
     ];
 
-    const certificadosParaMostrar = mostrarMais ? certificados : certificados.slice(0, 3);
+    // Ordenar: destaques primeiro
+    const certificadosOrdenados = [...certificados].sort((a, b) => {
+        if (a.destaque && !b.destaque) return -1;
+        if (!a.destaque && b.destaque) return 1;
+        return 0;
+    });
+
+    const certificadosParaMostrar = mostrarMais ? certificadosOrdenados : certificadosOrdenados.slice(0, 3);
 
     useEffect(() => {
-        // Forçar visibilidade inicial para evitar flash branco
-        if (sectionRef.current) {
-            gsap.set(sectionRef.current, { 
-                opacity: 1, 
-                visibility: "visible",
-                autoAlpha: 1 
-            });
-        }
+        if (!sectionRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Animação otimizada da seção
+            // Animação da seção
             gsap.fromTo(sectionRef.current,
                 {
                     y: 40,
@@ -104,47 +94,17 @@ export default function Certificados() {
                     ease: "power3.out",
                     scrollTrigger: {
                         trigger: sectionRef.current,
-                        start: "top 90%",
-                        end: "bottom 70%",
+                        start: "top 85%",
                         toggleActions: "play none none none",
-                        markers: false,
-                        immediateRender: false,
-                        onEnter: () => {
-                            animationsInitialized.current = true;
-                        }
                     }
                 }
             );
 
-            // Animação otimizada dos certificados
+            // Animação dos cards
             if (certificatesRef.current) {
                 gsap.fromTo(certificatesRef.current.children,
                     {
                         y: 30,
-                        opacity: 0
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.6,
-                        stagger: 0.1,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: certificatesRef.current,
-                            start: "top 85%",
-                            end: "top 60%",
-                            toggleActions: "play none none none",
-                            immediateRender: false
-                        }
-                    }
-                );
-            }
-
-            // Animação otimizada do botão
-            if (buttonRef.current && certificados.length > 3) {
-                gsap.fromTo(buttonRef.current,
-                    {
-                        y: 25,
                         opacity: 0,
                         scale: 0.95
                     },
@@ -152,120 +112,49 @@ export default function Certificados() {
                         y: 0,
                         opacity: 1,
                         scale: 1,
-                        duration: 0.5,
-                        ease: "power2.out",
+                        duration: 0.6,
+                        stagger: 0.08,
+                        ease: "back.out(1.2)",
                         scrollTrigger: {
-                            trigger: buttonRef.current,
-                            start: "top 90%",
-                            end: "top 70%",
+                            trigger: certificatesRef.current,
+                            start: "top 80%",
                             toggleActions: "play none none none",
-                            immediateRender: false
                         }
                     }
                 );
             }
 
-            // Forçar atualização do ScrollTrigger após um delay
-            setTimeout(() => {
-                ScrollTrigger.refresh();
-            }, 100);
-
-        });
-
-        return () => {
-            ctx.revert();
-            // Limpar todos os triggers para evitar memory leaks
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        };
-    }, [mostrarMais, certificados.length]);
-
-    const abrirModal = (certificado) => {
-        setCertificadoSelecionado(certificado);
-        setImagemModal(certificado.img);
-        
-        // Bloquear scroll do body quando modal abrir
-        const scrollY = window.scrollY;
-        document.body.style.position = 'fixed';
-        document.body.style.top = `-${scrollY}px`;
-        document.body.style.width = '100%';
-        document.body.style.overflow = 'hidden';
-        
-        // Animar entrada do modal
-        setTimeout(() => {
-            if (modalContentRef.current) {
-                gsap.fromTo(modalContentRef.current,
-                    { 
-                        scale: 0.9, 
+            // Animação do botão
+            if (buttonRef.current && certificados.length > 3) {
+                gsap.fromTo(buttonRef.current,
+                    {
+                        y: 20,
                         opacity: 0
                     },
-                    { 
-                        scale: 1, 
-                        opacity: 1, 
-                        duration: 0.5, 
-                        ease: "back.out(1.7)" 
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: buttonRef.current,
+                            start: "top 90%",
+                            toggleActions: "play none none none",
+                        }
                     }
                 );
             }
-        }, 10);
-    };
 
-    const fecharModal = () => {
-        // Animar saída do modal
-        if (modalContentRef.current) {
-            gsap.to(modalContentRef.current, {
-                scale: 0.9,
-                opacity: 0,
-                duration: 0.3,
-                ease: "power2.in",
-                onComplete: () => {
-                    // Restaurar scroll
-                    const scrollY = document.body.style.top;
-                    document.body.style.position = '';
-                    document.body.style.top = '';
-                    document.body.style.width = '';
-                    document.body.style.overflow = '';
-                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
-                    
-                    setImagemModal(null);
-                    setCertificadoSelecionado(null);
-                }
-            });
-        } else {
-            // Restaurar scroll
-            const scrollY = document.body.style.top;
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            document.body.style.overflow = '';
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
-            
-            setImagemModal(null);
-            setCertificadoSelecionado(null);
-        }
-    };
+        }, sectionRef);
 
-    // Fechar modal com ESC
-    useEffect(() => {
-        const handleEsc = (e) => {
-            if (e.key === 'Escape' && imagemModal) {
-                fecharModal();
-            }
-        };
-
-        window.addEventListener('keydown', handleEsc);
-        return () => window.removeEventListener('keydown', handleEsc);
-    }, [imagemModal]);
+        return () => ctx.revert();
+    }, [mostrarMais, certificados.length]);
 
     return (
         <section 
             id="certificados"
             ref={sectionRef}
-            className="py-20 md:py-32 relative overflow-hidden min-h-[400px]"
-            style={{ 
-                opacity: 1,
-                visibility: 'visible',
-                willChange: 'transform, opacity'
-            }}
+            className="py-20 md:py-28 relative overflow-hidden"
         >
             {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
@@ -290,11 +179,11 @@ export default function Certificados() {
                         <span className="text-blue-400 font-mono text-sm tracking-widest">CERTIFICATIONS</span>
                     </div>
                     
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                         Certificações & <span className="bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">Cursos</span>
                     </h2>
                     
-                    <p className="text-gray-400 mt-6 text-lg max-w-2xl mx-auto">
+                    <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                         Investimento contínuo em aprendizado e validação de conhecimentos técnicos
                     </p>
                 </div>
@@ -302,21 +191,30 @@ export default function Certificados() {
                 {/* Certificates grid */}
                 <div 
                     ref={certificatesRef}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
                     {certificadosParaMostrar.map((certificado) => (
                         <div 
                             key={certificado.id}
                             className="group relative"
-                            onClick={() => abrirModal(certificado)}
                         >
                             {/* Glow effect */}
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-2xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                             
-                            <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 group-hover:border-blue-500/50 group-hover:scale-[1.02] group-hover:shadow-2xl h-full">
+                            <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 group-hover:border-blue-500/50 group-hover:scale-[1.02] group-hover:shadow-2xl h-full">
                                 
+                                {/* Badge destaque */}
+                                {certificado.destaque && (
+                                    <div className="absolute top-4 left-4 z-10">
+                                        <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                                            <i className="fas fa-star text-xs"></i>
+                                            Destaque
+                                        </span>
+                                    </div>
+                                )}
+
                                 {/* Certificate image */}
-                                <div className="relative h-48 overflow-hidden">
+                                <div className="relative h-44 overflow-hidden">
                                     <img 
                                         src={certificado.img} 
                                         alt={certificado.titulo}
@@ -325,25 +223,33 @@ export default function Certificados() {
                                     />
                                     
                                     {/* Overlay gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
+                                    
+                                   
                                 </div>
                                 
                                 {/* Certificate info */}
-                                <div className="p-6">
-                                    {/* Title */}
-                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300 line-clamp-2">
-                                        {certificado.titulo}
-                                    </h3>
+                                <div className="p-5">
+                                    {/* Title and level */}
+                                    <div className="mb-3">
+                                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300 line-clamp-2">
+                                            {certificado.titulo}
+                                        </h3>
+                                        
+                                    </div>
                                     
                                     {/* Description */}
-                                    <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                                    <p className="text-gray-400 text-sm mb-4 line-clamp-3">
                                         {certificado.descricao}
                                     </p>
                                     
-                                    {/* Click indicator */}
-                                    <div className="flex items-center text-xs text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <i className="fas fa-external-link-alt mr-1"></i>
-                                        <span>Clique para ver detalhes</span>
+                                    {/* Footer info */}
+                                    <div className="flex items-center justify-between pt-3 border-t border-gray-800/50">
+                                        <span className="text-xs text-gray-500">{certificado.data}</span>
+                                        <div className="flex items-center text-xs text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <i className="fas fa-certificate mr-1"></i>
+                                            <span>Certificado verificado</span>
+                                        </div>
                                     </div>
                                     
                                     {/* Hover effect line */}
@@ -370,7 +276,7 @@ export default function Certificados() {
                                 ) : (
                                     <>
                                         <i className="fas fa-chevron-down"></i>
-                                        Ver mais certificados
+                                        Ver mais certificados ({certificados.length - 3})
                                     </>
                                 )}
                             </span>
@@ -380,137 +286,19 @@ export default function Certificados() {
                         </button>
                     </div>
                 )}
-            </div>
 
-            {/* Modal - SEMPRE CENTRALIZADO NA TELA */}
-            {imagemModal && certificadoSelecionado && (
-                <div 
-                    ref={modalRef}
-                    className="fixed inset-0 z-[9999] p-4"
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                    onClick={(e) => {
-                        if (e.target === modalRef.current) {
-                            fecharModal();
-                        }
-                    }}
-                >
-                    {/* Overlay animado */}
-                    <div 
-                        className="absolute inset-0 bg-black/95 backdrop-blur-sm"
-                        style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            width: '100vw',
-                            height: '100vh'
-                        }}
-                    ></div>
-                    
-                    {/* Conteúdo do Modal - FIXO NO CENTRO */}
-                    <div 
-                        ref={modalContentRef}
-                        className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-gray-950"
-                        style={{
-                            position: 'fixed',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            zIndex: 10000
-                        }}
-                    >
-                        {/* Header do Modal */}
-                        <div className="relative p-6 border-b border-gray-800">
-                            {/* Botão fechar */}
-                            <button
-                                onClick={fecharModal}
-                                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-gray-800/80 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-white hover:bg-gray-700 hover:border-blue-500 transition-all duration-300 group"
-                            >
-                                <i className="fas fa-times text-lg group-hover:scale-110 transition-transform"></i>
-                            </button>
-                            
-                            {/* Título */}
-                            <div className="pr-12">
-                                <h3 className="text-2xl md:text-3xl font-bold text-white">
-                                    {certificadoSelecionado.titulo}
-                                </h3>
-                            </div>
-                        </div>
-                        
-                        {/* Conteúdo principal do modal */}
-                        <div className="p-6 overflow-y-auto max-h-[60vh]">
-                            <div className="grid md:grid-cols-2 gap-8">
-                                {/* Imagem do certificado */}
-                                <div className="relative group">
-                                    <div className="relative rounded-xl overflow-hidden border-2 border-gray-800">
-                                        <img 
-                                            src={imagemModal} 
-                                            alt={certificadoSelecionado.titulo}
-                                            className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
-                                        />
-                                    </div>
-                                </div>
-                                
-                                {/* Detalhes do certificado */}
-                                <div className="space-y-6">
-                                    {/* Descrição */}
-                                    <div>
-                                        <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                            <i className="fas fa-info-circle text-blue-400"></i>
-                                            Sobre o curso
-                                        </h4>
-                                        <p className="text-gray-300 leading-relaxed">
-                                            {certificadoSelecionado.descricao}
-                                        </p>
-                                    </div>
-                                    
-                                    {/* Habilidades aprendidas */}
-                                    <div>
-                                        <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                                            <i className="fas fa-check-circle text-blue-400"></i>
-                                            Habilidades Desenvolvidas
-                                        </h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {certificadoSelecionado.habilidades.map((habilidade, index) => (
-                                                <span 
-                                                    key={index}
-                                                    className="px-3 py-1.5 rounded-lg bg-gray-800/50 border border-gray-700 text-gray-300 text-sm hover:border-blue-500 hover:text-blue-400 transition-colors cursor-default"
-                                                >
-                                                    {habilidade}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        {/* Footer do modal */}
-                        <div className="p-6 border-t border-gray-800">
-                            <button
-                                onClick={fecharModal}
-                                className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold hover:from-blue-500 hover:to-cyan-400 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] flex items-center justify-center gap-2"
-                            >
-                                <i className="fas fa-check"></i>
-                                Fechar
-                            </button>
-                            <p className="text-center text-gray-500 text-sm mt-2">
-                                Pressione ESC para fechar
-                            </p>
-                        </div>
-                    </div>
+                {/* Stats note */}
+                <div className="text-center mt-10 pt-8 border-t border-gray-800/30">
+                    <p className="text-gray-500 text-sm flex items-center justify-center gap-2">
+                        <i className="fas fa-chart-line"></i>
+                        <span>{certificados.length} certificados • 245+ horas de aprendizado • 4 áreas de conhecimento</span>
+                    </p>
                 </div>
-            )}
+            </div>
+            
+            {/* Bottom decorative elements */}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
+            <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-gray-900 to-transparent" />
         </section>
     );
 }

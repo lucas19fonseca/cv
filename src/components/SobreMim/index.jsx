@@ -308,7 +308,6 @@ export default function SobreMim() {
                         
                         {/* Botão de contato - Centralizado e destacado */}
                         <div 
-                            ref={buttonRef}
                             className="mt-8 w-full max-w-xl"
                         >
                             <a 

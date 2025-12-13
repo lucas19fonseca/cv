@@ -120,27 +120,53 @@ export default function Experiencia() {
         <section 
             id="experiencia"
             ref={sectionRef}
-            className="py-16 md:py-24 relative min-h-[300px]"
+            className="py-16 md:py-24 relative min-h-[300px] overflow-hidden"
             style={{ 
                 opacity: 1,
                 willChange: 'transform, opacity'
             }}
         >
-            {/* Background - com opacidade inicial */}
-            <div className="absolute inset-0 bg-gray-50 dark:bg-gray-900 opacity-100" />
+            {/* Background effects - ORGANIZADOS CORRETAMENTE */}
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
             
+            {/* Grid pattern - similar ao da seção de projetos */}
+            <div className="absolute inset-0 opacity-5">
+                <div
+                    className="w-full h-full"
+                    style={{
+                        backgroundImage: `
+                            linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
+                            linear-gradient(180deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
+                        `,
+                        backgroundSize: "50px 50px",
+                    }}
+                />
+            </div>
+            
+            {/* Linha decorativa no topo */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
+            
+            {/* Linha decorativa na base */}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
+
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
                 {/* Section header - Minimalista */}
                 <div className="text-center mb-12">
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
-                        EXPERIÊNCIA
-                    </span>
+                    <div className="inline-flex items-center justify-center gap-3 mb-4">
+                        <div className="w-3 h-3 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full" />
+                        <span className="text-blue-400 font-mono text-sm tracking-widest">
+                            EXPERIÊNCIA
+                        </span>
+                    </div>
                     
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                        Trajetória <span className="text-blue-600 dark:text-blue-400">Profissional</span>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+                        Trajetória{" "}
+                        <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                            Profissional
+                        </span>
                     </h2>
                     
-                    <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    <p className="text-gray-400 mt-6 text-lg max-w-2xl mx-auto">
                         Desenvolvimento frontend combinado com inovação em inteligência artificial
                     </p>
                 </div>
@@ -153,39 +179,44 @@ export default function Experiencia() {
                             className="group relative"
                             style={{ opacity: 1 }}
                         >
-                            {/* Card */}
-                            <div className="relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-700">
+                            {/* Glow effect para hover */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                            
+                            {/* Card principal */}
+                            <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-6 transition-all duration-300 group-hover:border-blue-500/50 group-hover:scale-[1.02] group-hover:shadow-2xl">
                                 
                                 {/* Header com linha colorida */}
-                                <div className="flex items-start justify-between mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
+                                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6 pb-6 border-b border-gray-700">
                                     <div className="flex items-start gap-4">
                                         <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${exp.cor} flex items-center justify-center flex-shrink-0`}>
                                             <i className={`${exp.icone} text-white text-lg`}></i>
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                                            <h3 className="text-xl font-bold text-white mb-1">
                                                 {exp.cargo}
                                             </h3>
-                                            <p className="text-gray-700 dark:text-gray-300">{exp.empresa}</p>
+                                            <p className="text-gray-300">{exp.empresa}</p>
                                         </div>
                                     </div>
                                     
                                     {/* Period */}
                                     <div className="text-right">
-                                        <span className="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium">
+                                        <span className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-blue-900/30 to-cyan-900/30 text-blue-400 text-sm font-medium border border-blue-800/50">
                                             {exp.periodo}
                                         </span>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{exp.tipo} • {exp.local}</p>
+                                        <p className="text-sm text-gray-400 mt-2">
+                                            {exp.tipo} • {exp.local}
+                                        </p>
                                     </div>
                                 </div>
                                 
                                 {/* Description */}
-                                <div className="mb-6">
+                                <div className="mb-8">
                                     <ul className="space-y-3">
                                         {exp.descricao.map((item, i) => (
-                                            <li key={i} className="flex items-start gap-3 text-gray-600 dark:text-gray-300">
-                                                <i className="fas fa-check text-blue-500 dark:text-blue-400 mt-1 text-sm"></i>
-                                                <span>{item}</span>
+                                            <li key={i} className="flex items-start gap-3 text-gray-300">
+                                                <div className="w-2 h-2 mt-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex-shrink-0" />
+                                                <span className="text-gray-300">{item}</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -193,12 +224,16 @@ export default function Experiencia() {
                                 
                                 {/* Technologies */}
                                 <div>
-                                    <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">TECNOLOGIAS</h4>
+                                    <div className="mb-4">
+                                        <span className="text-xs text-gray-500 font-medium">
+                                            TECNOLOGIAS UTILIZADAS
+                                        </span>
+                                    </div>
                                     <div className="flex flex-wrap gap-2">
                                         {exp.tecnologias.map((tech, i) => (
                                             <span 
                                                 key={i}
-                                                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
+                                                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800/50 text-gray-300 border border-gray-700 hover:border-blue-500/50 transition-all duration-300"
                                             >
                                                 {tech}
                                             </span>
@@ -207,12 +242,15 @@ export default function Experiencia() {
                                 </div>
                                 
                                 {/* Hover effect line */}
-                                <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 group-hover:w-full transition-all duration-500 rounded-b-xl"></div>
+                                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 group-hover:w-full transition-all duration-500 rounded-b-xl" />
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
+            
+            {/* Fade out na base */}
+            <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-gray-900 to-transparent" />
         </section>
     );
 }
