@@ -18,7 +18,6 @@ export default function Certificados() {
     const [mostrarMais, setMostrarMais] = useState(false);
     const [imagemModal, setImagemModal] = useState(null);
     const [certificadoSelecionado, setCertificadoSelecionado] = useState(null);
-    const [modalEntrando, setModalEntrando] = useState(false);
     const sectionRef = useRef(null);
     const certificatesRef = useRef(null);
     const buttonRef = useRef(null);
@@ -105,11 +104,11 @@ export default function Certificados() {
                     ease: "power3.out",
                     scrollTrigger: {
                         trigger: sectionRef.current,
-                        start: "top 90%", // MAIS CEDO
+                        start: "top 90%",
                         end: "bottom 70%",
-                        toggleActions: "play none none none", // Só anima uma vez
+                        toggleActions: "play none none none",
                         markers: false,
-                        immediateRender: false, // IMPORTANTE: evita renderização prematura
+                        immediateRender: false,
                         onEnter: () => {
                             animationsInitialized.current = true;
                         }
@@ -128,11 +127,11 @@ export default function Certificados() {
                         y: 0,
                         opacity: 1,
                         duration: 0.6,
-                        stagger: 0.1, // Stagger mais rápido
+                        stagger: 0.1,
                         ease: "power2.out",
                         scrollTrigger: {
                             trigger: certificatesRef.current,
-                            start: "top 85%", // MAIS CEDO
+                            start: "top 85%",
                             end: "top 60%",
                             toggleActions: "play none none none",
                             immediateRender: false
@@ -157,7 +156,7 @@ export default function Certificados() {
                         ease: "power2.out",
                         scrollTrigger: {
                             trigger: buttonRef.current,
-                            start: "top 90%", // MAIS CEDO
+                            start: "top 90%",
                             end: "top 70%",
                             toggleActions: "play none none none",
                             immediateRender: false
@@ -183,20 +182,31 @@ export default function Certificados() {
     const abrirModal = (certificado) => {
         setCertificadoSelecionado(certificado);
         setImagemModal(certificado.img);
-        setModalEntrando(true);
+        
+        // Bloquear scroll do body quando modal abrir
+        const scrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+        document.body.style.overflow = 'hidden';
         
         // Animar entrada do modal
         setTimeout(() => {
             if (modalContentRef.current) {
                 gsap.fromTo(modalContentRef.current,
-                    { scale: 0.9, opacity: 0, y: 50 },
-                    { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.7)" }
+                    { 
+                        scale: 0.9, 
+                        opacity: 0
+                    },
+                    { 
+                        scale: 1, 
+                        opacity: 1, 
+                        duration: 0.5, 
+                        ease: "back.out(1.7)" 
+                    }
                 );
             }
         }, 10);
-        
-        // Bloquear scroll do body quando modal abrir
-        document.body.style.overflow = 'hidden';
     };
 
     const fecharModal = () => {
@@ -205,21 +215,32 @@ export default function Certificados() {
             gsap.to(modalContentRef.current, {
                 scale: 0.9,
                 opacity: 0,
-                y: 50,
                 duration: 0.3,
                 ease: "power2.in",
                 onComplete: () => {
-                    setModalEntrando(false);
+                    // Restaurar scroll
+                    const scrollY = document.body.style.top;
+                    document.body.style.position = '';
+                    document.body.style.top = '';
+                    document.body.style.width = '';
+                    document.body.style.overflow = '';
+                    window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                    
                     setImagemModal(null);
                     setCertificadoSelecionado(null);
-                    document.body.style.overflow = 'auto';
                 }
             });
         } else {
-            setModalEntrando(false);
+            // Restaurar scroll
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            
             setImagemModal(null);
             setCertificadoSelecionado(null);
-            document.body.style.overflow = 'auto';
         }
     };
 
@@ -361,11 +382,21 @@ export default function Certificados() {
                 )}
             </div>
 
-            {/* Modal */}
-            {(imagemModal || modalEntrando) && certificadoSelecionado && (
+            {/* Modal - SEMPRE CENTRALIZADO NA TELA */}
+            {imagemModal && certificadoSelecionado && (
                 <div 
                     ref={modalRef}
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                    className="fixed inset-0 z-[9999] p-4"
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
                     onClick={(e) => {
                         if (e.target === modalRef.current) {
                             fecharModal();
@@ -373,12 +404,30 @@ export default function Certificados() {
                     }}
                 >
                     {/* Overlay animado */}
-                    <div className="absolute inset-0 bg-black/95 backdrop-blur-sm"></div>
+                    <div 
+                        className="absolute inset-0 bg-black/95 backdrop-blur-sm"
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            width: '100vw',
+                            height: '100vh'
+                        }}
+                    ></div>
                     
-                    {/* Conteúdo do Modal */}
+                    {/* Conteúdo do Modal - FIXO NO CENTRO */}
                     <div 
                         ref={modalContentRef}
                         className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-gray-950"
+                        style={{
+                            position: 'fixed',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex: 10000
+                        }}
                     >
                         {/* Header do Modal */}
                         <div className="relative p-6 border-b border-gray-800">

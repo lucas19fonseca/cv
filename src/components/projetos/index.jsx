@@ -90,7 +90,7 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Tailclones",
@@ -103,7 +103,7 @@ export default function Projetos() {
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
                 { nome: "Vite", icone: <SiVite />, color: "text-purple-500" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Kubo",
@@ -116,7 +116,7 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
                 { nome: "Golang", icone: <DiGo />, color: "text-cyan-600" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Portfólio React",
@@ -130,7 +130,7 @@ export default function Projetos() {
                 { nome: "GSAP", icone: <FaJs />, color: "text-green-500" },
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
             ],
-            destaque: true,
+            destaque: false,
         },
         {
             nome: "Andrews shelf",
@@ -501,7 +501,6 @@ export default function Projetos() {
                 {hasMoreProjects && (
                     <div className="text-center mt-12">
                         <button
-                            ref={buttonRef}
                             onClick={() => setMostrarMais(!mostrarMais)}
                             className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
                         >
