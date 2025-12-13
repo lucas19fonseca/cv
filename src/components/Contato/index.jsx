@@ -1,19 +1,9 @@
 import { useRef, useState, useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import emailjs from "emailjs-com";
-
-// Registrar plugin GSAP
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-}
 
 export default function Contato() {
     const form = useRef();
     const sectionRef = useRef(null);
-    const formRef = useRef(null);
-    const infoRef = useRef(null);
-    const modalRef = useRef(null);
     
     const [modalAberto, setModalAberto] = useState(false);
     const [modalTipo, setModalTipo] = useState(""); // "sucesso" ou "erro"
@@ -48,95 +38,6 @@ export default function Contato() {
         { icon: "fab fa-instagram", label: "Instagram", url: "https://www.instagram.com/lucax.andrade_/", color: "from-pink-600 to-purple-600" },
         { icon: "fab fa-discord", label: "Discord", url: "https://discord.com/channels/@me", color: "from-indigo-600 to-blue-600" },
     ];
-
-    useEffect(() => {
-        // Forçar visibilidade inicial
-        if (sectionRef.current) {
-            gsap.set(sectionRef.current, { opacity: 1, visibility: "visible" });
-        }
-
-        const ctx = gsap.context(() => {
-            // Animação otimizada da seção - INÍCIO MAIS CEDO
-            gsap.fromTo(sectionRef.current,
-                {
-                    y: 40,
-                    opacity: 0
-                },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top 90%", // Início antecipado
-                        end: "bottom 70%",
-                        toggleActions: "play none none none", // Só anima uma vez
-                        markers: false,
-                        immediateRender: false // IMPORTANTE: evita renderização prematura
-                    }
-                }
-            );
-
-            // Animação dos elementos de info - MAIS RÁPIDA
-            if (infoRef.current) {
-                gsap.fromTo(infoRef.current.children,
-                    {
-                        y: 30,
-                        opacity: 0
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.6,
-                        stagger: 0.1, // Stagger mais rápido
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: infoRef.current,
-                            start: "top 85%",
-                            end: "top 60%",
-                            toggleActions: "play none none none",
-                            immediateRender: false
-                        }
-                    }
-                );
-            }
-
-            // Animação do formulário - SINCRONIZADA
-            if (formRef.current) {
-                gsap.fromTo(formRef.current,
-                    {
-                        y: 40,
-                        opacity: 0
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.7,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: formRef.current,
-                            start: "top 85%",
-                            end: "top 60%",
-                            toggleActions: "play none none none",
-                            immediateRender: false
-                        }
-                    }
-                );
-            }
-
-            // Atualizar ScrollTrigger para evitar bugs
-            setTimeout(() => {
-                ScrollTrigger.refresh();
-            }, 100);
-        });
-
-        return () => {
-            ctx.revert();
-            // Limpar triggers para evitar memory leaks
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        };
-    }, []);
 
     const validarEmail = (email) => {
         const dominiosFalsos = [
@@ -230,11 +131,6 @@ export default function Contato() {
             id="contato"
             ref={sectionRef}
             className="py-20 md:py-32 relative overflow-hidden min-h-[600px]"
-            style={{ 
-                opacity: 1,
-                willChange: 'transform, opacity',
-                visibility: 'visible'
-            }}
         >
             {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
@@ -270,7 +166,7 @@ export default function Contato() {
 
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
                     {/* Contact Info */}
-                    <div ref={infoRef} className="space-y-8">
+                    <div className="space-y-8">
                         <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8">
                             <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                 <i className="fas fa-info-circle text-blue-400"></i>
@@ -348,7 +244,7 @@ export default function Contato() {
                     </div>
 
                     {/* Contact Form */}
-                    <div ref={formRef}>
+                    <div>
                         <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8">
                             <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                                 <i className="fas fa-paper-plane text-blue-400"></i>
@@ -437,10 +333,9 @@ export default function Contato() {
             {/* Modal */}
             {modalAberto && (
                 <div 
-                    ref={modalRef}
                     className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
                     onClick={(e) => {
-                        if (e.target === modalRef.current) {
+                        if (e.target === e.currentTarget) {
                             fecharModal();
                         }
                     }}

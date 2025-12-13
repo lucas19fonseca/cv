@@ -1,6 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState, useRef } from "react";
 
 // Importar todas as imagens
 import shelf from "../../assets/projetos/Andrews.png";
@@ -33,17 +31,9 @@ import { SiTailwindcss, SiMongodb, SiVite } from "react-icons/si";
 import { DiGo } from "react-icons/di";
 import { TbBrandFramerMotion } from "react-icons/tb";
 
-// Registrar plugin GSAP
-if (typeof window !== "undefined") {
-    gsap.registerPlugin(ScrollTrigger);
-}
-
 export default function Projetos() {
     const [mostrarMais, setMostrarMais] = useState(false);
     const sectionRef = useRef(null);
-    const projectsRef = useRef(null);
-    const buttonRef = useRef(null);
-    const animationsInitialized = useRef(false);
 
     // Mapeamento de imagens locais
     const imagensLocais = {
@@ -309,74 +299,11 @@ export default function Projetos() {
         },
     ];
 
-    // Ordenar projetos: destacados primeiro
-    const projetosOrdenados = [...projetos].sort((a, b) => {
-        if (a.destaque && !b.destaque) return -1;
-        if (!a.destaque && b.destaque) return 1;
-        return 0;
-    });
-
     const projetosIniciais = 3;
-    const hasMoreProjects = projetosOrdenados.length > projetosIniciais;
+    const hasMoreProjects = projetos.length > projetosIniciais;
     const projetosParaMostrar = mostrarMais
-        ? projetosOrdenados
-        : projetosOrdenados.slice(0, projetosIniciais);
-
-    useEffect(() => {
-        if (typeof window === "undefined") return;
-
-        const ctx = gsap.context(() => {
-            if (sectionRef.current && !animationsInitialized.current) {
-                gsap.from(sectionRef.current, {
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top 80%",
-                        toggleActions: "play none none reverse",
-                    },
-                    y: 30,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: "power3.out",
-                });
-                animationsInitialized.current = true;
-            }
-
-            if (projectsRef.current) {
-                const children = Array.from(projectsRef.current.children);
-                if (children.length > 0) {
-                    gsap.from(children, {
-                        scrollTrigger: {
-                            trigger: projectsRef.current,
-                            start: "top 85%",
-                            toggleActions: "play none none reverse",
-                        },
-                        y: 30,
-                        opacity: 0,
-                        stagger: 0.1,
-                        duration: 0.6,
-                        ease: "power2.out",
-                    });
-                }
-            }
-
-            if (buttonRef.current && hasMoreProjects) {
-                gsap.from(buttonRef.current, {
-                    scrollTrigger: {
-                        trigger: buttonRef.current,
-                        start: "top 95%",
-                        end: "bottom 80%",
-                        toggleActions: "play none none reverse",
-                    },
-                    y: 20,
-                    opacity: 0,
-                    duration: 0.6,
-                    ease: "power2.out",
-                });
-            }
-        });
-
-        return () => ctx.revert();
-    }, [mostrarMais, hasMoreProjects]);
+        ? projetos
+        : projetos.slice(0, projetosIniciais);
 
     return (
         <section
@@ -426,10 +353,7 @@ export default function Projetos() {
                 </div>
 
                 {/* Projects grid */}
-                <div
-                    ref={projectsRef}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {projetosParaMostrar.map((projeto, index) => (
                         <div key={index} className="group relative">
                             {/* Glow effect */}
@@ -512,18 +436,9 @@ export default function Projetos() {
                                     {/* Project footer */}
                                     <div className="mt-6 pt-4 border-t border-gray-800/50">
                                         <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                {projeto.destaque ? (
-                                                    <span className="text-xs text-blue-400 flex items-center gap-1">
-                                                        <i className="fas fa-star text-yellow-500"></i>
-                                                        Projeto em destaque
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-xs text-gray-500">
-                                                        Disponível no GitHub
-                                                    </span>
-                                                )}
-                                            </div>
+                                            <span className="text-xs text-gray-500">
+                                                Disponível no GitHub
+                                            </span>
                                             <a
                                                 href={projeto.link}
                                                 target="_blank"
@@ -546,7 +461,7 @@ export default function Projetos() {
 
                 {/* Show more/less button */}
                 {hasMoreProjects && (
-                    <div ref={buttonRef} className="text-center mt-12">
+                    <div className="text-center mt-12">
                         <button
                             onClick={() => setMostrarMais(!mostrarMais)}
                             className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"

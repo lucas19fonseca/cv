@@ -1,6 +1,4 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
 import Html from "../../assets/tecnologias/html.png"
 import Css from "../../assets/tecnologias/css.png"
 import Java from "../../assets/tecnologias/Java.sc.png"
@@ -18,15 +16,8 @@ import Fire from "../../assets/tecnologias/Firebase.png"
 import Bi from "../../assets/tecnologias/Bi.svg"
 import Ubuntu from "../../assets/tecnologias/ubuntu.png"
 
-// Registrar plugin GSAP
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-}
-
 export default function Tecnologia() {
     const sectionRef = useRef(null);
-    const cardsRef = useRef(null);
-    const headerRef = useRef(null);
     
     const technologies = [
         // Frontend
@@ -63,65 +54,19 @@ export default function Tecnologia() {
         design: technologies.filter(t => t.category === "design"),
     };
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Animação suave para a seção - sem opacidade inicial
-            gsap.from(headerRef.current, {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                },
-                y: 20,
-                duration: 0.8,
-                ease: "power2.out"
-            });
-
-            // Animação dos cards - já visíveis, apenas animação de entrada
-            if (cardsRef.current) {
-                const cards = cardsRef.current.children;
-                
-                gsap.set(cards, {
-                    opacity: 1,
-                    y: 0
-                });
-                
-                gsap.from(cards, {
-                    scrollTrigger: {
-                        trigger: cardsRef.current,
-                        start: "top 90%",
-                        toggleActions: "play none none reverse"
-                    },
-                    y: 15,
-                    opacity: 1,
-                    stagger: 0.05,
-                    duration: 0.6,
-                    ease: "power2.out"
-                });
-            }
-        });
-
-        return () => ctx.revert();
-    }, []);
-
     return (
         <section 
             id="tecnologias"
             ref={sectionRef}
             className="py-20 md:py-32 relative overflow-hidden"
-            style={{ opacity: 1, visibility: 'visible' }}
         >
-            {/* Background effects - sempre visível */}
+            {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
             
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
-                {/* Section header - sempre visível */}
-                <div 
-                    ref={headerRef}
-                    className="text-center mb-12"
-                    style={{ opacity: 1 }}
-                >
+                {/* Section header */}
+                <div className="text-center mb-12">
                     <div className="inline-flex items-center justify-center gap-3 mb-4">
                         <div className="w-3 h-3 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full animate-pulse"></div>
                         <span className="text-blue-400 font-mono text-sm tracking-widest">TECH STACK</span>
@@ -136,14 +81,10 @@ export default function Tecnologia() {
                     </p>
                 </div>
 
-                {/* Category cards grid - sempre visível */}
-                <div 
-                    ref={cardsRef}
-                    className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-                    style={{ opacity: 1 }}
-                >
+                {/* Category cards grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Card Frontend */}
-                    <div className="group relative" style={{ opacity: 1 }}>
+                    <div className="group relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                         
                         <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-xl p-4 transition-all duration-300 group-hover:border-blue-500/50 group-hover:shadow-xl h-full">
@@ -164,7 +105,6 @@ export default function Tecnologia() {
                                     <div 
                                         key={index}
                                         className="group/tech relative"
-                                        style={{ opacity: 1 }}
                                     >
                                         <div className="relative bg-gray-900/40 border border-gray-700 rounded-lg p-3 transition-all duration-300 group-hover/tech:border-blue-500/50 group-hover/tech:scale-105 group-hover/tech:shadow-md">
                                             {/* Tech icon */}
@@ -192,7 +132,7 @@ export default function Tecnologia() {
                     </div>
 
                     {/* Card Backend */}
-                    <div className="group relative" style={{ opacity: 1 }}>
+                    <div className="group relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                         
                         <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-xl p-4 transition-all duration-300 group-hover:border-green-500/50 group-hover:shadow-xl h-full">
@@ -213,7 +153,6 @@ export default function Tecnologia() {
                                     <div 
                                         key={index}
                                         className="group/tech relative"
-                                        style={{ opacity: 1 }}
                                     >
                                         <div className="relative bg-gray-900/40 border border-gray-700 rounded-lg p-3 transition-all duration-300 group-hover/tech:border-green-500/50 group-hover/tech:scale-105 group-hover/tech:shadow-md">
                                             {/* Tech icon */}
@@ -241,7 +180,7 @@ export default function Tecnologia() {
                     </div>
 
                     {/* Card Tools & DevOps */}
-                    <div className="lg:col-span-1 group relative" style={{ opacity: 1 }}>
+                    <div className="lg:col-span-1 group relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                         
                         <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-xl p-4 transition-all duration-300 group-hover:border-orange-500/50 group-hover:shadow-xl h-full">
@@ -262,7 +201,6 @@ export default function Tecnologia() {
                                     <div 
                                         key={index}
                                         className="group/tech relative"
-                                        style={{ opacity: 1 }}
                                     >
                                         <div className="relative bg-gray-900/40 border border-gray-700 rounded-lg p-3 transition-all duration-300 group-hover/tech:border-orange-500/50 group-hover/tech:scale-105 group-hover/tech:shadow-md">
                                             {/* Tech icon */}
@@ -290,7 +228,7 @@ export default function Tecnologia() {
                     </div>
 
                     {/* Card Design */}
-                    <div className="lg:col-span-3 group relative" style={{ opacity: 1 }}>
+                    <div className="lg:col-span-3 group relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                         
                         <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-xl p-4 transition-all duration-300 group-hover:border-pink-500/50 group-hover:shadow-xl h-full">
@@ -311,7 +249,6 @@ export default function Tecnologia() {
                                     <div 
                                         key={index}
                                         className="group/tech relative"
-                                        style={{ opacity: 1 }}
                                     >
                                         <div className="relative bg-gray-900/40 border border-gray-700 rounded-lg p-3 transition-all duration-300 group-hover/tech:border-pink-500/50 group-hover/tech:scale-105 group-hover/tech:shadow-md">
                                             {/* Tech icon */}

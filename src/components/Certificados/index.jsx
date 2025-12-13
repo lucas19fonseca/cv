@@ -1,6 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState, useRef } from "react";
 import ReactCert from "../../assets/certificados/react-curso.png";
 import Py from "../../assets/certificados/py.jpeg";
 import Js from "../../assets/certificados/java.jpeg";
@@ -9,16 +7,9 @@ import Tw from "../../assets/certificados/curso-tw.jpg";
 import Linux from "../../assets/certificados/curso-linux.jpg";
 import Prompt from "../../assets/certificados/curso-prompt.png";
 
-// Registrar plugin GSAP
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-}
-
 export default function Certificados() {
     const [mostrarMais, setMostrarMais] = useState(false);
     const sectionRef = useRef(null);
-    const certificatesRef = useRef(null);
-    const buttonRef = useRef(null);
 
     const certificados = [
         { 
@@ -26,21 +17,18 @@ export default function Certificados() {
             img: ReactCert, 
             titulo: "React.js - Fundamentos",
             descricao: "Fundamentos do React.js incluindo componentes, hooks, state management e práticas modernas de desenvolvimento.",
-            destaque: false
         },
         { 
             id: 2,
             img: Py, 
             titulo: "Python Essentials",
             descricao: "Conceitos essenciais de Python, estruturas de dados, funções e desenvolvimento de scripts.",
-            destaque: false
         },
         { 
             id: 3,
             img: Git, 
             titulo: "Git & GitHub Mastery",
             descricao: "Controle de versão, branching strategies, GitHub Actions e workflows colaborativos.",
-            destaque: false
         },
         { 
             id: 4,
@@ -68,87 +56,7 @@ export default function Certificados() {
         }
     ];
 
-    // Ordenar: destaques primeiro
-    const certificadosOrdenados = [...certificados].sort((a, b) => {
-        if (a.destaque && !b.destaque) return -1;
-        if (!a.destaque && b.destaque) return 1;
-        return 0;
-    });
-
-    const certificadosParaMostrar = mostrarMais ? certificadosOrdenados : certificadosOrdenados.slice(0, 3);
-
-    useEffect(() => {
-        if (!sectionRef.current) return;
-
-        const ctx = gsap.context(() => {
-            // Animação da seção
-            gsap.fromTo(sectionRef.current,
-                {
-                    y: 40,
-                    opacity: 0
-                },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top 85%",
-                        toggleActions: "play none none none",
-                    }
-                }
-            );
-
-            // Animação dos cards
-            if (certificatesRef.current) {
-                gsap.fromTo(certificatesRef.current.children,
-                    {
-                        y: 30,
-                        opacity: 0,
-                        scale: 0.95
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        scale: 1,
-                        duration: 0.6,
-                        stagger: 0.08,
-                        ease: "back.out(1.2)",
-                        scrollTrigger: {
-                            trigger: certificatesRef.current,
-                            start: "top 80%",
-                            toggleActions: "play none none none",
-                        }
-                    }
-                );
-            }
-
-            // Animação do botão
-            if (buttonRef.current && certificados.length > 3) {
-                gsap.fromTo(buttonRef.current,
-                    {
-                        y: 20,
-                        opacity: 0
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.5,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: buttonRef.current,
-                            start: "top 90%",
-                            toggleActions: "play none none none",
-                        }
-                    }
-                );
-            }
-
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, [mostrarMais, certificados.length]);
+    const certificadosParaMostrar = mostrarMais ? certificados : certificados.slice(0, 3);
 
     return (
         <section 
@@ -189,10 +97,7 @@ export default function Certificados() {
                 </div>
 
                 {/* Certificates grid */}
-                <div 
-                    ref={certificatesRef}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {certificadosParaMostrar.map((certificado) => (
                         <div 
                             key={certificado.id}
@@ -203,16 +108,6 @@ export default function Certificados() {
                             
                             <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 group-hover:border-blue-500/50 group-hover:scale-[1.02] group-hover:shadow-2xl h-full">
                                 
-                                {/* Badge destaque */}
-                                {certificado.destaque && (
-                                    <div className="absolute top-4 left-4 z-10">
-                                        <span className="px-3 py-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
-                                            <i className="fas fa-star text-xs"></i>
-                                            Destaque
-                                        </span>
-                                    </div>
-                                )}
-
                                 {/* Certificate image */}
                                 <div className="relative h-44 overflow-hidden">
                                     <img 
@@ -224,18 +119,15 @@ export default function Certificados() {
                                     
                                     {/* Overlay gradient */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-                                    
-                                   
                                 </div>
                                 
                                 {/* Certificate info */}
                                 <div className="p-5">
-                                    {/* Title and level */}
+                                    {/* Title */}
                                     <div className="mb-3">
                                         <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300 line-clamp-2">
                                             {certificado.titulo}
                                         </h3>
-                                        
                                     </div>
                                     
                                     {/* Description */}
@@ -245,7 +137,6 @@ export default function Certificados() {
                                     
                                     {/* Footer info */}
                                     <div className="flex items-center justify-between pt-3 border-t border-gray-800/50">
-                                        <span className="text-xs text-gray-500">{certificado.data}</span>
                                         <div className="flex items-center text-xs text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                             <i className="fas fa-certificate mr-1"></i>
                                             <span>Certificado verificado</span>
@@ -262,7 +153,7 @@ export default function Certificados() {
 
                 {/* Show more/less button */}
                 {certificados.length > 3 && (
-                    <div className="text-center mt-12" ref={buttonRef}>
+                    <div className="text-center mt-12">
                         <button
                             onClick={() => setMostrarMais(!mostrarMais)}
                             className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"

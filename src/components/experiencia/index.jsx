@@ -1,15 +1,7 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-// Registrar plugin GSAP
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-}
+import { useRef } from "react";
 
 export default function Experiencia() {
     const sectionRef = useRef(null);
-    const cardsRef = useRef(null);
 
     const experiencias = [
         {
@@ -51,82 +43,13 @@ export default function Experiencia() {
         }
     ];
 
-    useEffect(() => {
-        // Forçar pré-renderização para evitar flash branco
-        if (sectionRef.current) {
-            gsap.set(sectionRef.current, { opacity: 1, visibility: "visible" });
-        }
-
-        const ctx = gsap.context(() => {
-            // Animação da seção inteira - INÍCIO ANTECIPADO
-            gsap.fromTo(sectionRef.current,
-                {
-                    y: 30,
-                    opacity: 0
-                },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.7,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top 95%", // Começa mais cedo
-                        end: "bottom 80%",
-                        toggleActions: "play none none none", // Só anima uma vez
-                        markers: false,
-                        immediateRender: false // Evita renderização prematura
-                    }
-                }
-            );
-
-            // Animação dos cards - MAIS RÁPIDA
-            if (cardsRef.current) {
-                gsap.fromTo(cardsRef.current.children,
-                    {
-                        y: 25,
-                        opacity: 0
-                    },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.6,
-                        stagger: 0.1, // Stagger mais rápido
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: cardsRef.current,
-                            start: "top 90%",
-                            end: "top 60%",
-                            toggleActions: "play none none none",
-                            immediateRender: false
-                        }
-                    }
-                );
-            }
-
-            // Forçar atualização do ScrollTrigger
-            setTimeout(() => {
-                ScrollTrigger.refresh();
-            }, 100);
-        });
-
-        return () => {
-            ctx.revert();
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        };
-    }, []);
-
     return (
         <section 
             id="experiencia"
             ref={sectionRef}
             className="py-16 md:py-24 relative min-h-[300px] overflow-hidden"
-            style={{ 
-                opacity: 1,
-                willChange: 'transform, opacity'
-            }}
         >
-            {/* Background effects - ORGANIZADOS CORRETAMENTE */}
+            {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
             
             {/* Grid pattern - similar ao da seção de projetos */}
@@ -172,12 +95,11 @@ export default function Experiencia() {
                 </div>
 
                 {/* Experience cards - Layout simples */}
-                <div ref={cardsRef} className="max-w-4xl mx-auto space-y-8">
+                <div className="max-w-4xl mx-auto space-y-8">
                     {experiencias.map((exp) => (
                         <div 
                             key={exp.id}
                             className="group relative"
-                            style={{ opacity: 1 }}
                         >
                             {/* Glow effect para hover */}
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
