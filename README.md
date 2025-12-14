@@ -27,4 +27,5 @@ Nele você encontrará:
 - **CSS3**
 - **Vite** (ambiente de desenvolvimento)
 - **Vercel** (deploy)
+- Gsap(biblioteca js pra animar sites)
 
