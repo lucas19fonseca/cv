@@ -16,6 +16,7 @@ import Plix from "../../assets/projetos/plix.png";
 import Spider from "../../assets/projetos/spider.png";
 import Lucas from "../../assets/projetos/lucas.png";
 import VemComigo from "../../assets/projetos/vem-comigo.png";
+import Governo from "../../assets/projetos/governo.png";
 
 import {
     FaReact,
@@ -52,6 +53,7 @@ export default function Projetos() {
         "PlixGames": Plix,
         "Portfólio React": Lucas,
         "Vem Comigo": VemComigo,
+        "Guia Prático de Prompt - Governo": Governo,
     };
 
     // Links dos sites para cada projeto
@@ -71,6 +73,7 @@ export default function Projetos() {
         "Eixo": "https://eixo.vercel.app/",
         "Spiderverse": "https://lucas19fonseca.github.io/spiderverse-bootstrap/",
         "Folha de Ponto": "https://lucas19fonseca.github.io/ponto-eletronico/",
+        "Guia Prático de Prompt - Governo": "https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/publicacoes/guia-pratico-de-prompt-e-pesquisa-com-ia-para-servidores-publicos/",
     };
 
     // Função para obter imagem - prioriza local, depois GitHub
@@ -127,6 +130,20 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
                 { nome: "Golang", icone: <DiGo />, color: "text-cyan-600" },
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
+            ],
+            destaque: true,
+        },
+        {
+            nome: "Guia Prático de Prompt - Governo",
+            img: getImagemProjeto("Guia Prático de Prompt - Governo", "guia-prompt-governo"),
+            link: "https://github.com/lucas19fonseca/guia-prompt-governo",
+            site: getSiteLink("Guia Prático de Prompt - Governo"),
+            descricao: "Guia prático desenvolvido para o governo brasileiro usando Plone framework, HTML e CSS para auxiliar servidores públicos no uso de LLMs.",
+            tecnologias: [
+                { nome: "Plone", icone: <FaPython />, color: "text-blue-400" },
+                { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
+                { nome: "CSS", icone: <FaCss3Alt />, color: "text-blue-500" },
+                { nome: "JavaScript", icone: <FaJs />, color: "text-yellow-400" },
             ],
             destaque: true,
         },

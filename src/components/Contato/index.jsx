@@ -152,7 +152,7 @@ export default function Contato() {
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center gap-3 mb-4">
                         <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full"></div>
-                        <span className="text-blue-400 font-mono text-sm tracking-widest">CONTACT</span>
+                        <span className="text-blue-400 font-mono text-sm tracking-widest">CONTATO</span>
                     </div>
                     
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">

@@ -515,7 +515,11 @@ export default function SobreMim() {
                         </div>
 
                         {/* Conteúdo do Modal */}
-                        <div className="p-6 max-h-[70vh] overflow-y-auto bg-white">            
+                        <div className="p-6 max-h-[70vh] overflow-y-auto bg-white">
+                            <p className="text-gray-600 mb-6 text-center text-lg">
+                                Certificados e cursos concluídos na minha jornada de aprendizado
+                            </p>
+                            
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {certificados.map((cert) => (
                                     <div 
@@ -561,7 +565,7 @@ export default function SobreMim() {
                                                     // Se não tiver link válido, mostra a imagem ampliada
                                                     <button
                                                         onClick={() => mostrarImagemAmpliada(cert.img)}
-                                                        className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium rounded-xl hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-400/30 transition-all duration-300"
+                                                        className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-xl hover:from-purple-500 hover:to-blue-500 hover:shadow-lg hover:shadow-purple-400/30 transition-all duration-300"
                                                     >
                                                         <i className="fas fa-expand-alt"></i>
                                                         Visualizar Certificado
@@ -577,6 +581,11 @@ export default function SobreMim() {
                         {/* Footer do Modal */}
                         <div className="p-4 border-t border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-blue-700 text-sm">
+                                <div className="flex items-center gap-2">
+                                    <i className="fas fa-info-circle"></i>
+                                    <p>Total de {certificados.length} certificados obtidos</p>
+                                </div>
+                                <span className="hidden sm:block mx-4 text-blue-300">•</span>
                                 <div className="flex items-center gap-2 text-cyan-600">
                                     <i className="fas fa-mouse-pointer"></i>
                                     <p>Clique na imagem para ampliar</p>
@@ -616,6 +625,30 @@ export default function SobreMim() {
                                     alt="Certificado ampliado"
                                     className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
                                 />
+                            </div>
+                            
+                            <div className="mt-4 flex justify-center gap-4">
+                                <button
+                                    onClick={fecharImagemAmpliada}
+                                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium rounded-lg hover:from-blue-500 hover:to-cyan-400 transition-all duration-300 shadow-md shadow-blue-400/30"
+                                >
+                                    <i className="fas fa-times mr-2"></i>
+                                    Fechar
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        const link = document.createElement('a');
+                                        link.href = imagemAmpliada;
+                                        link.download = `certificado-${new Date().getTime()}.jpg`;
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    }}
+                                    className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-500 text-white font-medium rounded-lg hover:from-green-500 hover:to-emerald-400 transition-all duration-300 shadow-md shadow-green-400/30"
+                                >
+                                    <i className="fas fa-download mr-2"></i>
+                                    Baixar
+                                </button>
                             </div>
                         </div>
                     </div>
