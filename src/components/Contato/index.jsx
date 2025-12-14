@@ -246,7 +246,7 @@ export default function Contato() {
                     {/* Contact Form */}
                     <div>
                         <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl p-8">
-                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <h3 className="text-2xl font-bold text-white mb-10 flex items-center gap-3">
                                 <i className="fas fa-paper-plane text-blue-400"></i>
                                 Envie uma Mensagem
                             </h3>
@@ -266,7 +266,7 @@ export default function Contato() {
                                         type="text"
                                         name="name"
                                         placeholder="Como posso te chamar?"
-                                        className="w-full bg-gray-800/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+                                        className="w-full bg-gray-800/50 border border-gray-700 rounded-xl px-4 py-5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
                                         required
                                     />
                                 </div>
@@ -281,7 +281,7 @@ export default function Contato() {
                                         type="email"
                                         name="email"
                                         placeholder="seu@email.com"
-                                        className="w-full bg-gray-800/50 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+                                        className="w-full bg-gray-800/50 border border-gray-700 rounded-xl px-4 py-5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
                                         required
                                     />
                                 </div>

@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import { gsap } from 'gsap';
 import './index.css'
 import SobreMim from "./components/SobreMim/index";
 import Tecnologia from "./components/Tecnologias/index";

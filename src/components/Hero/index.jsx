@@ -4,15 +4,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FotoLucas from "../../assets/comum/lucas.jpg";
 import curriculo from "../../assets/comum/Lucas_Andrade_web_junior.pdf";
 
-// Registrar plugin GSAP
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-}
-
 export default function HomeHero() {
     const heroRef = useRef(null);
     const headerRef = useRef(null);
     const titleContainerRef = useRef(null);
+    const subtitleContainerRef = useRef(null); // REF ADICIONADA para o subtítulo
     const imageRef = useRef(null);
     const socialRef = useRef(null);
     const btnRef = useRef(null);
@@ -62,6 +58,13 @@ export default function HomeHero() {
         { id: 'experiencia', label: 'Experiência' },
         { id: 'contato', label: 'Contato' }
     ];
+
+    // Registrar GSAP apenas no client-side
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
+    }, []);
 
     // Animação do hamburguer para X - VERSÃO CORRIGIDA
     useEffect(() => {
@@ -269,8 +272,19 @@ export default function HomeHero() {
             });
         };
 
-        // Animação de entrada inicial
+        // Animação de entrada inicial - VERSÃO SIMPLIFICADA E CORRIGIDA
         const ctx = gsap.context(() => {
+            // Forçar visibilidade inicial dos elementos principais
+            if (titleContainerRef.current) {
+                gsap.set(titleContainerRef.current, { opacity: 1, visibility: "visible" });
+            }
+            if (subtitleContainerRef.current) {
+                gsap.set(subtitleContainerRef.current, { opacity: 1, visibility: "visible" });
+            }
+            if (imageRef.current) {
+                gsap.set(imageRef.current, { opacity: 1, visibility: "visible" });
+            }
+
             // Animação de entrada do header (suave e elegante)
             if (headerRef.current) {
                 gsap.fromTo(headerRef.current,
@@ -327,10 +341,35 @@ export default function HomeHero() {
                 }
             }
 
-            // Animação principal usando timeline
-            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+            // Animação principal usando timeline - VERSÃO SIMPLIFICADA
+            const tl = gsap.timeline({ 
+                defaults: { 
+                    ease: "power3.out",
+                    opacity: 0 
+                } 
+            });
 
-            // Foto com efeito especial
+            // Título principal - ANIMAÇÃO SIMPLIFICADA
+            if (titleContainerRef.current) {
+                tl.from(titleContainerRef.current, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power3.out"
+                }, 0.3);
+            }
+
+            // Subtítulo (descrição)
+            if (subtitleContainerRef.current) {
+                tl.from(subtitleContainerRef.current, {
+                    y: 20,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power3.out"
+                }, 0.5);
+            }
+
+            // Foto com efeito especial - ANIMAÇÃO GARANTIDA
             if (imageRef.current) {
                 const imgElement = imageRef.current.querySelector('img');
                 tl.from(imageRef.current, {
@@ -338,7 +377,7 @@ export default function HomeHero() {
                     opacity: 0,
                     duration: 1.2,
                     rotateY: -30
-                }, 0);
+                }, 0.4);
                 
                 if (imgElement) {
                     tl.from(imgElement, {
@@ -346,18 +385,8 @@ export default function HomeHero() {
                         duration: 1.5,
                         filter: "blur(10px)",
                         ease: "power4.out"
-                    }, 0.2);
+                    }, 0.6);
                 }
-            }
-
-            // Animação do título
-            if (titleContainerRef.current) {
-                tl.from(titleContainerRef.current, {
-                    opacity: 0,
-                    y: 20,
-                    duration: 0.8,
-                    ease: "power3.out"
-                }, 0.5);
             }
 
             // Ícones sociais
@@ -390,6 +419,11 @@ export default function HomeHero() {
                     ease: "power2.out"
                 }, 0.5);
             }
+
+            // Forçar atualização após um breve delay
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 100);
         });
 
         // Adicionar listeners
@@ -595,8 +629,12 @@ export default function HomeHero() {
                         
                         {/* Conteúdo de texto (esquerda) */}
                         <div className="w-full lg:w-1/2 text-center lg:text-left order-2 lg:order-1">
-                            {/* Nome */}
-                            <div ref={titleContainerRef} className="mb-6 lg:mb-8">
+                            {/* Nome - COM ESTILO INICIAL VISÍVEL */}
+                            <div 
+                                ref={titleContainerRef} 
+                                className="mb-6 lg:mb-8"
+                                style={{ opacity: 1, visibility: 'visible' }}
+                            >
                                 <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
                                     Olá! Eu sou o <br className="hidden sm:block" />
                                     <span className="font-black bg-gradient-to-r from-[#0969CC] via-cyan-400 to-[#0969CC] bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient">
@@ -605,10 +643,12 @@ export default function HomeHero() {
                                 </h1>
                             </div>
 
-                            {/* Descrição */}
+                            {/* Descrição - COM REF SEPARADA E ESTILO INICIAL */}
                             <div
-                            ref={titleContainerRef} 
-                            className="mb-6 lg:mb-8">
+                                ref={subtitleContainerRef} 
+                                className="mb-6 lg:mb-8"
+                                style={{ opacity: 1, visibility: 'visible' }}
+                            >
                                 <p className="text-white/90 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
                                     Desenvolvedor Full Stack & Estudante de{" "}
                                     <span className="text-[#0969CC] font-semibold relative">
@@ -655,8 +695,12 @@ export default function HomeHero() {
                             </div>
                         </div>
 
-                        {/* Foto (direita) */}
-                        <div ref={imageRef} className="w-full lg:w-1/2 order-1 lg:order-2 mb-8 lg:mb-0 flex justify-center relative">
+                        {/* Foto (direita) - COM ESTILO INICIAL VISÍVEL */}
+                        <div 
+                            ref={imageRef} 
+                            className="w-full lg:w-1/2 order-1 lg:order-2 mb-8 lg:mb-0 flex justify-center relative"
+                            style={{ opacity: 1, visibility: 'visible' }}
+                        >
                             <div className="relative">
                                 <div className="absolute -inset-3 sm:-inset-4 lg:-inset-5 bg-gradient-to-r from-[#0969CC] to-cyan-500 rounded-full opacity-20 blur-xl animate-pulse" />
                                 

@@ -12,96 +12,65 @@ import Tw from "../../assets/certificados/curso-tw.jpg";
 import Linux from "../../assets/certificados/curso-linux.jpg";
 import Prompt from "../../assets/certificados/curso-prompt.png";
 
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-}
-
 export default function SobreMim() {
     const [idade, setIdade] = useState(null);
     const [modalAberto, setModalAberto] = useState(false);
+    const [imagemAmpliada, setImagemAmpliada] = useState(null);
     const sectionRef = useRef(null);
     const imageRef = useRef(null);
     const textRef = useRef(null);
     const buttonRef = useRef(null);
     const particlesRef = useRef(null);
 
-    // Array de certificados
+    // Array de certificados SIMPLIFICADO
     const certificados = [
         { 
             id: 1,
             img: ReactCert,
-            titulo: "React.js - Fundamentos",
+            titulo: "React.js",
             descricao: "Fundamentos do React.js incluindo componentes, hooks, state management e práticas modernas de desenvolvimento.",
-            instituicao: "Udemy",
-            data: "Dez 2023",
-            horas: "40h",
-            skills: ["React", "Hooks", "State Management"],
             link: "#"
         },
         { 
             id: 2,
             img: Py,
-            titulo: "Python Essentials",
+            titulo: "Python",
             descricao: "Conceitos essenciais de Python, estruturas de dados, funções e desenvolvimento de scripts.",
-            instituicao: "Coursera",
-            data: "Nov 2023",
-            horas: "35h",
-            skills: ["Python", "Data Structures", "Functions"],
             link: "#"
         },
         { 
             id: 3,
             img: Git,
-            titulo: "Git & GitHub Mastery",
+            titulo: "Git & GitHub",
             descricao: "Controle de versão, branching strategies, GitHub Actions e workflows colaborativos.",
-            instituicao: "LinkedIn Learning",
-            data: "Out 2023",
-            horas: "25h",
-            skills: ["Git", "GitHub", "Version Control"],
             link: "#"
         },
         { 
             id: 4,
             img: Js,
-            titulo: "JavaScript Moderno",
+            titulo: "JavaScript",
             descricao: "ES6+, promises, async/await, manipulação de DOM e padrões modernos de JavaScript.",
-            instituicao: "Udemy",
-            data: "Set 2023",
-            horas: "45h",
-            skills: ["JavaScript", "ES6+", "Async/Await"],
             link: "#"
         },
         { 
             id: 5,
             img: Tw,
-            titulo: "Tailwind CSS Pro",
+            titulo: "Tailwind CSS",
             descricao: "Framework CSS utility-first, design responsivo e componentes reutilizáveis.",
-            instituicao: "Frontend Masters",
-            data: "Ago 2023",
-            horas: "20h",
-            skills: ["Tailwind", "CSS", "Responsive Design"],
-            link: "#"
+            link: "https://www.udemy.com/certificate/UC-6cc09705-d9e3-4474-a7d6-9b08832f01a1/"
         },
         { 
             id: 6,
             img: Linux,
-            titulo: "Linux Administration",
+            titulo: "Linux",
             descricao: "Administração de sistemas Linux, shell scripting e configuração de servidores.",
-            instituicao: "Linux Foundation",
-            data: "Jul 2023",
-            horas: "50h",
-            skills: ["Linux", "Shell Scripting", "Server Management"],
-            link: "#"
+            link: "https://www.udemy.com/certificate/UC-6403bf3c-dab4-4f7a-9151-62f64872cba0/"
         },
         { 
             id: 7,
             img: Prompt,
-            titulo: "AI & Prompt Engineering",
+            titulo: "Prompt Engineering",
             descricao: "Engenharia de prompts, utilização de IA generativa e ferramentas de produtividade.",
-            instituicao: "OpenAI",
-            data: "Jun 2023",
-            horas: "30h",
-            skills: ["AI", "Prompt Engineering", "GPT"],
             link: "#"
         }
     ];
@@ -126,12 +95,28 @@ export default function SobreMim() {
 
     const fecharModal = () => {
         setModalAberto(false);
+        setImagemAmpliada(null);
         document.body.style.overflow = 'auto';
+    };
+
+    const mostrarImagemAmpliada = (imgSrc) => {
+        setImagemAmpliada(imgSrc);
+    };
+
+    const fecharImagemAmpliada = () => {
+        setImagemAmpliada(null);
     };
 
     useEffect(() => {
         const idadeCalculada = calcularIdade("2004-07-19");
         setIdade(idadeCalculada);
+    }, []);
+
+    // Registrar GSAP apenas no client-side
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
     }, []);
 
     // Criar partículas para o fundo
@@ -174,13 +159,16 @@ export default function SobreMim() {
     }, []);
 
     useEffect(() => {
+        // Verificar se estamos no client-side
+        if (typeof window === 'undefined') return;
+
         // Forçar visibilidade inicial
         if (sectionRef.current) {
             gsap.set(sectionRef.current, { opacity: 1, visibility: "visible" });
         }
 
         const ctx = gsap.context(() => {
-            // Animação da seção - OTIMIZADA
+            // Animação da seção
             gsap.fromTo(sectionRef.current,
                 {
                     y: 40,
@@ -241,32 +229,6 @@ export default function SobreMim() {
                             trigger: textRef.current,
                             start: "top 85%",
                             end: "top 60%",
-                            toggleActions: "play none none none",
-                            immediateRender: false
-                        }
-                    }
-                );
-            }
-
-            // Animação do botão
-            if (buttonRef.current) {
-                gsap.fromTo(buttonRef.current,
-                    {
-                        scale: 0.9,
-                        opacity: 0,
-                        y: 20
-                    },
-                    {
-                        scale: 1,
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.5,
-                        delay: 0.1,
-                        ease: "back.out(1.5)",
-                        scrollTrigger: {
-                            trigger: buttonRef.current,
-                            start: "top 90%",
-                            end: "top 70%",
                             toggleActions: "play none none none",
                             immediateRender: false
                         }
@@ -528,7 +490,7 @@ export default function SobreMim() {
                 `}</style>
             </section>
 
-            {/* Modal de Certificados - APENAS CORES ALTERADAS */}
+            {/* Modal de Certificados - COR ORIGINAL (AZUL CLARO) */}
             {modalAberto && (
                 <div 
                     className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
@@ -540,73 +502,71 @@ export default function SobreMim() {
                     >
                         {/* Header do Modal */}
                         <div className="flex items-center justify-between p-6 border-b border-blue-200 bg-gradient-to-r from-blue-100 to-cyan-100">
-                            <h2 className="text-2xl font-bold text-blue-800">Certificados</h2>
+                            <div className="flex items-center gap-3">
+                                <i className="fas fa-certificate text-blue-600 text-xl"></i>
+                                <h2 className="text-2xl font-bold text-blue-800">Meus Certificados</h2>
+                            </div>
                             <button
                                 onClick={fecharModal}
-                                className="p-2 rounded-lg hover:bg-blue-200 transition-colors"
+                                className="p-3 rounded-full hover:bg-blue-200 transition-colors"
                             >
                                 <i className="fas fa-times text-blue-600 text-xl"></i>
                             </button>
                         </div>
 
                         {/* Conteúdo do Modal */}
-                        <div className="p-6 max-h-[70vh] overflow-y-auto bg-white">
-                            <div className="space-y-6">
+                        <div className="p-6 max-h-[70vh] overflow-y-auto bg-white">            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {certificados.map((cert) => (
                                     <div 
                                         key={cert.id}
-                                        className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-200 hover:border-blue-400 transition-all duration-300 shadow-lg"
+                                        className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-5 border border-blue-200 hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-200/50"
                                     >
-                                        <div className="flex flex-col md:flex-row gap-6">
-                                            {/* Thumbnail do Certificado */}
-                                            <div className="md:w-48 h-32 flex-shrink-0">
-                                                <img 
-                                                    src={cert.img} 
-                                                    alt={cert.titulo}
-                                                    className="w-full h-full object-cover rounded-xl border border-blue-100"
-                                                />
-                                            </div>
+                                        {/* Thumbnail do Certificado - Clique para ampliar */}
+                                        <div 
+                                            className="h-48 mb-4 overflow-hidden rounded-xl border border-blue-100 cursor-pointer hover:border-blue-300 transition-all duration-300"
+                                            onClick={() => mostrarImagemAmpliada(cert.img)}
+                                        >
+                                            <img 
+                                                src={cert.img} 
+                                                alt={cert.titulo}
+                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                            />
+                                        </div>
 
-                                            {/* Informações do Certificado */}
-                                            <div className="flex-1 space-y-3">
-                                                <h3 className="text-xl font-bold text-blue-800">
-                                                    {cert.titulo}
-                                                </h3>
-                                                
-                                                <p className="text-blue-700 text-sm">
-                                                    <i className="fas fa-university mr-2 text-blue-500"></i>
-                                                    {cert.instituicao}
-                                                </p>
-                                                
-                                                <p className="text-blue-600 text-sm">
-                                                    <i className="fas fa-calendar mr-2 text-cyan-500"></i>
-                                                    {cert.data}
-                                                </p>
+                                        {/* Informações do Certificado */}
+                                        <div className="space-y-3">
+                                            <h3 className="text-lg font-bold text-blue-800">
+                                                {cert.titulo}
+                                            </h3>
+                                            
+                                            <p className="text-gray-600 text-sm">
+                                                {cert.descricao}
+                                            </p>
 
-                                                {/* Skills */}
-                                                <div className="flex flex-wrap gap-2 mt-3">
-                                                    {cert.skills.map((skill, index) => (
-                                                        <span 
-                                                            key={index}
-                                                            className="px-3 py-1 bg-gradient-to-r from-blue-200 to-cyan-200 text-blue-800 text-xs font-medium rounded-full border border-blue-300"
-                                                        >
-                                                            {skill}
-                                                        </span>
-                                                    ))}
-                                                </div>
-
-                                                {/* Botão Ver Certificado */}
-                                                <div className="pt-3">
+                                            {/* Botão Ver Certificado - Comportamento diferente para links válidos */}
+                                            <div className="pt-2">
+                                                {cert.link !== "#" ? (
+                                                    // Se tiver link válido, abre em nova aba
                                                     <a
                                                         href={cert.link}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-sm font-medium rounded-full hover:shadow-lg hover:shadow-blue-400/30 transition-all duration-300"
+                                                        className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium rounded-xl hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-400/30 transition-all duration-300"
                                                     >
-                                                        Ver Certificado
-                                                        <i className="fas fa-arrow-right"></i>
+                                                        <i className="fas fa-external-link-alt"></i>
+                                                        Ver Certificado Completo
                                                     </a>
-                                                </div>
+                                                ) : (
+                                                    // Se não tiver link válido, mostra a imagem ampliada
+                                                    <button
+                                                        onClick={() => mostrarImagemAmpliada(cert.img)}
+                                                        className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium rounded-xl hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-400/30 transition-all duration-300"
+                                                    >
+                                                        <i className="fas fa-expand-alt"></i>
+                                                        Visualizar Certificado
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -615,9 +575,47 @@ export default function SobreMim() {
                         </div>
 
                         {/* Footer do Modal */}
-                        <div className="p-4 border-t border-blue-200 bg-blue-50">
-                            <div className="text-center text-blue-600 text-sm">
-                                {certificados.length} certificados encontrados
+                        <div className="p-4 border-t border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-blue-700 text-sm">
+                                <div className="flex items-center gap-2 text-cyan-600">
+                                    <i className="fas fa-mouse-pointer"></i>
+                                    <p>Clique na imagem para ampliar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Imagem Ampliada */}
+            {imagemAmpliada && (
+                <div 
+                    className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
+                    onClick={fecharImagemAmpliada}
+                >
+                    <div 
+                        className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-white to-blue-50 rounded-2xl overflow-hidden shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-100 to-cyan-100 border-b border-blue-200">
+                            <h3 className="text-lg font-semibold text-blue-800">
+                                Certificado Ampliado
+                            </h3>
+                            <button
+                                onClick={fecharImagemAmpliada}
+                                className="p-2 rounded-full hover:bg-blue-200 transition-colors"
+                            >
+                                <i className="fas fa-times text-blue-600 text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div className="p-4 bg-white">
+                            <div className="relative w-full h-[70vh] flex items-center justify-center bg-gray-50 rounded-lg">
+                                <img 
+                                    src={imagemAmpliada} 
+                                    alt="Certificado ampliado"
+                                    className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
+                                />
                             </div>
                         </div>
                     </div>
