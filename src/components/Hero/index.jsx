@@ -60,7 +60,6 @@ export default function HomeHero() {
         { id: 'tecnologias', label: 'Tecnologias ' },
         { id: 'projetos', label: 'Projetos' },
         { id: 'experiencia', label: 'Experiência' },
-        { id: 'certificados', label: 'Certificados' },
         { id: 'contato', label: 'Contato' }
     ];
 
@@ -426,7 +425,6 @@ export default function HomeHero() {
             case 'tecnologias': return 'fa-code';
             case 'projetos': return 'fa-folder';
             case 'experiencia': return 'fa-briefcase';
-            case 'certificados': return 'fa-certificate';
             case 'contato': return 'fa-envelope';
             default: return 'fa-circle';
         }
