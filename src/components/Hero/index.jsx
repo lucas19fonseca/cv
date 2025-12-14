@@ -76,7 +76,7 @@ export default function HomeHero() {
             // Animação para X (menu aberto)
             gsap.to(topLine, {
                 rotation: 45,
-                y: 8, // Ajuste fino para posicionamento
+                y: 8,
                 duration: 0.3,
                 ease: "power2.out",
                 overwrite: true
@@ -91,7 +91,7 @@ export default function HomeHero() {
             
             gsap.to(bottomLine, {
                 rotation: -45,
-                y: -8, // Ajuste fino para posicionamento
+                y: -8,
                 duration: 0.3,
                 ease: "power2.out",
                 overwrite: true
@@ -212,16 +212,121 @@ export default function HomeHero() {
         }
     }, [isMenuOpen]);
 
+    // Detectar scroll e animação de entrada do header
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Animação de entrada do header
-            gsap.from(headerRef.current, {
-                y: -100,
-                opacity: 0,
-                duration: 1,
-                ease: "power4.out",
-                delay: 0.3
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            setIsScrolled(scrollY > 50);
+            
+            // Atualizar barra de progresso
+            const progressBar = document.querySelector('.progress-bar-fill');
+            if (progressBar) {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                const scrollTop = window.scrollY;
+                const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+                progressBar.style.width = `${Math.min(scrollPercent, 100)}%`;
+            }
+            
+            // Detectar seção ativa
+            const sections = menuItems.map(item => item.id);
+            let current = '';
+            
+            sections.forEach(section => {
+                const element = document.getElementById(section);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top <= 100 && rect.bottom >= 100) {
+                        current = section;
+                    }
+                }
             });
+            
+            setActiveSection(current);
+        };
+
+        // Configurar rolagem suave
+        const setupSmoothScroll = () => {
+            const anchors = document.querySelectorAll('a[href^="#"]');
+            anchors.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith("#") && href !== "#") {
+                        e.preventDefault();
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            setIsMenuOpen(false);
+                            
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                            const headerHeight = 70; // Altura do header fixo
+                            
+                            window.scrollTo({
+                                top: targetPosition - headerHeight,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+        };
+
+        // Animação de entrada inicial
+        const ctx = gsap.context(() => {
+            // Animação de entrada do header (suave e elegante)
+            if (headerRef.current) {
+                gsap.fromTo(headerRef.current,
+                    {
+                        y: -100,
+                        opacity: 0,
+                        backdropFilter: "blur(0px)"
+                    },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        backdropFilter: "blur(16px)",
+                        duration: 1,
+                        ease: "power4.out",
+                        delay: 0.2
+                    }
+                );
+
+                // Animar os elementos internos do header em sequência
+                const logo = headerRef.current.querySelector('.header-logo');
+                const nav = headerRef.current.querySelector('nav');
+                const menuBtn = headerRef.current.querySelector('.lg\\:hidden');
+
+                if (logo) {
+                    gsap.from(logo, {
+                        x: -30,
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        delay: 0.5
+                    });
+                }
+
+                if (nav) {
+                    const navItems = nav.querySelectorAll('li');
+                    gsap.from(navItems, {
+                        y: -20,
+                        opacity: 0,
+                        stagger: 0.08,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        delay: 0.7
+                    });
+                }
+
+                if (menuBtn) {
+                    gsap.from(menuBtn, {
+                        x: 30,
+                        opacity: 0,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        delay: 0.6
+                    });
+                }
+            }
 
             // Animação principal usando timeline
             const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -267,7 +372,7 @@ export default function HomeHero() {
                 }, 0.8);
             }
 
-            // Botão PRINCIPAL - ANIMAÇÃO CORRIGIDA
+            // Botão PRINCIPAL
             if (btnRef.current) {
                 tl.from(btnRef.current, {
                     opacity: 0,
@@ -288,64 +393,22 @@ export default function HomeHero() {
             }
         });
 
-        // Detectar scroll
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-            
-            const sections = menuItems.map(item => item.id);
-            let current = '';
-            
-            sections.forEach(section => {
-                const element = document.getElementById(section);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    if (rect.top <= 150 && rect.bottom >= 150) {
-                        current = section;
-                    }
-                }
-            });
-            
-            setActiveSection(current);
-        };
-
-        // Configurar rolagem suave
-        const setupSmoothScroll = () => {
-            const anchors = document.querySelectorAll('a[href^="#"]');
-            anchors.forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    const href = this.getAttribute('href');
-                    if (href && href.startsWith("#") && href !== "#") {
-                        e.preventDefault();
-                        const targetElement = document.querySelector(href);
-                        if (targetElement) {
-                            setIsMenuOpen(false);
-                            
-                            gsap.to(window, {
-                                scrollTo: { 
-                                    y: targetElement, 
-                                    offsetY: 80,
-                                    autoKill: false 
-                                },
-                                duration: 1.5,
-                                ease: "power3.inOut"
-                            });
-                        }
-                    }
-                });
-            });
-        };
-
-        window.addEventListener('scroll', handleScroll);
+        // Adicionar listeners
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleScroll, { passive: true });
+        
+        // Executar uma vez para estado inicial
         handleScroll();
         setupSmoothScroll();
 
         return () => {
-            ctx.revert(); // CORRIGIDO: Limpar todas as animações
+            ctx.revert();
             window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', handleScroll);
         };
     }, []);
 
-    // Toggle menu mobile com animação GSAP
+    // Toggle menu mobile
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -354,142 +417,6 @@ export default function HomeHero() {
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
-
-    // Componente Header
-    const Header = () => (
-        <header
-            ref={headerRef}
-            className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-                isScrolled 
-                    ? 'bg-gray-950/95 backdrop-blur-lg py-3 border-b border-gray-800/30' 
-                    : 'bg-transparent py-4'
-            }`}
-        >
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between">
-                    
-                    {/* Logo */}
-                    <a 
-                        href="#home-hero"
-                        className="group flex items-center gap-2 sm:gap-3"
-                        onClick={closeMenu}
-                    >
-                        <div className="relative">
-                            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 flex items-center justify-center">
-                                {/* Ícone de fragmento de código usando Font Awesome */}
-                                <i className="fas fa-code text-blue-500 text-sm"></i>
-                            </div>
-                        </div>
-                        
-                        <div className="hidden sm:block">
-                            <span className="text-white font-medium text-sm sm:text-base tracking-tight block">LUCAS ANDRADE FONSECA</span>
-                            <span className="text-gray-500 text-[10px] sm:text-[11px] font-normal tracking-widest block">• DEVELOPER</span>
-                        </div>
-                        <div className="block sm:hidden">
-                            <span className="text-white font-medium text-xs tracking-tight">LUCAS</span>
-                        </div>
-                    </a>
-
-                    {/* Navegação desktop */}
-                    <nav className="hidden lg:block">
-                        <ul className="flex items-center gap-4 xl:gap-6">
-                            {menuItems.map((item, index) => {
-                                const isActive = activeSection === item.id;
-                                return (
-                                    <li key={index} className="relative">
-                                        <a 
-                                            href={`#${item.id}`}
-                                            className={`text-xs xl:text-[13px] font-medium tracking-wider uppercase transition-all duration-300 ${
-                                                isActive 
-                                                    ? 'text-white' 
-                                                    : 'text-gray-500 hover:text-gray-300'
-                                            }`}
-                                        >
-                                            <span className="relative">
-                                                {item.label}
-                                                {isActive && (
-                                                    <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-gradient-to-r from-blue-500 to-cyan-500"></span>
-                                                )}
-                                            </span>
-                                        </a>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </nav>
-                    
-                    {/* Menu mobile hamburger - VERSÃO CORRIGIDA */}
-                    <button 
-                        className="lg:hidden group z-50 relative w-10 h-10 flex items-center justify-center"
-                        onClick={toggleMenu}
-                        aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
-                    >
-                        {/* Container para as linhas */}
-                        <div className="relative w-6 h-6 flex flex-col items-center justify-center gap-1.5">
-                            {/* Linha superior */}
-                            <div 
-                                ref={topLineRef}
-                                className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
-                            />
-                            
-                            {/* Linha do meio */}
-                            <div 
-                                ref={middleLineRef}
-                                className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
-                            />
-                            
-                            {/* Linha inferior */}
-                            <div 
-                                ref={bottomLineRef}
-                                className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
-                            />
-                        </div>
-                    </button>
-                </div>
-            </div>
-            
-            {/* Menu mobile dropdown */}
-            <div 
-                ref={menuRef}
-                className={`lg:hidden absolute top-full left-0 w-full bg-gray-950/98 backdrop-blur-lg border-b border-gray-800/30 overflow-hidden`}
-                style={{ display: isMenuOpen ? 'block' : 'none' }}
-            >
-                <ul className="py-4 px-4 space-y-2">
-                    {menuItems.map((item, index) => {
-                        const isActive = activeSection === item.id;
-                        return (
-                            <li key={index}>
-                                <a 
-                                    href={`#${item.id}`}
-                                    className={`block py-3 px-4 text-sm font-medium tracking-wider uppercase rounded-lg transition-all duration-300 ${
-                                        isActive 
-                                            ? 'text-white bg-blue-900/30 border-l-4 border-blue-500' 
-                                            : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                                    }`}
-                                    onClick={closeMenu}
-                                >
-                                    <span className="flex items-center gap-3">
-                                        <i className={`fas ${getIconForMenuItem(item.id)} text-xs ${isActive ? 'text-blue-400' : 'text-gray-500'}`}></i>
-                                        {item.label}
-                                    </span>
-                                </a>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
-            
-            {/* Barra de progresso sutil */}
-            <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900/50">
-                <div 
-                    className="h-full bg-gradient-to-r from-blue-600/80 to-cyan-500/80 transition-all duration-500"
-                    style={{ 
-                        width: `${Math.min((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100, 100)}%` 
-                    }}
-                ></div>
-            </div>
-        </header>
-    );
 
     // Função auxiliar para obter ícones do menu
     const getIconForMenuItem = (id) => {
@@ -524,13 +451,145 @@ export default function HomeHero() {
             <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-500/5 rounded-full blur-3xl" />
             <div className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-cyan-500/5 rounded-full blur-3xl" />
 
-            {/* Componentes organizados */}
-            <Header />
-            
+            {/* HEADER FIXO */}
+            <header
+                ref={headerRef}
+                className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out ${
+                    isScrolled 
+                        ? 'bg-gray-950/95 backdrop-blur-md py-3 shadow-lg shadow-black/20' 
+                        : 'bg-transparent py-4'
+                }`}
+                style={{ 
+                    transform: 'translate3d(0,0,0)', 
+                    willChange: 'transform, opacity',
+                    WebkitBackfaceVisibility: 'hidden',
+                    backfaceVisibility: 'hidden'
+                }}
+            >
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between">
+                        
+                        {/* Logo */}
+                        <a 
+                            href="#home-hero"
+                            className="header-logo group flex items-center gap-2 sm:gap-3"
+                            onClick={closeMenu}
+                        >
+                            <div className="relative">
+                                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 flex items-center justify-center">
+                                    <i className="fas fa-code text-blue-500 text-sm"></i>
+                                </div>
+                            </div>
+                            
+                            <div className="hidden sm:block">
+                                <span className="text-white font-medium text-sm sm:text-base tracking-tight block">LUCAS ANDRADE FONSECA</span>
+                                <span className="text-gray-500 text-[10px] sm:text-[11px] font-normal tracking-widest block">• DEVELOPER</span>
+                            </div>
+                            <div className="block sm:hidden">
+                                <span className="text-white font-medium text-xs tracking-tight">LUCAS</span>
+                            </div>
+                        </a>
+
+                        {/* Navegação desktop */}
+                        <nav className="hidden lg:block">
+                            <ul className="flex items-center gap-4 xl:gap-6">
+                                {menuItems.map((item, index) => {
+                                    const isActive = activeSection === item.id;
+                                    return (
+                                        <li key={index} className="relative">
+                                            <a 
+                                                href={`#${item.id}`}
+                                                className={`text-xs xl:text-[13px] font-medium tracking-wider uppercase transition-all duration-300 px-1 ${
+                                                    isActive 
+                                                        ? 'text-white' 
+                                                        : 'text-gray-500 hover:text-gray-300'
+                                                }`}
+                                            >
+                                                <span className="relative pb-1">
+                                                    {item.label}
+                                                    {isActive && (
+                                                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-blue-500 to-cyan-500"></span>
+                                                    )}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </nav>
+                        
+                        {/* Menu mobile hamburger */}
+                        <button 
+                            className="lg:hidden group z-50 relative w-10 h-10 flex items-center justify-center"
+                            onClick={toggleMenu}
+                            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+                            aria-expanded={isMenuOpen}
+                        >
+                            <div className="relative w-6 h-6 flex flex-col items-center justify-center gap-1.5">
+                                <div 
+                                    ref={topLineRef}
+                                    className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
+                                />
+                                <div 
+                                    ref={middleLineRef}
+                                    className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
+                                />
+                                <div 
+                                    ref={bottomLineRef}
+                                    className="w-6 h-0.5 bg-gray-400 group-hover:bg-white transition-colors duration-300 rounded-full transform origin-center"
+                                />
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                {/* Menu mobile dropdown */}
+                <div 
+                    ref={menuRef}
+                    className={`lg:hidden absolute top-full left-0 w-full bg-gray-950/98 backdrop-blur-lg border-b border-gray-800/30 overflow-hidden`}
+                    style={{ 
+                        display: isMenuOpen ? 'block' : 'none',
+                        boxShadow: isMenuOpen ? '0 10px 30px rgba(0,0,0,0.3)' : 'none'
+                    }}
+                >
+                    <ul className="py-4 px-4 space-y-2">
+                        {menuItems.map((item, index) => {
+                            const isActive = activeSection === item.id;
+                            return (
+                                <li key={index}>
+                                    <a 
+                                        href={`#${item.id}`}
+                                        className={`block py-3 px-4 text-sm font-medium tracking-wider uppercase rounded-lg transition-all duration-300 ${
+                                            isActive 
+                                                ? 'text-white bg-blue-900/30 border-l-4 border-blue-500' 
+                                                : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                                        }`}
+                                        onClick={closeMenu}
+                                    >
+                                        <span className="flex items-center gap-3">
+                                            <i className={`fas ${getIconForMenuItem(item.id)} text-xs ${isActive ? 'text-blue-400' : 'text-gray-500'}`}></i>
+                                            {item.label}
+                                        </span>
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+                
+                {/* Barra de progresso sutil */}
+                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gray-900/50">
+                    <div 
+                        className="progress-bar-fill h-full bg-gradient-to-r from-blue-600/80 to-cyan-500/80 transition-all duration-300"
+                        style={{ width: '0%' }}
+                    ></div>
+                </div>
+            </header>
+
             {/* Hero Section */}
             <div
                 ref={heroRef}
-                className="relative z-20 flex items-center justify-center min-h-screen pt-16 pb-20 px-4"
+                className="relative z-20 flex items-center justify-center min-h-screen pt-20 pb-20 px-4"
                 id="home-hero"
             >
                 <div className="container mx-auto relative">
@@ -550,8 +609,8 @@ export default function HomeHero() {
 
                             {/* Descrição */}
                             <div
-                              ref={titleContainerRef}
-                             className=" mb-6 lg:mb-8">
+                            ref={titleContainerRef} 
+                            className="mb-6 lg:mb-8">
                                 <p className="text-white/90 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
                                     Desenvolvedor Full Stack & Estudante de{" "}
                                     <span className="text-[#0969CC] font-semibold relative">
@@ -593,19 +652,16 @@ export default function HomeHero() {
                                     <span className="relative z-10 tracking-wide">Baixar Currículo</span>
                                     <i className="fa-solid fa-download text-sm sm:text-base lg:text-lg group-hover:translate-y-0.5 transition-transform duration-300" />
                                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600/0 via-blue-600/20 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                    {/* Glow effect */}
                                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600/20 to-cyan-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                 </a>
                             </div>
                         </div>
 
-                        {/* Foto (direita) limpa */}
+                        {/* Foto (direita) */}
                         <div ref={imageRef} className="w-full lg:w-1/2 order-1 lg:order-2 mb-8 lg:mb-0 flex justify-center relative">
                             <div className="relative">
-                                {/* Efeito de brilho */}
-                                <div className="absolute -inset-3 sm:-ins-4 lg:-inset-5 bg-gradient-to-r from-[#0969CC] to-cyan-500 rounded-full opacity-20 blur-xl animate-pulse" />
+                                <div className="absolute -inset-3 sm:-inset-4 lg:-inset-5 bg-gradient-to-r from-[#0969CC] to-cyan-500 rounded-full opacity-20 blur-xl animate-pulse" />
                                 
-                                {/* Container da foto */}
                                 <div className="relative rounded-full overflow-hidden border-2 sm:border-3 lg:border-3 border-[#0969CC]/20 p-1.5 sm:p-2 lg:p-2 bg-gradient-to-br from-gray-900 to-black shadow-xl sm:shadow-2xl">
                                     <img
                                         src={FotoLucas}
@@ -672,51 +728,40 @@ export default function HomeHero() {
                     opacity: 0;
                 }
                 
-                /* Estilos específicos para as linhas do hambúrguer */
-                .hamburger-line {
-                    position: absolute;
-                    left: 0;
-                    width: 24px;
-                    height: 2px;
-                    background-color: #9CA3AF;
-                    border-radius: 9999px;
-                    transition: all 0.3s ease;
-                    transform-origin: center;
+                @keyframes gradient {
+                    0% {
+                        background-position: 0% 50%;
+                    }
+                    50% {
+                        background-position: 100% 50%;
+                    }
+                    100% {
+                        background-position: 0% 50%;
+                    }
                 }
                 
-                .hamburger-line.top {
-                    top: 8px;
+                .animate-gradient {
+                    animation: gradient 3s ease infinite;
+                    background-size: 200% auto;
                 }
                 
-                .hamburger-line.middle {
-                    top: 15px;
+                @keyframes scan {
+                    0% {
+                        transform: translateY(-100%);
+                    }
+                    100% {
+                        transform: translateY(100%);
+                    }
                 }
                 
-                .hamburger-line.bottom {
-                    top: 22px;
-                }
-                
-                /* Estados para animação do hambúrguer */
-                .hamburger-open .hamburger-line.top {
-                    transform: rotate(45deg) translate(4px, 4px);
-                }
-                
-                .hamburger-open .hamburger-line.middle {
-                    opacity: 0;
-                }
-                
-                .hamburger-open .hamburger-line.bottom {
-                    transform: rotate(-45deg) translate(4px, -4px);
+                .animate-scan {
+                    animation: scan 2s linear infinite;
                 }
                 
                 /* Melhorias para mobile */
                 @media (max-width: 640px) {
                     .waves {
                         min-height: 100px !important;
-                    }
-                    
-                    .hero-content {
-                        padding-top: 4rem !important;
                     }
                 }
             `}</style>

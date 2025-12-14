@@ -101,7 +101,7 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
             ],
-            destaque: false,
+            destaque: true,
         },
         {
             nome: "Tailclones",
@@ -114,7 +114,7 @@ export default function Projetos() {
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
                 { nome: "Vite", icone: <SiVite />, color: "text-purple-500" },
             ],
-            destaque: false,
+            destaque: true,
         },
         {
             nome: "Kubo",
@@ -127,7 +127,7 @@ export default function Projetos() {
                 { nome: "React", icone: <FaReact />, color: "text-cyan-400" },
                 { nome: "Golang", icone: <DiGo />, color: "text-cyan-600" },
             ],
-            destaque: false,
+            destaque: true,
         },
         {
             nome: "Vem Comigo",
@@ -156,7 +156,7 @@ export default function Projetos() {
                 { nome: "GSAP", icone: <FaJs />, color: "text-green-500" },
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
             ],
-            destaque: false,
+            destaque: true,
         },
         {
             nome: "Andrews shelf",
@@ -472,12 +472,16 @@ export default function Projetos() {
                             <span className="relative z-10 flex items-center gap-3">
                                 {mostrarMais ? (
                                     <>
-                                        <i className="fas fa-chevron-up"></i>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                        </svg>
                                         Ver menos projetos
                                     </>
                                 ) : (
                                     <>
-                                        <i className="fas fa-chevron-down"></i>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
                                         Ver mais projetos
                                     </>
                                 )}
@@ -495,7 +499,7 @@ export default function Projetos() {
                 </div>
             </div>
             
-            {/* Fim da section - elementos decorativos corrigidos */}
+            {/* Bottom decorative elements */}
             <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
             <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-gray-900 to-transparent" />
         </section>
