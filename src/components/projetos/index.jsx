@@ -26,6 +26,7 @@ import {
     FaGithub,
     FaBootstrap,
     FaPython,
+    FaDocker,
     FaExternalLinkAlt,
 } from "react-icons/fa";
 import { SiTailwindcss, SiMongodb, SiVite } from "react-icons/si";
@@ -159,6 +160,7 @@ export default function Projetos() {
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
                 { nome: "GSAP", icone: <FaJs />, color: "text-green-500" },
                 { nome: "n8n", icone: <FaJs />, color: "text-purple-400" },
+                { nome: "Docker", icone: <FaDocker />, color: "text-blue-500" },
             ],
             destaque: false,
         },
