@@ -33,7 +33,7 @@ import { DiGo } from "react-icons/di";
 import { TbBrandFramerMotion } from "react-icons/tb";
 
 export default function Projetos() {
-    const [mostrarMais, setMostrarMais] = useState(false);
+    const [projetosMostrados, setProjetosMostrados] = useState(6);
     const sectionRef = useRef(null);
 
     // Mapeamento de imagens locais
@@ -181,7 +181,7 @@ export default function Projetos() {
             img: getImagemProjeto("Andrews shelf", "Andrew-s-shelf"),
             link: "https://github.com/lucas19fonseca/Andrew-s-shelf",
             site: getSiteLink("Andrews shelf"),
-            descricao: "Sistema de gerenciamento de biblioteca pessoal com catalogação de livros e controle de empréstimos.",
+            descricao: "Sistema de gerenciamento de biblioteca pessoal com catalogação de livros,minha primeira página web,guardando pra ver a minha evolução futuramente.",
             tecnologias: [
                 { nome: "JavaScript", icone: <FaJs />, color: "text-yellow-400" },
                 { nome: "CSS", icone: <FaCss3Alt />, color: "text-blue-500" },
@@ -228,11 +228,6 @@ export default function Projetos() {
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
                 { nome: "GSAP", icone: <FaJs />, color: "text-green-500" },
-                {
-                    nome: "Framer Motion",
-                    icone: <TbBrandFramerMotion />,
-                    color: "text-pink-500",
-                },
             ],
             destaque: false,
         },
@@ -282,7 +277,7 @@ export default function Projetos() {
             img: getImagemProjeto("Eixo", "Eixo"),
             link: "https://github.com/lucas19fonseca/Eixo",
             site: getSiteLink("Eixo"),
-            descricao: "Projeto web com foco em design responsivo e experiência do usuário.",
+            descricao: "Projeto Vibe Code aplicação web com foco em design responsivo e experiência do usuário.",
             tecnologias: [
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
                 { nome: "CSS", icone: <FaCss3Alt />, color: "text-blue-500" },
@@ -318,11 +313,19 @@ export default function Projetos() {
         },
     ];
 
-    const projetosIniciais = 3;
-    const hasMoreProjects = projetos.length > projetosIniciais;
-    const projetosParaMostrar = mostrarMais
-        ? projetos
-        : projetos.slice(0, projetosIniciais);
+    const projetosPorVez = 6;
+    const hasMoreProjects = projetos.length > projetosMostrados;
+    
+    // Slice para mostrar apenas os projetos necessários
+    const projetosParaMostrar = projetos.slice(0, projetosMostrados);
+
+    const carregarMaisProjetos = () => {
+        setProjetosMostrados(prev => prev + projetosPorVez);
+    };
+
+    const resetarProjetos = () => {
+        setProjetosMostrados(projetosPorVez);
+    };
 
     return (
         <section
@@ -482,28 +485,50 @@ export default function Projetos() {
                 {hasMoreProjects && (
                     <div className="text-center mt-12">
                         <button
-                            onClick={() => setMostrarMais(!mostrarMais)}
+                            onClick={carregarMaisProjetos}
                             className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
                         >
                             {/* Glow effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                             
                             <span className="relative z-10 flex items-center gap-3">
-                                {mostrarMais ? (
-                                    <>
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                                        </svg>
-                                        Ver menos projetos
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                        Ver mais projetos
-                                    </>
-                                )}
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                                Ver mais {Math.min(projetosPorVez, projetos.length - projetosMostrados)} projetos
+                                <span className="text-xs text-gray-400 ml-2">
+                                    ({projetosMostrados}/{projetos.length})
+                                </span>
+                            </span>
+                        </button>
+                        
+                        {/* Botão para resetar (opcional) - aparece quando todos os projetos estão sendo mostrados */}
+                        {projetosMostrados > projetosPorVez && (
+                            <button
+                                onClick={resetarProjetos}
+                                className="mt-4 text-sm text-gray-400 hover:text-white transition-colors duration-300"
+                            >
+                                Mostrar menos
+                            </button>
+                        )}
+                    </div>
+                )}
+
+                {/* Mostrar contagem quando todos os projetos estão visíveis */}
+                {!hasMoreProjects && projetosMostrados > projetosPorVez && (
+                    <div className="text-center mt-12">
+                        <p className="text-gray-400 mb-4">
+                            Todos os {projetos.length} projetos estão sendo exibidos
+                        </p>
+                        <button
+                            onClick={resetarProjetos}
+                            className="group relative px-6 py-3 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300"
+                        >
+                            <span className="relative z-10 flex items-center gap-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                                </svg>
+                                Ver menos projetos
                             </span>
                         </button>
                     </div>
