@@ -5,6 +5,7 @@ import Contato from "./components/Contato/index";
 import Projetos from "./components/projetos/index";
 import Experiencia from "./components/experiencia/index";
 import Hero from "./components/Hero/index";
+import ChatBot from "./components/ChatBot/index";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Projetos />
         <Experiencia />
         <Contato />
+        <ChatBot />
       </main>
     </div>
   )
