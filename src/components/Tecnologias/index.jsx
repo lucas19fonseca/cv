@@ -15,6 +15,8 @@ import Tw from "../../assets/tecnologias/tailwind.png"
 import Fire from "../../assets/tecnologias/Firebase.png"
 import Bi from "../../assets/tecnologias/Bi.svg"
 import Ubuntu from "../../assets/tecnologias/ubuntu.png"
+import Bootstrap from "../../assets/tecnologias/bootstrap.png"
+import Go from "../../assets/tecnologias/golang.png"
 
 export default function Tecnologia() {
     const sectionRef = useRef(null);
@@ -26,8 +28,10 @@ export default function Tecnologia() {
         { name: "JavaScript", icon: Java, category: "frontend", color: "from-yellow-400 to-yellow-600" },
         { name: "React", icon: ReactIcon, category: "frontend", color: "from-cyan-400 to-blue-500" },
         { name: "Tailwind", icon: Tw, category: "frontend", color: "from-teal-400 to-cyan-500" },
+        { name: "Bootstrap", icon: Bootstrap, category: "frontend", color: "from-teal-400 to-cyan-500" },
         
         // Backend
+        { name: "Golang", icon: Go, category: "backend", color: "from-blue-600 to-yellow-400" },
         { name: "Python", icon: Py, category: "backend", color: "from-blue-600 to-yellow-400" },
         { name: "MySQL", icon: Mysql, category: "backend", color: "from-blue-400 to-blue-700" },
         { name: "Firebase", icon: Fire, category: "backend", color: "from-yellow-400 to-orange-500" },
