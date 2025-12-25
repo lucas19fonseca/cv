@@ -8,7 +8,7 @@ export default function ChatBot() {
       {/* Botão flutuante */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-5 right-5 z-10 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl"
+        className="fixed bottom-5 right-5 z-20 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl"
         aria-label="Abrir chat"
       >
         <i className="fa-solid fa-comments"></i>
