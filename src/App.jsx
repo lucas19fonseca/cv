@@ -1,11 +1,11 @@
 import './index.css'
-import SobreMim from "./components/SobreMim/index";
-import Tecnologia from "./components/Tecnologias/index";
-import Contato from "./components/Contato/index";
-import Projetos from "./components/projetos/index";
-import Experiencia from "./components/experiencia/index";
-import Hero from "./components/Hero/index";
-import ChatBot from "./components/ChatBot/index";
+import SobreMim from "./components/SobreMim";
+import Tecnologia from "./components/Tecnologias";
+import Contato from "./components/Contato";
+import Projetos from "./components/projetos";
+import Experiencia from "./components/experiencia";
+import Hero from "./components/Hero";
+import ChatBot from "./components/ChatBot";
 
 function App() {
 

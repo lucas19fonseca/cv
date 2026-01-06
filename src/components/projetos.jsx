@@ -1,22 +1,22 @@
 import { useState, useRef } from "react";
 
 // Importar todas as imagens
-import shelf from "../../assets/projetos/Andrews.png";
-import Tw from "../../assets/projetos/tailwclones.png";
-import Ponto from "../../assets/projetos/ponto.png";
-import Kubo from "../../assets/projetos/kubo-tela.png";
-import Reactlb from "../../assets/projetos/react-lab.png";
-import Chris from "../../assets/projetos/chris.png";
-import Dell from "../../assets/projetos/dell.png";
-import Diogo from "../../assets/projetos/diogo.png";
-import Eixo from "../../assets/projetos/eixo.png";
-import Let from "../../assets/projetos/let.png";
-import List from "../../assets/projetos/list.png";
-import Plix from "../../assets/projetos/plix.png";
-import Spider from "../../assets/projetos/spider.png";
-import Lucas from "../../assets/projetos/lucas.png";
-import VemComigo from "../../assets/projetos/vem-comigo.png";
-import Governo from "../../assets/projetos/governo.png";
+import shelf from "../assets/projetos/Andrews.png";
+import Tw from "../assets/projetos/tailwclones.png";
+import Ponto from "../assets/projetos/ponto.png";
+import Kubo from "../assets/projetos/kubo-tela.png";
+import Reactlb from "../assets/projetos/react-lab.png";
+import Chris from "../assets/projetos/chris.png";
+import Dell from "../assets/projetos/dell.png";
+import Diogo from "../assets/projetos/diogo.png";
+import Eixo from "../assets/projetos/eixo.png";
+import Let from "../assets/projetos/let.png";
+import List from "../assets/projetos/list.png";
+import Plix from "../assets/projetos/plix.png";
+import Spider from "../assets/projetos/spider.png";
+import Lucas from "../assets/projetos/lucas.png";
+import VemComigo from "../assets/projetos/vem-comigo.png";
+import Governo from "../assets/projetos/governo.png";
 
 import {
     FaReact,

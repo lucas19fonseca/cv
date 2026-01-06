@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ImgDev from "../../assets/comum/programador.png";
+import ImgDev from "../assets/comum/programador.png";
 
 // Imports dos certificados
-import ReactCert from "../../assets/certificados/react-curso.png";
-import Py from "../../assets/certificados/py.jpeg";
-import Js from "../../assets/certificados/java.jpeg";
-import Git from "../../assets/certificados/git-certificado.png";
-import Tw from "../../assets/certificados/curso-tw.jpg";
-import Linux from "../../assets/certificados/curso-linux.jpg";
-import Prompt from "../../assets/certificados/curso-prompt.png";
+import ReactCert from "../assets/certificados/react-curso.png";
+import Py from "../assets/certificados/py.jpeg";
+import Js from "../assets/certificados/java.jpeg";
+import Git from "../assets/certificados/git-certificado.png";
+import Tw from "../assets/certificados/curso-tw.jpg";
+import Linux from "../assets/certificados/curso-linux.jpg";
+import Prompt from "../assets/certificados/curso-prompt.png";
 
 export default function SobreMim() {
     const [idade, setIdade] = useState(null);

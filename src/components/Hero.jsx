@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import FotoLucas from "../../assets/comum/lucas.jpg";
-import curriculo from "../../assets/comum/Lucas_Andrade_web_junior.pdf";
+import FotoLucas from "../assets/comum/lucas.jpg";
+import curriculo from "../assets/comum/Lucas_Andrade_web_junior.pdf";
 
 export default function HomeHero() {
     const heroRef = useRef(null);
