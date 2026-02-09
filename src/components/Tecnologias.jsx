@@ -22,7 +22,6 @@ export default function Tecnologia() {
     const sectionRef = useRef(null);
     
     const technologies = [
-        // Frontend
         { name: "HTML", icon: Html, category: "frontend", color: "from-orange-500 to-red-500" },
         { name: "CSS", icon: Css, category: "frontend", color: "from-blue-500 to-blue-700" },
         { name: "JavaScript", icon: Java, category: "frontend", color: "from-yellow-400 to-yellow-600" },

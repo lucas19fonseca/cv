@@ -17,7 +17,8 @@ export default function Experiencia() {
                 "Trabalho com Plone (framework governamental)",
                 "Desenvolvimento de agentes de IA com RAG (Retrieval-Augmented Generation)",
                 "Implementação de soluções com LLMs (Large Language Models)",
-                "Participação em projetos de inovação com inteligência artificial"
+                "Participação em projetos de inovação com inteligência artificial",
+                "Participação no desenvolvimento do chatbot GOV, com foco em análise de dados e métricas Analytics."
             ],
             tecnologias: ["HTML", "CSS", "JavaScript", "Plone", "Python", "LLM", "RAG", "IA Generativa"],
             cor: "from-indigo-500 to-purple-500",
