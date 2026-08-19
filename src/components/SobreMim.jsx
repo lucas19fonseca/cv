@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ImgDev from "../assets/comum/programador.png";
+import ImgDev from "../assets/comum/programador.webp";
 
 import ReactCert from "../assets/certificados/react-curso.png";
 import Py from "../assets/certificados/py.jpeg";
@@ -12,7 +12,6 @@ import Linux from "../assets/certificados/curso-linux.jpg";
 import Prompt from "../assets/certificados/curso-prompt.png";
 
 export default function SobreMim() {
-    const [idade, setIdade] = useState(null);
     const [modalAberto, setModalAberto] = useState(false);
     const [imagemAmpliada, setImagemAmpliada] = useState(null);
     const sectionRef = useRef(null);
@@ -74,19 +73,6 @@ export default function SobreMim() {
         }
     ];
 
-    function calcularIdade(dataNascimento) {
-        const hoje = new Date();
-        const nascimento = new Date(dataNascimento);
-        let idade = hoje.getFullYear() - nascimento.getFullYear();
-        const aniversarioEsteAno = new Date(hoje.getFullYear(), nascimento.getMonth(), nascimento.getDate());
-
-        if (hoje < aniversarioEsteAno) {
-            idade--;
-        }
-
-        return idade;
-    }
-
     const abrirModal = () => {
         setModalAberto(true);
         document.body.style.overflow = 'hidden';
@@ -105,11 +91,6 @@ export default function SobreMim() {
     const fecharImagemAmpliada = () => {
         setImagemAmpliada(null);
     };
-
-    useEffect(() => {
-        const idadeCalculada = calcularIdade("2004-07-19");
-        setIdade(idadeCalculada);
-    }, []);
 
     // Registrar GSAP apenas no client-side
     useEffect(() => {
@@ -329,35 +310,19 @@ export default function SobreMim() {
                             ref={imageRef}
                             className="lg:w-1/3 flex-shrink-0 flex flex-col items-center"
                         >
-                            <div className="relative w-full group">
-                                <div className="absolute -inset-3 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                
+                            <div className="relative w-full">
                                 <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-xl p-1 shadow-lg shadow-blue-100/50">
                                     <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
                                     <img
                                         src={ImgDev}
-                                        alt="Lucas Andrade"
+                                        alt="Ilustração de um programador representando Lucas Andrade"
                                         className="relative rounded-lg w-full h-auto"
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
                             </div>
-                            
-                            {/* Info badges */}
-                            <div className="flex flex-wrap justify-center gap-3 mt-6">
-                                <span className="px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg text-sm text-blue-700 font-medium shadow-sm shadow-blue-200/50">
-                                    <i className="fas fa-birthday-cake mr-2"></i>
-                                    {idade ?? "..."} anos
-                                </span>
-                                <span className="px-4 py-2 bg-gradient-to-r from-cyan-50 to-cyan-100 border border-cyan-200 rounded-lg text-sm text-cyan-700 font-medium shadow-sm shadow-cyan-200/50">
-                                    <i className="fas fa-graduation-cap mr-2"></i>
-                                    6º Semestre
-                                </span>
-                                <span className="px-4 py-2 bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 rounded-lg text-sm text-purple-700 font-medium shadow-sm shadow-purple-200/50">
-                                    <i className="fas fa-code mr-2"></i>
-                                    Full Stack
-                                </span>
-                            </div>
-                            
+
                             {/* Botões - Empilhados */}
                             <div className="mt-8 w-full max-w-xl space-y-3">
                                 {/* Botão Entre em Contato */}
@@ -396,15 +361,11 @@ export default function SobreMim() {
                                 <div className="bg-white/80 backdrop-blur-sm border border-gray-200/70 rounded-xl p-6 md:p-8 shadow-lg shadow-gray-200/30 hover:shadow-xl hover:shadow-blue-100/30 transition-all duration-300">
                                     <div className="text-gray-800 text-base md:text-lg leading-relaxed space-y-4 md:space-y-6">
                                         <p className="text-justify">
-                                            Olá! Meu nome é Lucas Andrade, tenho {idade ?? "..."} anos e estou no 6º semestre de Ciências da Computação. Sou apaixonado por tecnologia e desenvolvimento de software.
+                                            Sou formado em Ciência da Computação, com experiência em desenvolvimento de software e Inteligência Artificial. Atualmente, busco aprofundar meus conhecimentos em IA, com foco em LLMs, Transformers, embeddings, bancos de dados vetoriais, RAG, MCP e IA generativa, além de aprimorar meu inglês e continuar evoluindo profissionalmente.
                                         </p>
-                                        
+
                                         <p className="text-justify">
-                                            Sou uma pessoa comunicativa, com facilidade para trabalhar em equipe e colaborar em projetos, o que contribui positivamente no ambiente acadêmico e profissional. Acredito que a colaboração é essencial para criar soluções inovadoras.
-                                        </p>
-                                        
-                                        <p className="text-justify">
-                                            Meu principal objetivo é crescer profissionalmente na área de tecnologia, contribuindo com soluções criativas e eficientes enquanto desenvolvo continuamente minhas habilidades. Tenho grande interesse em participar de projetos desafiadores que me permitam aprender na prática, expandir meus conhecimentos e agregar valor às equipes com as quais trabalho.
+                                            Também atuo como freelancer, desenvolvendo soluções personalizadas para diferentes necessidades e utilizando tecnologia para solucionar problemas de forma prática, eficiente e inovadora. Tenho facilidade para aprender novas tecnologias, trabalhar em equipe e transformar desafios em soluções que agreguem valor a projetos e negócios.
                                         </p>
                                     </div>
                                 </div>
@@ -527,10 +488,12 @@ export default function SobreMim() {
                                             className="h-48 mb-4 overflow-hidden rounded-xl border border-blue-100 cursor-pointer hover:border-blue-300 transition-all duration-300"
                                             onClick={() => mostrarImagemAmpliada(cert.img)}
                                         >
-                                            <img 
-                                                src={cert.img} 
-                                                alt={cert.titulo}
+                                            <img
+                                                src={cert.img}
+                                                alt={`Certificado: ${cert.titulo}`}
                                                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                                loading="lazy"
+                                                decoding="async"
                                             />
                                         </div>
 

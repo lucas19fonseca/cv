@@ -148,7 +148,7 @@ export default function Experiencia() {
                                 {/* Technologies */}
                                 <div>
                                     <div className="mb-4">
-                                        <span className="text-xs text-gray-500 font-medium">
+                                        <span className="text-xs text-gray-400 font-medium">
                                             TECNOLOGIAS UTILIZADAS
                                         </span>
                                     </div>

@@ -1,22 +1,22 @@
 import { useState, useRef } from "react";
 
 // Importar todas as imagens
-import shelf from "../assets/projetos/Andrews.png";
-import Tw from "../assets/projetos/tailwclones.png";
-import Ponto from "../assets/projetos/ponto.png";
-import Kubo from "../assets/projetos/kubo-tela.png";
-import Reactlb from "../assets/projetos/react-lab.png";
-import Chris from "../assets/projetos/chris.png";
-import Dell from "../assets/projetos/dell.png";
-import Diogo from "../assets/projetos/diogo.png";
-import Eixo from "../assets/projetos/eixo.png";
-import Let from "../assets/projetos/let.png";
-import List from "../assets/projetos/list.png";
-import Plix from "../assets/projetos/plix.png";
-import Spider from "../assets/projetos/spider.png";
-import Lucas from "../assets/projetos/lucas.png";
-import VemComigo from "../assets/projetos/vem-comigo.png";
-import Governo from "../assets/projetos/governo.png";
+import shelf from "../assets/projetos/Andrews.webp";
+import Tw from "../assets/projetos/tailwclones.webp";
+import Ponto from "../assets/projetos/ponto.webp";
+import Kubo from "../assets/projetos/kubo-tela.webp";
+import Reactlb from "../assets/projetos/react-lab.webp";
+import Chris from "../assets/projetos/chris.webp";
+import Dell from "../assets/projetos/dell.webp";
+import Diogo from "../assets/projetos/diogo.webp";
+import Eixo from "../assets/projetos/eixo.webp";
+import Let from "../assets/projetos/let.webp";
+import List from "../assets/projetos/list.webp";
+import Plix from "../assets/projetos/plix.webp";
+import Spider from "../assets/projetos/spider.webp";
+import Lucas from "../assets/projetos/lucas.webp";
+import VemComigo from "../assets/projetos/vem-comigo.webp";
+import Governo from "../assets/projetos/governo.webp";
 
 import {
     FaReact,
@@ -92,7 +92,7 @@ export default function Projetos() {
     };
 
     const projetos = [
-        {
+        /* {
             nome: "React Labs",
             img: getImagemProjeto("React Labs", "react-labs"),
             link: "https://github.com/lucas19fonseca/react-labs",
@@ -106,7 +106,7 @@ export default function Projetos() {
                 { nome: "Tailwind", icone: <SiTailwindcss />, color: "text-teal-400" },
             ],
             destaque: true,
-        },
+        }, */
         {
             nome: "Tailclones",
             img: getImagemProjeto("Tailclones", "tailclones"),
@@ -178,7 +178,7 @@ export default function Projetos() {
             ],
             destaque: true,
         },
-        {
+        /* {
             nome: "Andrews shelf",
             img: getImagemProjeto("Andrews shelf", "Andrew-s-shelf"),
             link: "https://github.com/lucas19fonseca/Andrew-s-shelf",
@@ -191,8 +191,8 @@ export default function Projetos() {
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
             ],
             destaque: false,
-        },
-        {
+        }, */
+        /* {
             nome: "PlixGames",
             img: getImagemProjeto("PlixGames", "PlixGames"),
             link: "https://github.com/lucas19fonseca/PlixGames",
@@ -205,8 +205,8 @@ export default function Projetos() {
                 { nome: "HTML", icone: <FaHtml5 />, color: "text-orange-500" },
             ],
             destaque: false,
-        },
-        {
+        }, */
+        /* {
             nome: "Chris - Landing Page",
             img: getImagemProjeto("Chris - Landing Page", "cv-chris"),
             link: "https://github.com/lucas19fonseca/cv-chris",
@@ -219,7 +219,7 @@ export default function Projetos() {
                 { nome: "CSS", icone: <FaCss3Alt />, color: "text-blue-500" },
             ],
             destaque: false,
-        },
+        }, */
         {
             nome: "Diego - Landing Page",
             img: getImagemProjeto("Diego - Landing Page", "cv-diego"),
@@ -247,7 +247,7 @@ export default function Projetos() {
             ],
             destaque: false,
         },
-        {
+        /* {
             nome: "ListFy",
             img: getImagemProjeto("ListFy", "ListFy"),
             link: "https://github.com/lucas19fonseca/ListFy",
@@ -260,7 +260,7 @@ export default function Projetos() {
                 { nome: "JavaScript", icone: <FaJs />, color: "text-yellow-400" },
             ],
             destaque: false,
-        },
+        }, */
         {
             nome: "Let Let Go",
             img: getImagemProjeto("Let Let Go", "let-let-go"),
@@ -274,7 +274,7 @@ export default function Projetos() {
             ],
             destaque: false,
         },
-        {
+        /* {
             nome: "Eixo",
             img: getImagemProjeto("Eixo", "Eixo"),
             link: "https://github.com/lucas19fonseca/Eixo",
@@ -312,7 +312,7 @@ export default function Projetos() {
                 { nome: "JavaScript", icone: <FaJs />, color: "text-yellow-400" },
             ],
             destaque: false,
-        },
+        }, */
     ];
 
     const projetosPorVez = 6;
@@ -388,9 +388,12 @@ export default function Projetos() {
                                 <div className="relative h-48 overflow-hidden">
                                     <img
                                         src={projeto.img}
-                                        alt={`Imagem do projeto ${projeto.nome}`}
+                                        alt={`Captura de tela do projeto ${projeto.nome}`}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                         loading="lazy"
+                                        decoding="async"
+                                        width="640"
+                                        height="360"
                                         onError={(e) => {
                                             const repoName = projeto.link.split('/').pop() || 
                                                           projeto.nome.toLowerCase().replace(/\s+/g, '-');
@@ -434,7 +437,7 @@ export default function Projetos() {
                                     {/* Technologies */}
                                     <div className="mt-2 pt-4 border-t border-gray-800">
                                         <div className="mb-3">
-                                            <span className="text-xs text-gray-500 font-medium">
+                                            <span className="text-xs text-gray-400 font-medium">
                                                 TECNOLOGIAS UTILIZADAS
                                             </span>
                                         </div>
@@ -460,7 +463,7 @@ export default function Projetos() {
                                     {/* Project footer */}
                                     <div className="mt-6 pt-4 border-t border-gray-800/50">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-500">
+                                            <span className="text-xs text-gray-400">
                                                 Disponível no GitHub
                                             </span>
                                             <a
@@ -538,7 +541,7 @@ export default function Projetos() {
 
                 {/* GitHub note */}
                 <div className="mt-16 text-center border-t border-gray-800/30 pt-8">
-                    <p className="text-gray-500 text-sm flex items-center justify-center gap-2 mb-4">
+                    <p className="text-gray-400 text-sm flex items-center justify-center gap-2 mb-4">
                         <FaGithub className="text-lg" />
                         Todos os projetos são open-source e estão disponíveis no GitHub
                     </p>

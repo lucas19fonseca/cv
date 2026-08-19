@@ -12,9 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
     "@vercel/analytics": "^1.6.1",
-    "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",
-    "framer-motion": "^12.19.1",
     "gsap": "^3.13.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -32,15 +30,14 @@
     "globals": "^16.0.0",
     "vite": "^6.4.1"
   },
-  "description": "Bem-vindo ao meu portfólio pessoal! 🚀  \r Este projeto foi desenvolvido para apresentar quem sou, as tecnologias que domino e demonstrar na prática algumas das minhas habilidades em desenvolvimento front-end.",
-  "main": "eslint.config.js",
+  "description": "Portfólio pessoal de Lucas Andrade, desenvolvedor de software com foco em Inteligência Artificial.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lucas19fonseca/cv.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["portfolio", "react", "vite", "tailwindcss", "inteligencia-artificial"],
+  "author": "Lucas Andrade",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/lucas19fonseca/cv/issues"
   },

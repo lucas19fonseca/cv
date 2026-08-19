@@ -37,15 +37,10 @@ export default function HomeHero() {
             url: "https://github.com/lucas19fonseca", 
             label: "GitHub" 
         },
-        { 
-            icon: "linkedin", 
-            url: "https://www.linkedin.com/in/lucas-andrade-5511022b3/", 
-            label: "LinkedIn" 
-        },
-        { 
-            icon: "discord", 
-            url: "https://discord.com/channels/@me", 
-            label: "Discord" 
+        {
+            icon: "linkedin",
+            url: "https://www.linkedin.com/in/lucas-andrade-5511022b3/",
+            label: "LinkedIn"
         }
     ];
 
@@ -515,7 +510,7 @@ export default function HomeHero() {
                             
                             <div className="hidden sm:block">
                                 <span className="text-white font-medium text-sm sm:text-base tracking-tight block">LUCAS ANDRADE FONSECA</span>
-                                <span className="text-gray-500 text-[10px] sm:text-[11px] font-normal tracking-widest block">• DEVELOPER</span>
+                                <span className="text-gray-400 text-[10px] sm:text-[11px] font-normal tracking-widest block">• DEVELOPER</span>
                             </div>
                             <div className="block sm:hidden">
                                 <span className="text-white font-medium text-xs tracking-tight">LUCAS</span>
@@ -534,7 +529,7 @@ export default function HomeHero() {
                                                 className={`text-xs xl:text-[13px] font-medium tracking-wider uppercase transition-all duration-300 px-1 ${
                                                     isActive 
                                                         ? 'text-white' 
-                                                        : 'text-gray-500 hover:text-gray-300'
+                                                        : 'text-gray-400 hover:text-gray-300'
                                                 }`}
                                             >
                                                 <span className="relative pb-1">
@@ -599,7 +594,7 @@ export default function HomeHero() {
                                         onClick={closeMenu}
                                     >
                                         <span className="flex items-center gap-3">
-                                            <i className={`fas ${getIconForMenuItem(item.id)} text-xs ${isActive ? 'text-blue-400' : 'text-gray-500'}`}></i>
+                                            <i className={`fas ${getIconForMenuItem(item.id)} text-xs ${isActive ? 'text-blue-400' : 'text-gray-400'}`}></i>
                                             {item.label}
                                         </span>
                                     </a>
@@ -650,11 +645,12 @@ export default function HomeHero() {
                                 style={{ opacity: 1, visibility: 'visible' }}
                             >
                                 <p className="text-white/90 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                                    Desenvolvedor Full Stack & Estudante de{" "}
+                                    Desenvolvedor de Software & Formado em{" "}
                                     <span className="text-[#0969CC] font-semibold relative">
-                                        Ciências da Computação
+                                        Ciência da Computação
                                         <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-[#0969CC] to-cyan-500" />
-                                    </span>
+                                    </span>{" "}
+                                    com foco em Inteligência Artificial
                                 </p>
                             </div>
 
@@ -707,9 +703,13 @@ export default function HomeHero() {
                                 <div className="relative rounded-full overflow-hidden border-2 sm:border-3 lg:border-3 border-[#0969CC]/20 p-1.5 sm:p-2 lg:p-2 bg-gradient-to-br from-gray-900 to-black shadow-xl sm:shadow-2xl">
                                     <img
                                         src={FotoLucas}
-                                        alt="Lucas Andrade - Desenvolvedor Full Stack"
+                                        alt="Foto de Lucas Andrade, desenvolvedor de software"
                                         className="rounded-full w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 xl:w-80 xl:h-80 object-cover relative z-10"
                                         loading="eager"
+                                        fetchpriority="high"
+                                        width="320"
+                                        height="320"
+                                        decoding="async"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0969CC]/10 to-transparent animate-scan" />
                                 </div>

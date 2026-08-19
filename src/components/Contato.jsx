@@ -36,7 +36,6 @@ export default function Contato() {
         { icon: "fab fa-github", label: "GitHub", url: "https://github.com/lucas19fonseca", color: "from-gray-700 to-gray-900" },
         { icon: "fab fa-linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/lucas-andrade-5511022b3/", color: "from-blue-700 to-blue-900" },
         { icon: "fab fa-instagram", label: "Instagram", url: "https://www.instagram.com/lucax.andrade_/", color: "from-pink-600 to-purple-600" },
-        { icon: "fab fa-discord", label: "Discord", url: "https://discord.com/channels/@me", color: "from-indigo-600 to-blue-600" },
     ];
 
     const validarEmail = (email) => {
