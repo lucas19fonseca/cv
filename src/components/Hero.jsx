@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FotoLucas from "../assets/comum/lucas.jpg";
-import curriculo from "../assets/comum/Lucas_Andrade_web_junior.pdf";
+import ContatoModal from "./ContatoModal";
 
 export default function HomeHero() {
+    const [contatoModalAberto, setContatoModalAberto] = useState(false);
     const heroRef = useRef(null);
     const headerRef = useRef(null);
     const titleContainerRef = useRef(null);
@@ -50,8 +51,7 @@ export default function HomeHero() {
         { id: 'sobre-mim', label: 'Sobre' },
         { id: 'tecnologias', label: 'Tecnologias ' },
         { id: 'projetos', label: 'Projetos' },
-        { id: 'experiencia', label: 'Experiência' },
-        { id: 'contato', label: 'Contato' }
+        { id: 'experiencia', label: 'Experiência' }
     ];
 
     // Registrar GSAP apenas no client-side
@@ -676,18 +676,17 @@ export default function HomeHero() {
 
                             {/* Botão ÚNICO */}
                             <div className="flex justify-center lg:justify-start pt-4">
-                                <a
+                                <button
                                     ref={btnRef}
-                                    href={curriculo}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    type="button"
+                                    onClick={() => setContatoModalAberto(true)}
                                     className="group relative bg-gradient-to-r from-[#0969CC] to-cyan-600 text-white rounded-full px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-4 text-sm sm:text-base lg:text-lg font-bold shadow-xl hover:shadow-[0_0_30px_rgba(9,105,204,0.6)] transition-all duration-500 inline-flex items-center gap-2 sm:gap-3 lg:gap-4 backdrop-blur-sm border border-[#0969CC]/30 hover:border-white/30 min-w-[180px] sm:min-w-[200px] lg:min-w-[240px] justify-center animate-fade-in"
                                 >
-                                    <span className="relative z-10 tracking-wide">Baixar Currículo</span>
-                                    <i className="fa-solid fa-download text-sm sm:text-base lg:text-lg group-hover:translate-y-0.5 transition-transform duration-300" />
+                                    <span className="relative z-10 tracking-wide">Entre em Contato</span>
+                                    <i className="fa-solid fa-envelope text-sm sm:text-base lg:text-lg group-hover:translate-y-0.5 transition-transform duration-300" />
                                     <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600/0 via-blue-600/20 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-blue-600/20 to-cyan-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -807,6 +806,12 @@ export default function HomeHero() {
                     }
                 }
             `}</style>
+
+            {/* Modal de contato */}
+            <ContatoModal
+                aberto={contatoModalAberto}
+                onFechar={() => setContatoModalAberto(false)}
+            />
         </div>
     );
 }

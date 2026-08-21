@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ImgDev from "../assets/comum/programador.webp";
+import curriculo from "../assets/comum/Lucas_Andrade_web_junior.pdf";
 
 import ReactCert from "../assets/certificados/react-curso.png";
 import Py from "../assets/certificados/py.jpeg";
@@ -13,12 +14,12 @@ import Prompt from "../assets/certificados/curso-prompt.png";
 
 export default function SobreMim() {
     const [modalAberto, setModalAberto] = useState(false);
-    const [imagemAmpliada, setImagemAmpliada] = useState(null);
     const sectionRef = useRef(null);
     const imageRef = useRef(null);
     const textRef = useRef(null);
     const buttonRef = useRef(null);
     const particlesRef = useRef(null);
+    const dialogRef = useRef(null);
 
     // Array de certificados SIMPLIFICADO
     const certificados = [
@@ -75,22 +76,32 @@ export default function SobreMim() {
 
     const abrirModal = () => {
         setModalAberto(true);
-        document.body.style.overflow = 'hidden';
     };
 
     const fecharModal = () => {
         setModalAberto(false);
-        setImagemAmpliada(null);
-        document.body.style.overflow = 'auto';
     };
 
-    const mostrarImagemAmpliada = (imgSrc) => {
-        setImagemAmpliada(imgSrc);
-    };
+    // Acessibilidade do modal: ESC para fechar, foco inicial e travar o scroll do fundo
+    useEffect(() => {
+        if (!modalAberto) return;
 
-    const fecharImagemAmpliada = () => {
-        setImagemAmpliada(null);
-    };
+        const handleEsc = (e) => {
+            if (e.key === "Escape") fecharModal();
+        };
+
+        window.addEventListener("keydown", handleEsc);
+        const overflowAnterior = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+
+        dialogRef.current?.focus();
+
+        return () => {
+            window.removeEventListener("keydown", handleEsc);
+            document.body.style.overflow = overflowAnterior;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [modalAberto]);
 
     // Registrar GSAP apenas no client-side
     useEffect(() => {
@@ -325,14 +336,16 @@ export default function SobreMim() {
 
                             {/* Botões - Empilhados */}
                             <div className="mt-8 w-full max-w-xl space-y-3">
-                                {/* Botão Entre em Contato */}
-                                <a 
-                                    href="#contato"
+                                {/* Botão Ver Currículo */}
+                                <a
+                                    href={curriculo}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="group relative overflow-hidden inline-flex items-center justify-center gap-3 w-full px-6 py-4 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-600 text-white rounded-xl text-base font-semibold hover:shadow-2xl shadow-lg shadow-blue-500/30 transform hover:-translate-y-1 transition-all duration-500"
                                 >
                                     <span className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-                                    <i className="fas fa-paper-plane text-lg group-hover:rotate-12 transition-transform duration-300 relative z-10"></i>
-                                    <span className="relative z-10 text-base">Entre em contato</span>
+                                    <i className="fas fa-file-lines text-lg group-hover:rotate-12 transition-transform duration-300 relative z-10"></i>
+                                    <span className="relative z-10 text-base">Ver Currículo</span>
                                     <i className="fas fa-arrow-right text-sm ml-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 relative z-10"></i>
                                     
                                     <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400/30 via-cyan-400/30 to-blue-400/30 blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -450,141 +463,123 @@ export default function SobreMim() {
                 `}</style>
             </section>
 
-            {/* Modal de Certificados - COR ORIGINAL (AZUL CLARO) */}
+            {/* Modal de Certificados */}
             {modalAberto && (
-                <div 
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-                    onClick={fecharModal}
+                <div
+                    className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md cert-modal-overlay"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) fecharModal();
+                    }}
                 >
-                    <div 
-                        className="relative w-full max-w-4xl bg-gradient-to-br from-white to-blue-50 rounded-3xl shadow-2xl border border-blue-200 overflow-hidden"
-                        onClick={(e) => e.stopPropagation()}
+                    <div
+                        ref={dialogRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="cert-modal-titulo"
+                        tabIndex={-1}
+                        className="cert-modal-card relative w-full max-w-md max-h-[90vh] flex flex-col rounded-3xl border border-white/10 bg-gray-950/95 shadow-2xl outline-none overflow-hidden"
                     >
-                        {/* Header do Modal */}
-                        <div className="flex items-center justify-between p-6 border-b border-blue-200 bg-gradient-to-r from-blue-100 to-cyan-100">
-                            <div className="flex items-center gap-3">
-                                <i className="fas fa-certificate text-blue-600 text-xl"></i>
-                                <h2 className="text-2xl font-bold text-blue-800">Meus Certificados</h2>
-                            </div>
-                            <button
-                                onClick={fecharModal}
-                                className="p-3 rounded-full hover:bg-blue-200 transition-colors"
-                            >
-                                <i className="fas fa-times text-blue-600 text-xl"></i>
-                            </button>
-                        </div>
+                        {/* Brilho decorativo no topo */}
+                        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-blue-600/20 blur-3xl" />
+                        <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
 
-                        {/* Conteúdo do Modal */}
-                        <div className="p-6 max-h-[70vh] overflow-y-auto bg-white">
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {certificados.map((cert) => (
-                                    <div 
-                                        key={cert.id}
-                                        className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-5 border border-blue-200 hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-200/50"
-                                    >
-                                        {/* Thumbnail do Certificado - Clique para ampliar */}
-                                        <div 
-                                            className="h-48 mb-4 overflow-hidden rounded-xl border border-blue-100 cursor-pointer hover:border-blue-300 transition-all duration-300"
-                                            onClick={() => mostrarImagemAmpliada(cert.img)}
-                                        >
-                                            <img
-                                                src={cert.img}
-                                                alt={`Certificado: ${cert.titulo}`}
-                                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
-                                        </div>
+                        {/* Botão fechar */}
+                        <button
+                            onClick={fecharModal}
+                            aria-label="Fechar"
+                            className="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300"
+                        >
+                            <i className="fas fa-times"></i>
+                        </button>
 
-                                        {/* Informações do Certificado */}
-                                        <div className="space-y-3">
-                                            <h3 className="text-lg font-bold text-blue-800">
-                                                {cert.titulo}
-                                            </h3>
-                                            
-                                            <p className="text-gray-600 text-sm">
-                                                {cert.descricao}
-                                            </p>
-
-                                            {/* Botão Ver Certificado - Comportamento diferente para links válidos */}
-                                            <div className="pt-2">
-                                                {cert.link !== "#" ? (
-                                                    // Se tiver link válido, abre em nova aba
-                                                    <a
-                                                        href={cert.link}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium rounded-xl hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-400/30 transition-all duration-300"
-                                                    >
-                                                        <i className="fas fa-external-link-alt"></i>
-                                                        Ver Certificado Completo
-                                                    </a>
-                                                ) : (
-                                                    // Se não tiver link válido, mostra a imagem ampliada
-                                                    <button
-                                                        onClick={() => mostrarImagemAmpliada(cert.img)}
-                                                        className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium rounded-xl hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-400/30 transition-all duration-300"
-                                                    >
-                                                        <i className="fas fa-expand-alt"></i>
-                                                        Visualizar Certificado
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Footer do Modal */}
-                        <div className="p-4 border-t border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-blue-700 text-sm">
-                                <div className="flex items-center gap-2 text-cyan-600">
-                                    <i className="fas fa-mouse-pointer"></i>
-                                    <p>Clique na imagem para ampliar</p>
+                        {/* Cabeçalho */}
+                        <div className="relative p-6 sm:p-7 pb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/30">
+                                    <i className="fas fa-certificate text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h2 id="cert-modal-titulo" className="text-xl font-bold text-white leading-tight">
+                                        Meus Certificados
+                                    </h2>
+                                    <p className="text-gray-400 text-sm">
+                                        Cursos e formações concluídas.
+                                    </p>
                                 </div>
                             </div>
                         </div>
+
+                        {/* Lista de certificados */}
+                        <div className="cert-modal-scroll relative px-6 sm:px-7 pb-6 sm:pb-7 overflow-y-auto space-y-3.5">
+                            {certificados.map((cert) => (
+                                <div
+                                    key={cert.id}
+                                    className="rounded-xl p-3.5 border border-white/10 bg-white/5 hover:border-blue-500/60 hover:bg-white/[0.07] transition-all duration-300"
+                                >
+                                    <div className="flex items-center gap-3.5">
+                                        <img
+                                            src={cert.img}
+                                            alt={`Certificado: ${cert.titulo}`}
+                                            className="h-14 w-14 shrink-0 rounded-lg border border-white/10 object-cover"
+                                            loading="lazy"
+                                            decoding="async"
+                                        />
+                                        <div className="min-w-0 flex-1">
+                                            <h3 className="text-sm font-semibold text-white truncate">
+                                                {cert.titulo}
+                                            </h3>
+                                            <p className="text-gray-400 text-xs line-clamp-2">
+                                                {cert.descricao}
+                                            </p>
+                                        </div>
+                                        <a
+                                            href={cert.link !== "#" ? cert.link : cert.img}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`Ver certificado de ${cert.titulo}`}
+                                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 text-white transition-all duration-300 hover:from-blue-500 hover:to-cyan-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.35)]"
+                                        >
+                                            <i className={`fas ${cert.link !== "#" ? "fa-external-link-alt" : "fa-expand"} text-xs`}></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
 
-            {/* Modal de Imagem Ampliada */}
-            {imagemAmpliada && (
-                <div 
-                    className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-                    onClick={fecharImagemAmpliada}
-                >
-                    <div 
-                        className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-white to-blue-50 rounded-2xl overflow-hidden shadow-2xl"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-100 to-cyan-100 border-b border-blue-200">
-                            <h3 className="text-lg font-semibold text-blue-800">
-                                Certificado Ampliado
-                            </h3>
-                            <button
-                                onClick={fecharImagemAmpliada}
-                                className="p-2 rounded-full hover:bg-blue-200 transition-colors"
-                            >
-                                <i className="fas fa-times text-blue-600 text-xl"></i>
-                            </button>
-                        </div>
-                        
-                        <div className="p-4 bg-white">
-                            <div className="relative w-full h-[70vh] flex items-center justify-center bg-gray-50 rounded-lg">
-                                <img 
-                                    src={imagemAmpliada} 
-                                    alt="Certificado ampliado"
-                                    className="max-w-full max-h-full object-contain rounded-lg shadow-lg"
-                                />
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            )}
+            <style>{`
+                @keyframes certOverlayIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes certCardIn {
+                    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+                    to { opacity: 1; transform: translateY(0) scale(1); }
+                }
+                .cert-modal-overlay { animation: certOverlayIn 0.25s ease-out; }
+                .cert-modal-card { animation: certCardIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+                /* Scrollbar fina e minimalista */
+                .cert-modal-scroll {
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+                }
+                .cert-modal-scroll::-webkit-scrollbar {
+                    width: 5px;
+                }
+                .cert-modal-scroll::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .cert-modal-scroll::-webkit-scrollbar-thumb {
+                    background-color: rgba(255, 255, 255, 0.15);
+                    border-radius: 9999px;
+                }
+                .cert-modal-scroll::-webkit-scrollbar-thumb:hover {
+                    background-color: rgba(255, 255, 255, 0.3);
+                }
+            `}</style>
         </>
     );
 }
