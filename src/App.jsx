@@ -1,6 +1,5 @@
 import './index.css'
 import SobreMim from "./components/SobreMim";
-import Tecnologia from "./components/Tecnologias";
 import Projetos from "./components/projetos";
 import Experiencia from "./components/experiencia";
 import Hero from "./components/Hero";
@@ -13,7 +12,6 @@ function App() {
       <main className="min-w-[301px]">
         <Hero />
         <SobreMim />
-        <Tecnologia />
         <Projetos />
         <Experiencia />
         <ChatBot />

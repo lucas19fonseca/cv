@@ -12,14 +12,36 @@ import Tw from "../assets/certificados/curso-tw.jpg";
 import Linux from "../assets/certificados/curso-linux.jpg";
 import Prompt from "../assets/certificados/curso-prompt.png";
 
+// Ícones das tecnologias (mesmos usados na section Tecnologias)
+import HtmlIcon from "../assets/tecnologias/html.png";
+import CssIcon from "../assets/tecnologias/css.png";
+import JsIcon from "../assets/tecnologias/Java.sc.png";
+import ReactIcon from "../assets/tecnologias/react copy.svg";
+import PyIcon from "../assets/tecnologias/py.png";
+import GitHubIcon from "../assets/tecnologias/github.png";
+import GitIcon from "../assets/tecnologias/git.png";
+import VscodeIcon from "../assets/tecnologias/vscode.png";
+import MysqlIcon from "../assets/tecnologias/mysql.svg";
+import FigmaIcon from "../assets/tecnologias/figma.png";
+import DockerIcon from "../assets/tecnologias/docker.png";
+import PostmanIcon from "../assets/tecnologias/postman.png";
+import TwIcon from "../assets/tecnologias/tailwind.png";
+import FireIcon from "../assets/tecnologias/Firebase.png";
+import BiIcon from "../assets/tecnologias/Bi.svg";
+import UbuntuIcon from "../assets/tecnologias/ubuntu.png";
+import BootstrapIcon from "../assets/tecnologias/bootstrap.png";
+import GoIcon from "../assets/tecnologias/golang.png";
+
 export default function SobreMim() {
     const [modalAberto, setModalAberto] = useState(false);
+    const [techModalAberto, setTechModalAberto] = useState(false);
     const sectionRef = useRef(null);
     const imageRef = useRef(null);
     const textRef = useRef(null);
     const buttonRef = useRef(null);
     const particlesRef = useRef(null);
     const dialogRef = useRef(null);
+    const techDialogRef = useRef(null);
 
     // Array de certificados SIMPLIFICADO
     const certificados = [
@@ -74,12 +96,82 @@ export default function SobreMim() {
         }
     ];
 
+    // Tecnologias agrupadas por categoria (espelha a section Tecnologias)
+    const grupos = [
+        {
+            id: "frontend",
+            titulo: "Frontend",
+            subtitulo: "Interface & UX",
+            icone: "fa-code",
+            gradiente: "from-blue-500 to-cyan-500",
+            borda: "hover:border-blue-500/60",
+            techs: [
+                { name: "HTML", icon: HtmlIcon },
+                { name: "CSS", icon: CssIcon },
+                { name: "JavaScript", icon: JsIcon },
+                { name: "React", icon: ReactIcon },
+                { name: "Tailwind", icon: TwIcon },
+                { name: "Bootstrap", icon: BootstrapIcon },
+            ],
+        },
+        {
+            id: "backend",
+            titulo: "Backend",
+            subtitulo: "Lógica & Dados",
+            icone: "fa-server",
+            gradiente: "from-green-500 to-emerald-500",
+            borda: "hover:border-green-500/60",
+            techs: [
+                { name: "Golang", icon: GoIcon },
+                { name: "Python", icon: PyIcon },
+                { name: "MySQL", icon: MysqlIcon },
+                { name: "Firebase", icon: FireIcon },
+            ],
+        },
+        {
+            id: "tools",
+            titulo: "Ferramentas",
+            subtitulo: "Dev & Ops",
+            icone: "fa-tools",
+            gradiente: "from-orange-500 to-yellow-500",
+            borda: "hover:border-orange-500/60",
+            techs: [
+                { name: "Git", icon: GitIcon },
+                { name: "GitHub", icon: GitHubIcon },
+                { name: "VS Code", icon: VscodeIcon },
+                { name: "Postman", icon: PostmanIcon },
+                { name: "Power BI", icon: BiIcon },
+                { name: "Docker", icon: DockerIcon },
+                { name: "Ubuntu", icon: UbuntuIcon },
+            ],
+        },
+        {
+            id: "design",
+            titulo: "Design & Outros",
+            subtitulo: "UI & Análise",
+            icone: "fa-palette",
+            gradiente: "from-pink-500 to-rose-500",
+            borda: "hover:border-pink-500/60",
+            techs: [
+                { name: "Figma", icon: FigmaIcon },
+            ],
+        },
+    ];
+
     const abrirModal = () => {
         setModalAberto(true);
     };
 
     const fecharModal = () => {
         setModalAberto(false);
+    };
+
+    const abrirTechModal = () => {
+        setTechModalAberto(true);
+    };
+
+    const fecharTechModal = () => {
+        setTechModalAberto(false);
     };
 
     // Acessibilidade do modal: ESC para fechar, foco inicial e travar o scroll do fundo
@@ -102,6 +194,27 @@ export default function SobreMim() {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [modalAberto]);
+
+    // Acessibilidade do modal de tecnologias
+    useEffect(() => {
+        if (!techModalAberto) return;
+
+        const handleEsc = (e) => {
+            if (e.key === "Escape") fecharTechModal();
+        };
+
+        window.addEventListener("keydown", handleEsc);
+        const overflowAnterior = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+
+        techDialogRef.current?.focus();
+
+        return () => {
+            window.removeEventListener("keydown", handleEsc);
+            document.body.style.overflow = overflowAnterior;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [techModalAberto]);
 
     // Registrar GSAP apenas no client-side
     useEffect(() => {
@@ -361,6 +474,16 @@ export default function SobreMim() {
                                     <span className="text-base">Ver Certificados</span>
                                     <i className="fas fa-arrow-right text-sm opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300"></i>
                                 </button>
+
+                                {/* Botão Ver Tecnologias */}
+                                <button
+                                    onClick={abrirTechModal}
+                                    className="group relative overflow-hidden inline-flex items-center justify-center gap-3 w-full px-6 py-4 bg-white border-2 border-cyan-500 text-cyan-600 rounded-xl text-base font-semibold hover:bg-cyan-50 hover:shadow-xl shadow-md shadow-cyan-200/30 transform hover:-translate-y-1 transition-all duration-500"
+                                >
+                                    <i className="fas fa-layer-group text-lg group-hover:scale-110 transition-transform duration-300"></i>
+                                    <span className="text-base">Tecnologias & Ferramentas</span>
+                                    <i className="fas fa-arrow-right text-sm opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300"></i>
+                                </button>
                             </div>
                         </div>
 
@@ -541,6 +664,94 @@ export default function SobreMim() {
                                         >
                                             <i className={`fas ${cert.link !== "#" ? "fa-external-link-alt" : "fa-expand"} text-xs`}></i>
                                         </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de Tecnologias & Ferramentas */}
+            {techModalAberto && (
+                <div
+                    className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md cert-modal-overlay"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) fecharTechModal();
+                    }}
+                >
+                    <div
+                        ref={techDialogRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="tech-modal-titulo"
+                        tabIndex={-1}
+                        className="cert-modal-card relative w-full max-w-3xl max-h-[90vh] flex flex-col rounded-3xl border border-white/10 bg-gray-950/95 shadow-2xl outline-none overflow-hidden"
+                    >
+                        {/* Brilho decorativo no topo */}
+                        <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full bg-cyan-600/20 blur-3xl" />
+                        <div className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/60 to-transparent" />
+
+                        {/* Botão fechar */}
+                        <button
+                            onClick={fecharTechModal}
+                            aria-label="Fechar"
+                            className="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300"
+                        >
+                            <i className="fas fa-times"></i>
+                        </button>
+
+                        {/* Cabeçalho */}
+                        <div className="relative p-6 sm:p-7 pb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-cyan-500/30">
+                                    <i className="fas fa-layer-group text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h2 id="tech-modal-titulo" className="text-xl font-bold text-white leading-tight">
+                                        Tecnologias & <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">Ferramentas</span>
+                                    </h2>
+                                    <p className="text-gray-400 text-sm">
+                                        Tecnologias que utilizo no dia a dia.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Categorias */}
+                        <div className="cert-modal-scroll relative px-6 sm:px-7 pb-6 sm:pb-7 overflow-y-auto space-y-5">
+                            {grupos.map((grupo) => (
+                                <div key={grupo.id}>
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div className={`w-9 h-9 rounded-lg bg-gradient-to-r ${grupo.gradiente} flex items-center justify-center flex-shrink-0`}>
+                                            <i className={`fas ${grupo.icone} text-white text-sm`}></i>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-base font-bold text-white leading-tight">{grupo.titulo}</h3>
+                                            <p className="text-gray-500 text-xs">{grupo.subtitulo}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                                        {grupo.techs.map((tech) => (
+                                            <div
+                                                key={tech.name}
+                                                className={`rounded-xl border border-white/10 bg-white/5 p-3 transition-all duration-300 hover:bg-white/[0.08] hover:scale-105 ${grupo.borda}`}
+                                            >
+                                                <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gray-900/60 border border-white/10 flex items-center justify-center p-1.5">
+                                                    <img
+                                                        src={tech.icon}
+                                                        alt={tech.name}
+                                                        className="w-full h-full object-contain"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                </div>
+                                                <h4 className="text-center text-white font-medium text-xs truncate">
+                                                    {tech.name}
+                                                </h4>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             ))}

@@ -49,7 +49,6 @@ export default function HomeHero() {
     const menuItems = [
         { id: 'home-hero', label: 'Início' },
         { id: 'sobre-mim', label: 'Sobre' },
-        { id: 'tecnologias', label: 'Tecnologias ' },
         { id: 'projetos', label: 'Projetos' },
         { id: 'experiencia', label: 'Experiência' }
     ];
@@ -451,7 +450,6 @@ export default function HomeHero() {
         switch(id) {
             case 'home-hero': return 'fa-home';
             case 'sobre-mim': return 'fa-user';
-            case 'tecnologias': return 'fa-code';
             case 'projetos': return 'fa-folder';
             case 'experiencia': return 'fa-briefcase';
             case 'contato': return 'fa-envelope';
