@@ -435,8 +435,8 @@ export default function SobreMim() {
                             className="lg:w-1/3 flex-shrink-0 flex flex-col items-center"
                         >
                             <div className="relative w-full">
-                                <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-xl p-1 shadow-lg shadow-blue-100/50">
-                                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
+                                <div className="relative  rounded-xl p-1 ">
+                                    <div className="absolute inset-0 rounded-xl "></div>
                                     <img
                                         src={ImgDev}
                                         alt="Ilustração de um programador representando Lucas Andrade"

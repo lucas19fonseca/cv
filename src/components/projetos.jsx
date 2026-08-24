@@ -82,7 +82,7 @@ export default function Projetos() {
         if (imagensLocais[nomeProjeto]) {
             return imagensLocais[nomeProjeto];
         }
-        
+
         return `https://opengraph.githubassets.com/1/lucas19fonseca/${repoName}`;
     };
 
@@ -317,7 +317,7 @@ export default function Projetos() {
 
     const projetosPorVez = 6;
     const hasMoreProjects = projetos.length > projetosMostrados;
-    
+
     // Slice para mostrar apenas os projetos necessários
     const projetosParaMostrar = projetos.slice(0, projetosMostrados);
 
@@ -333,11 +333,10 @@ export default function Projetos() {
         <section
             id="projetos"
             ref={sectionRef}
-            className="py-20 md:py-32 relative overflow-hidden"
+            className="py-16 md:py-24 relative overflow-hidden"
         >
             {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900" />
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
 
             {/* Grid pattern */}
             <div className="absolute inset-0 opacity-5">
@@ -345,15 +344,21 @@ export default function Projetos() {
                     className="w-full h-full"
                     style={{
                         backgroundImage: `
-              linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
-              linear-gradient(180deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
-            `,
+                            linear-gradient(90deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
+                            linear-gradient(180deg, rgba(59, 130, 246, 0.3) 1px, transparent 1px)
+                        `,
                         backgroundSize: "50px 50px",
                     }}
-                ></div>
+                />
             </div>
 
-            <div className="container mx-auto px-4 lg:px-8 relative z-10">
+            {/* Linha decorativa no topo */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
+
+            {/* Linha decorativa na base */}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
+
+            <div className="container mx-auto max-w-6xl px-6 lg:px-8 relative z-10">
                 {/* Section header */}
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center gap-3 mb-4">
@@ -377,180 +382,113 @@ export default function Projetos() {
                 </div>
 
                 {/* Projects grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projetosParaMostrar.map((projeto, index) => (
-                        <div key={index} className="group relative">
-                            {/* Glow effect */}
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-700 to-gray-900 rounded-2xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <article
+                            key={index}
+                            className="group flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] transition-colors duration-300 hover:border-white/10"
+                        >
+                            {/* Project image */}
+                            <div className="relative aspect-[16/10] overflow-hidden">
+                                <img
+                                    src={projeto.img}
+                                    alt={`Captura de tela do projeto ${projeto.nome}`}
+                                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                    loading="lazy"
+                                    decoding="async"
+                                    width="640"
+                                    height="360"
+                                    onError={(e) => {
+                                        const repoName = projeto.link.split('/').pop() ||
+                                            projeto.nome.toLowerCase().replace(/\s+/g, '-');
+                                        e.target.src = `https://opengraph.githubassets.com/1/lucas19fonseca/${repoName}`;
+                                    }}
+                                />
 
-                            <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl overflow-hidden transition-all duration-300 group-hover:border-blue-500/50 group-hover:scale-[1.02] group-hover:shadow-2xl h-full flex flex-col">
-                                {/* Project image */}
-                                <div className="relative h-48 overflow-hidden">
-                                    <img
-                                        src={projeto.img}
-                                        alt={`Captura de tela do projeto ${projeto.nome}`}
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        loading="lazy"
-                                        decoding="async"
-                                        width="640"
-                                        height="360"
-                                        onError={(e) => {
-                                            const repoName = projeto.link.split('/').pop() || 
-                                                          projeto.nome.toLowerCase().replace(/\s+/g, '-');
-                                            e.target.src = `https://opengraph.githubassets.com/1/lucas19fonseca/${repoName}`;
-                                        }}
-                                    />
-
-                                    {/* Overlay gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
-
-                                    {/* Site link badge (se disponível) */}
-                                    {projeto.site && (
-                                        <div className="absolute top-4 right-4">
-                                            <a
-                                                href={projeto.site}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs font-medium rounded-lg hover:opacity-90 transition-opacity"
-                                            >
-                                                <FaExternalLinkAlt className="text-xs" />
-                                                Ver Site
-                                            </a>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Project content */}
-                                <div className="flex-1 p-6 flex flex-col">
-                                    {/* Project title */}
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">
-                                            {projeto.nome}
-                                        </h3>
-                                    </div>
-
-                                    {/* Project description */}
-                                    <p className="text-gray-400 text-sm mb-6 flex-1">
-                                        {projeto.descricao}
-                                    </p>
-
-                                    {/* Technologies */}
-                                    <div className="mt-2 pt-4 border-t border-gray-800">
-                                        <div className="mb-3">
-                                            <span className="text-xs text-gray-400 font-medium">
-                                                TECNOLOGIAS UTILIZADAS
-                                            </span>
-                                        </div>
-
-                                        <div className="flex flex-wrap gap-2">
-                                            {projeto.tecnologias.map((tech, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-800/50 border border-gray-700 group/tech hover:border-blue-500/50 transition-all duration-300"
-                                                    title={tech.nome}
-                                                >
-                                                    <div className={`text-lg ${tech.color}`}>
-                                                        {tech.icone}
-                                                    </div>
-                                                    <span className="text-xs text-gray-300">
-                                                        {tech.nome}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* Project footer */}
-                                    <div className="mt-6 pt-4 border-t border-gray-800/50">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-400">
-                                                Disponível no GitHub
-                                            </span>
-                                            <a
-                                                href={projeto.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-300 flex items-center gap-1.5 group/link"
-                                            >
-                                                <span>Acessar repositório</span>
-                                                <FaGithub className="text-sm group-hover/link:translate-x-1 transition-transform" />
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Hover line effect */}
-                                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 group-hover:w-full transition-all duration-500"></div>
+                                {/* Site link */}
+                                {projeto.site && (
+                                    <a
+                                        href={projeto.site}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-gray-950/70 px-3 py-1.5 text-xs font-medium text-white opacity-0 backdrop-blur-sm transition-opacity duration-300 hover:bg-gray-950/90 group-hover:opacity-100"
+                                    >
+                                        <FaExternalLinkAlt className="text-[10px]" />
+                                        Ver site
+                                    </a>
+                                )}
                             </div>
-                        </div>
+
+                            {/* Project content */}
+                            <div className="flex flex-1 flex-col p-5">
+                                <h3 className="text-lg font-semibold text-white">
+                                    {projeto.nome}
+                                </h3>
+
+                                <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-400">
+                                    {projeto.descricao}
+                                </p>
+
+                                {/* Technologies */}
+                                <div className="mt-5 flex flex-wrap gap-1.5">
+                                    {projeto.tecnologias.map((tech, i) => (
+                                        <span
+                                            key={i}
+                                            className="inline-flex items-center gap-1.5 rounded-md bg-white/[0.03] px-2.5 py-1 text-xs text-gray-300"
+                                            title={tech.nome}
+                                        >
+                                            <span className={`text-sm ${tech.color}`}>
+                                                {tech.icone}
+                                            </span>
+                                            {tech.nome}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                {/* Footer */}
+                                <div className="mt-5 border-t border-white/5 pt-4">
+                                    <a
+                                        href={projeto.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors duration-300 hover:text-white"
+                                    >
+                                        <FaGithub className="text-base" />
+                                        Ver repositório
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
                     ))}
                 </div>
 
                 {/* Show more/less button */}
                 {hasMoreProjects && (
-                    <div className="text-center mt-12">
+                    <div className="mt-12 text-center">
                         <button
                             onClick={carregarMaisProjetos}
-                            className="group relative px-8 py-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300 overflow-hidden"
+                            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-6 py-3 text-sm font-medium text-gray-300 transition-colors duration-300 hover:border-white/20 hover:text-white"
                         >
-                            {/* Glow effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            
-                            <span className="relative z-10 flex items-center gap-3">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                                Ver mais {Math.min(projetosPorVez, projetos.length - projetosMostrados)} projetos
-                                <span className="text-xs text-gray-400 ml-2">
-                                    ({projetosMostrados}/{projetos.length})
-                                </span>
+                            Ver mais projetos
+                            <span className="text-xs text-gray-500">
+                                ({projetosMostrados}/{projetos.length})
                             </span>
                         </button>
-                        
-                        {/* Botão para resetar (opcional) - aparece quando todos os projetos estão sendo mostrados */}
-                        {projetosMostrados > projetosPorVez && (
-                            <button
-                                onClick={resetarProjetos}
-                                className="mt-4 text-sm text-gray-400 hover:text-white transition-colors duration-300"
-                            >
-                                Mostrar menos
-                            </button>
-                        )}
                     </div>
                 )}
 
-                {/* Mostrar contagem quando todos os projetos estão visíveis */}
+                {/* Reset button quando todos visíveis */}
                 {!hasMoreProjects && projetosMostrados > projetosPorVez && (
-                    <div className="text-center mt-12">
-                        <p className="text-gray-400 mb-4">
-                            Todos os {projetos.length} projetos estão sendo exibidos
-                        </p>
+                    <div className="mt-12 text-center">
                         <button
                             onClick={resetarProjetos}
-                            className="group relative px-6 py-3 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 text-white font-medium hover:border-blue-500 hover:bg-gray-800/80 transition-all duration-300"
+                            className="inline-flex items-center gap-2 rounded-full border border-white/10 px-6 py-3 text-sm font-medium text-gray-300 transition-colors duration-300 hover:border-white/20 hover:text-white"
                         >
-                            <span className="relative z-10 flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                                </svg>
-                                Ver menos projetos
-                            </span>
+                            Ver menos
                         </button>
                     </div>
                 )}
-
-                {/* GitHub note */}
-                <div className="mt-16 text-center border-t border-gray-800/30 pt-8">
-                    <p className="text-gray-400 text-sm flex items-center justify-center gap-2 mb-4">
-                        <FaGithub className="text-lg" />
-                        Todos os projetos são open-source e estão disponíveis no GitHub
-                    </p>
-                </div>
             </div>
-            
-            {/* Bottom decorative elements */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
-            <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-gray-900 to-transparent" />
         </section>
     );
 }

@@ -142,24 +142,20 @@ export default function ContatoModal({ aberto, onFechar }) {
                         </div>
                     </div>
 
-                    {/* Atalhos rápidos */}
-                    <div className="mb-5 grid grid-cols-2 gap-3">
-                        <a
-                            href="https://wa.me/5561983462252"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white transition-all duration-300 hover:border-green-500/60 hover:bg-green-500/10"
-                        >
-                            <i className="fab fa-whatsapp text-green-400"></i>
-                            <span className="text-sm font-medium">WhatsApp</span>
-                        </a>
-                        <a
-                            href="mailto:lucas19fonseca@gmail.com"
-                            className="group flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white transition-all duration-300 hover:border-blue-500/60 hover:bg-blue-500/10"
-                        >
-                            <i className="fas fa-envelope text-blue-400"></i>
-                            <span className="text-sm font-medium">Email</span>
-                        </a>
+                    {/* Contato direto por email */}
+                    <div className="mb-5 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                        <i className="fas fa-envelope text-blue-400"></i>
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[11px] uppercase tracking-widest text-gray-500">
+                                Prefere mandar direto?
+                            </p>
+                            <a
+                                href="mailto:lucas19fonseca@gmail.com"
+                                className="block truncate text-sm font-medium text-white transition-colors duration-300 hover:text-blue-400"
+                            >
+                                lucas19fonseca@gmail.com
+                            </a>
+                        </div>
                     </div>
 
                     <div className="mb-5 flex items-center gap-3">

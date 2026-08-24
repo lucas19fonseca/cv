@@ -38,7 +38,7 @@ export default function Experiencia() {
                 "Suporte técnico e manutenção para clientes",
                 "Implementação de designs modernos com foco em UX/UI"
             ],
-            tecnologias: ["HTML", "CSS", "JavaScript", "Bootstrap", "Tailwind", "SEO", "GitHub Pages", "Vercel","Gsap"],
+            tecnologias: ["HTML", "CSS", "JavaScript", "Bootstrap", "Tailwind", "SEO", "Acessibilidade", "Performace", "GitHub Pages", "Vercel","Gsap"],
             cor: "from-blue-500 to-cyan-500",
             icone: "fas fa-briefcase"
         }

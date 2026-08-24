@@ -30,7 +30,7 @@ export default function HomeHero() {
     const socialLinks = [
         { 
             icon: "instagram", 
-            url: "https://www.instagram.com/lucax.andrade_/", 
+            url: "https://www.instagram.com/lucas.andradefs/", 
             label: "Instagram" 
         },
         { 
