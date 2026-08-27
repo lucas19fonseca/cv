@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ImgDev from "../assets/comum/programador.webp";
-import curriculo from "../assets/comum/Lucas_Andrade_web_junior.pdf";
+import curriculo from "../assets/comum/curriculo_lucas (1).pdf";
 
 import ReactCert from "../assets/certificados/react-curso.png";
 import Py from "../assets/certificados/py.jpeg";
