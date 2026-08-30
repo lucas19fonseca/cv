@@ -88,7 +88,7 @@ const arredonda = (v) => Math.round(v / 100) * 100;
 export default function EstimadorProjeto() {
     const [tipo, setTipo] = useState("sistema");
     const [complexidade, setComplexidade] = useState("media");
-    const [features, setFeatures] = useState(["login", "bancoDados"]);
+    const [features, setFeatures] = useState([]);
     const [design, setDesign] = useState("uiBasica");
     const [infra, setInfra] = useState("deploy");
     const [prazo, setPrazo] = useState("normal");
