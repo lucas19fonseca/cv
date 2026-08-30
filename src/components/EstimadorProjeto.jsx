@@ -86,8 +86,8 @@ const brl = (v) =>
 const arredonda = (v) => Math.round(v / 100) * 100;
 
 export default function EstimadorProjeto() {
-    const [tipo, setTipo] = useState("sistema");
-    const [complexidade, setComplexidade] = useState("media");
+    const [tipo, setTipo] = useState("");
+    const [complexidade, setComplexidade] = useState("");
     const [features, setFeatures] = useState([]);
     const [design, setDesign] = useState("uiBasica");
     const [infra, setInfra] = useState("deploy");
@@ -99,13 +99,15 @@ export default function EstimadorProjeto() {
 
     const calc = useMemo(() => {
         const t = TIPOS.find((x) => x.id === tipo);
+        if (!t) return null; // sem tipo escolhido, sem estimativa
         const c = COMPLEXIDADES.find((x) => x.id === complexidade);
         const d = DESIGNS.find((x) => x.id === design);
         const inf = INFRAS.find((x) => x.id === infra);
         const p = PRAZOS.find((x) => x.id === prazo);
+        const cMult = c ? c.mult : 1;
         const hFeat = features.reduce((s, id) => s + (FEATURE_HORAS[id] || 0), 0);
         const horas = Math.round((t.horas + hFeat + d.horas + inf.horas) * MARGEM_TECNICA);
-        const preco = horas * VALOR_HORA * c.mult * p.mult;
+        const preco = horas * VALOR_HORA * cMult * p.mult;
         return { horas, min: arredonda(preco * 0.92), max: arredonda(preco * 1.08) };
     }, [tipo, complexidade, features, design, infra, prazo]);
 
@@ -264,28 +266,46 @@ export default function EstimadorProjeto() {
                                     <span className="text-blue-400 font-mono text-[11px] tracking-widest">ESTIMATIVA</span>
                                 </div>
 
-                                <p className="text-gray-400 text-xs mb-1">Investimento estimado</p>
-                                <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
-                                    {brl(calc.min)}
-                                </p>
-                                <p className="text-gray-300 text-xs mb-4">
-                                    até <span className="font-semibold">{brl(calc.max)}</span>
-                                </p>
+                                {calc ? (
+                                    <>
+                                        <p className="text-gray-400 text-xs mb-1">Investimento estimado</p>
+                                        <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
+                                            {brl(calc.min)}
+                                        </p>
+                                        <p className="text-gray-300 text-xs mb-4">
+                                            até <span className="font-semibold">{brl(calc.max)}</span>
+                                        </p>
 
-                                <div className="flex items-center gap-4 text-xs text-gray-400 mb-4">
-                                    <span className="flex items-center gap-1.5">
-                                        <i className="fas fa-clock text-cyan-400" />
-                                        ~{calc.horas}h
-                                    </span>
-                                    <span className="flex items-center gap-1.5">
-                                        <i className="fas fa-shield-halved text-cyan-400" />
-                                        margem inclusa
-                                    </span>
-                                </div>
+                                        <div className="flex items-center gap-4 text-xs text-gray-400 mb-4">
+                                            <span className="flex items-center gap-1.5">
+                                                <i className="fas fa-clock text-cyan-400" />
+                                                ~{calc.horas}h
+                                            </span>
+                                            <span className="flex items-center gap-1.5">
+                                                <i className="fas fa-shield-halved text-cyan-400" />
+                                                margem inclusa
+                                            </span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="mb-4 py-2">
+                                        <p className="text-gray-300 text-sm font-medium mb-1">
+                                            Selecione o tipo de projeto
+                                        </p>
+                                        <p className="text-gray-500 text-xs">
+                                            Escolha um tipo acima para ver a estimativa na hora.
+                                        </p>
+                                    </div>
+                                )}
 
                                 <button
                                     onClick={() => setModalAberto(true)}
-                                    className="w-full py-2.5 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:shadow-lg hover:shadow-blue-500/30 transition"
+                                    disabled={!calc}
+                                    className={`w-full py-2.5 rounded-lg text-sm font-semibold text-white transition ${
+                                        calc
+                                            ? "bg-gradient-to-r from-blue-600 to-cyan-500 hover:shadow-lg hover:shadow-blue-500/30"
+                                            : "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                                    }`}
                                 >
                                     Solicitar orçamento
                                 </button>
