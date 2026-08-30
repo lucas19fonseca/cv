@@ -38,7 +38,7 @@ export default function Experiencia() {
                 "Suporte técnico e manutenção para clientes",
                 "Implementação de designs modernos com foco em UX/UI"
             ],
-            tecnologias: ["HTML", "CSS", "JavaScript", "Bootstrap", "Tailwind", "SEO", "Acessibilidade", "Performace", "GitHub Pages", "Vercel","Gsap"],
+            tecnologias: ["HTML", "CSS", "JavaScript", "Bootstrap", "Tailwind", "SEO", "Acessibilidade", "Performace", "GitHub Pages", "Vercel","Gsap","SSR","SSG","CSR","ISR"],
             cor: "from-blue-500 to-cyan-500",
             icone: "fas fa-briefcase"
         }
@@ -96,7 +96,7 @@ export default function Experiencia() {
                 </div>
 
                 {/* Experience cards - Layout simples */}
-                <div className="max-w-4xl mx-auto space-y-8">
+                <div className="max-w-6xl mx-auto space-y-8">
                     {experiencias.map((exp) => (
                         <div 
                             key={exp.id}
