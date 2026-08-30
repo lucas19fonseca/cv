@@ -7,6 +7,25 @@ export default function ContatoModal({ aberto, onFechar }) {
 
     const [isLoading, setIsLoading] = useState(false);
     const [status, setStatus] = useState(null); // { tipo: "sucesso" | "erro", titulo, mensagem }
+    const [copiado, setCopiado] = useState(false);
+
+    const EMAIL = "lucas19fonseca@gmail.com";
+
+    const copiarEmail = async () => {
+        try {
+            await navigator.clipboard.writeText(EMAIL);
+        } catch {
+            // fallback para navegadores sem clipboard API
+            const t = document.createElement("textarea");
+            t.value = EMAIL;
+            document.body.appendChild(t);
+            t.select();
+            try { document.execCommand("copy"); } catch { /* noop */ }
+            document.body.removeChild(t);
+        }
+        setCopiado(true);
+        setTimeout(() => setCopiado(false), 2000);
+    };
 
     const validarEmail = (email) => {
         const dominiosFalsos = [
@@ -143,19 +162,31 @@ export default function ContatoModal({ aberto, onFechar }) {
                     </div>
 
                     {/* Contato direto por email */}
-                    <div className="mb-5 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                    <div className="mb-5 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 transition-colors duration-300 hover:border-blue-500/40">
                         <i className="fas fa-envelope text-blue-400"></i>
-                        <div className="min-w-0 flex-1">
+                        <a
+                            href={`mailto:${EMAIL}`}
+                            className="min-w-0 flex-1 group"
+                        >
                             <p className="text-[11px] uppercase tracking-widest text-gray-500">
                                 Prefere mandar direto?
                             </p>
-                            <a
-                                href="mailto:lucas19fonseca@gmail.com"
-                                className="block truncate text-sm font-medium text-white transition-colors duration-300 hover:text-blue-400"
-                            >
-                                lucas19fonseca@gmail.com
-                            </a>
-                        </div>
+                            <span className="block truncate text-sm font-medium text-white transition-colors duration-300 group-hover:text-blue-400">
+                                {EMAIL}
+                            </span>
+                        </a>
+                        <button
+                            type="button"
+                            onClick={copiarEmail}
+                            aria-label="Copiar e-mail"
+                            className="flex-shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-300 transition-colors duration-300 hover:border-blue-500/40 hover:text-blue-400"
+                        >
+                            {copiado ? (
+                                <><i className="fas fa-check text-blue-400"></i> <span className="hidden sm:inline">Copiado</span></>
+                            ) : (
+                                <><i className="fas fa-copy"></i> <span className="hidden sm:inline">Copiar</span></>
+                            )}
+                        </button>
                     </div>
 
                     <div className="mb-5 flex items-center gap-3">

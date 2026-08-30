@@ -50,7 +50,8 @@ export default function HomeHero() {
         { id: 'home-hero', label: 'Início' },
         { id: 'sobre-mim', label: 'Sobre' },
         { id: 'projetos', label: 'Projetos' },
-        { id: 'experiencia', label: 'Experiência' }
+        { id: 'experiencia', label: 'Experiência' },
+        { id: 'estimador', label: 'Serviços' }
     ];
 
     // Registrar GSAP apenas no client-side
