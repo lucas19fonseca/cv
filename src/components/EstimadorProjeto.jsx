@@ -7,10 +7,10 @@ import ContatoModal from "./ContatoModal";
      (horas base + funcionalidades + design + infra)
         x 1.15 (margem técnica)  x valor/hora
         x complexidade  x prazo
-   Valor/hora de R$90 = faixa "pleno" de front-end React no Brasil (2026).
+   Valor/hora de R$50 = faixa "júnior" de front-end React no Brasil (2026).
    ========================================================================= */
 
-const VALOR_HORA = 90;
+const VALOR_HORA = 50;
 const MARGEM_TECNICA = 1.15;
 
 const TIPOS = [
@@ -85,6 +85,12 @@ const brl = (v) =>
 
 const arredonda = (v) => Math.round(v / 100) * 100;
 
+// Preço base "a partir de" na faixa júnior (R$50/h): tipo + design/infra padrão, complexidade básica, prazo normal.
+const DESIGN_PADRAO_H = 5; // UI básica
+const INFRA_PADRAO_H = 2;  // deploy simples
+const precoBasePleno = (t) =>
+    arredonda(Math.round((t.horas + DESIGN_PADRAO_H + INFRA_PADRAO_H) * MARGEM_TECNICA) * VALOR_HORA);
+
 export default function EstimadorProjeto() {
     const [tipo, setTipo] = useState("");
     const [complexidade, setComplexidade] = useState("");
@@ -154,7 +160,7 @@ export default function EstimadorProjeto() {
                     <div className="bg-gray-900/40 border border-gray-800 rounded-2xl p-5 divide-y divide-gray-800">
                         {/* Tipo */}
                         <div className="pb-4">
-                            <span className={label}>Tipo de projeto</span>
+                            <span className={label}>Tipo de projeto <span className="text-gray-600 normal-case tracking-normal">· preços faixa júnior</span></span>
                             <div className="flex flex-wrap gap-2">
                                 {TIPOS.map((t) => {
                                     const on = tipo === t.id;
@@ -163,14 +169,19 @@ export default function EstimadorProjeto() {
                                             key={t.id}
                                             type="button"
                                             onClick={() => setTipo(t.id)}
-                                            className={`flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg border text-xs transition ${
+                                            className={`flex flex-col items-start gap-1 py-2 px-2.5 rounded-lg border text-xs transition ${
                                                 on
                                                     ? "border-blue-500/70 bg-blue-500/10 text-white"
                                                     : "border-gray-800 bg-gray-900/50 text-gray-300 hover:border-blue-500/40"
                                             }`}
                                         >
-                                            <i className={`fas ${t.icone} ${on ? "text-cyan-400" : "text-gray-500"}`} />
-                                            {t.nome}
+                                            <span className="flex items-center gap-1.5">
+                                                <i className={`fas ${t.icone} ${on ? "text-cyan-400" : "text-gray-500"}`} />
+                                                {t.nome}
+                                            </span>
+                                            <span className={`text-[10px] font-medium ${on ? "text-cyan-300" : "text-gray-500"}`}>
+                                                a partir de {brl(precoBasePleno(t))}
+                                            </span>
                                         </button>
                                     );
                                 })}
