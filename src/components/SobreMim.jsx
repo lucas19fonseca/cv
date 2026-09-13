@@ -35,6 +35,7 @@ import GoIcon from "../assets/tecnologias/golang.png";
 export default function SobreMim() {
     const [modalAberto, setModalAberto] = useState(false);
     const [techModalAberto, setTechModalAberto] = useState(false);
+    const [certificadoAtivo, setCertificadoAtivo] = useState(null);
     const sectionRef = useRef(null);
     const imageRef = useRef(null);
     const textRef = useRef(null);
@@ -42,6 +43,7 @@ export default function SobreMim() {
     const particlesRef = useRef(null);
     const dialogRef = useRef(null);
     const techDialogRef = useRef(null);
+    const certPreviewRef = useRef(null);
 
     // Array de certificados SIMPLIFICADO
     const certificados = [
@@ -174,6 +176,14 @@ export default function SobreMim() {
         setTechModalAberto(false);
     };
 
+    const abrirCertificado = (cert) => {
+        setCertificadoAtivo(cert);
+    };
+
+    const fecharCertificado = () => {
+        setCertificadoAtivo(null);
+    };
+
     // Acessibilidade do modal: ESC para fechar, foco inicial e travar o scroll do fundo
     useEffect(() => {
         if (!modalAberto) return;
@@ -215,6 +225,27 @@ export default function SobreMim() {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [techModalAberto]);
+
+    // Acessibilidade do preview de certificado (abre por cima do modal de certificados)
+    useEffect(() => {
+        if (!certificadoAtivo) return;
+
+        const handleEsc = (e) => {
+            if (e.key === "Escape") fecharCertificado();
+        };
+
+        window.addEventListener("keydown", handleEsc);
+        const overflowAnterior = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+
+        certPreviewRef.current?.focus();
+
+        return () => {
+            window.removeEventListener("keydown", handleEsc);
+            document.body.style.overflow = overflowAnterior;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [certificadoAtivo]);
 
     // Registrar GSAP apenas no client-side
     useEffect(() => {
@@ -655,18 +686,74 @@ export default function SobreMim() {
                                                 {cert.descricao}
                                             </p>
                                         </div>
-                                        <a
-                                            href={cert.link !== "#" ? cert.link : cert.img}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                        <button
+                                            type="button"
+                                            onClick={() => abrirCertificado(cert)}
                                             aria-label={`Ver certificado de ${cert.titulo}`}
                                             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 text-white transition-all duration-300 hover:from-blue-500 hover:to-cyan-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.35)]"
                                         >
-                                            <i className={`fas ${cert.link !== "#" ? "fa-external-link-alt" : "fa-expand"} text-xs`}></i>
-                                        </a>
+                                            <i className="fas fa-expand text-xs"></i>
+                                        </button>
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Preview do certificado (imagem em modal, sem abrir outra página) */}
+            {certificadoAtivo && (
+                <div
+                    className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md cert-modal-overlay"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget) fecharCertificado();
+                    }}
+                >
+                    <div
+                        ref={certPreviewRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="cert-preview-titulo"
+                        tabIndex={-1}
+                        className="cert-modal-card relative w-full max-w-lg max-h-[90vh] flex flex-col rounded-3xl border border-white/10 bg-gray-950/95 shadow-2xl outline-none overflow-hidden"
+                    >
+                        {/* Botão fechar */}
+                        <button
+                            onClick={fecharCertificado}
+                            aria-label="Fechar"
+                            className="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white/80 hover:text-white hover:bg-black/60 transition-all duration-300"
+                        >
+                            <i className="fas fa-times"></i>
+                        </button>
+
+                        <div className="overflow-y-auto">
+                            <img
+                                src={certificadoAtivo.img}
+                                alt={`Certificado: ${certificadoAtivo.titulo}`}
+                                className="w-full max-h-[60vh] object-contain bg-black"
+                            />
+
+                            <div className="p-6 sm:p-7">
+                                <h2 id="cert-preview-titulo" className="text-lg font-bold text-white leading-tight">
+                                    {certificadoAtivo.titulo}
+                                </h2>
+                                <p className="text-gray-400 text-sm mt-1.5">
+                                    {certificadoAtivo.descricao}
+                                </p>
+
+                                {certificadoAtivo.link !== "#" && (
+                                    <a
+                                        href={certificadoAtivo.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 mt-4 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+                                    >
+                                        <i className="fas fa-external-link-alt text-xs"></i>
+                                        Verificar certificado original
+                                    </a>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
