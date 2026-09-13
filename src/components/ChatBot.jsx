@@ -1,26 +1,32 @@
 import { useState, useRef, useEffect } from "react";
 
-// Webhook do workflow "Chatbot Portfolio - Lucas Andrade" (node Webhook1, POST).
+// Backend do chat, por ambiente:
 //
-// Em produção (Vercel) defina VITE_N8N_WEBHOOK_URL apontando para um n8n
-// acessível pela internet — localhost:5678 só existe na sua máquina.
+// PRODUÇÃO (Vercel) -> /api/chat (serverless function que chama a Groq).
+//   localhost:5678 só existe na sua máquina, então o n8n local não serve aqui.
+//   Se um dia o n8n ficar exposto na internet, basta definir
+//   VITE_N8N_WEBHOOK_URL na Vercel que ele volta a ser usado.
 //
-// Em dev tentamos duas URLs, nesta ordem:
-//   1. /webhook/      -> produção, funciona sempre que o workflow está ATIVO
-//   2. /webhook-test/ -> teste, funciona depois de clicar "Execute workflow"
+// DEV -> n8n local, tentando duas URLs nesta ordem:
+//   1. /webhook/      -> funciona sempre que o workflow está ATIVO
+//   2. /webhook-test/ -> funciona depois de clicar "Execute workflow"
 //                        no n8n (vale para UMA chamada por clique)
-// Assim o chat responde com o workflow ativo ou no modo de teste.
+//   3. /api/chat      -> fallback (só existe rodando `vercel dev`)
 const N8N_BASE = import.meta.env.VITE_N8N_BASE_URL || "http://localhost:5678";
 const N8N_WEBHOOK_ID = "02b19a44-a6be-42e8-b1dc-ac69d647111a";
+const API_VERCEL = "/api/chat";
 
 const URLS_WEBHOOK = import.meta.env.VITE_N8N_WEBHOOK_URL
   ? [import.meta.env.VITE_N8N_WEBHOOK_URL]
-  : [
+  : import.meta.env.DEV
+  ? [
       `${N8N_BASE}/webhook/${N8N_WEBHOOK_ID}`,
       `${N8N_BASE}/webhook-test/${N8N_WEBHOOK_ID}`,
-    ];
+      API_VERCEL,
+    ]
+  : [API_VERCEL];
 
-// Dispara o POST na primeira URL que estiver registrada no n8n.
+// Dispara o POST na primeira URL que responder.
 // Um 404 significa "webhook não registrado nessa modalidade" -> tenta a próxima.
 async function chamarWebhook(payload) {
   let ultimoErro;
@@ -114,6 +120,9 @@ export default function ChatBot() {
       const data = await chamarWebhook({
         chatInput: texto,
         sessionId: sessionIdRef.current,
+        // contexto da conversa para o /api/chat (o n8n ignora este campo,
+        // lá quem guarda o histórico é o node de memória)
+        historico: mensagens.slice(-10),
       });
 
       const textoExtraido = extrairResposta(data);
@@ -260,8 +269,8 @@ export default function ChatBot() {
 
             {erro && (
               <p className="text-[11px] text-red-400 px-4 pb-2 -mt-1 font-mono">
-                n8n não respondeu. Ative o workflow (toggle Active) ou clique
-                em "Execute workflow" para usar o modo de teste.
+                Servidor do chat não respondeu. Em dev: ative o workflow do n8n
+                (toggle Active) ou clique em "Execute workflow".
               </p>
             )}
           </div>
