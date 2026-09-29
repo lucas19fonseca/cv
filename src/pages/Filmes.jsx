@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SpaceBackground from "../components/SpaceBackground";
 import { filmes, estatisticas } from "../data/filmes";
@@ -57,6 +57,17 @@ export default function Filmes() {
     };
     return [...arr].sort(ordenar[ordem]);
   }, [genero, ordem]);
+
+  // Paginação: renderiza só a página atual (as capas fora da página nem carregam)
+  const porPagina = 15;
+  const [pagina, setPagina] = useState(1);
+  const totalPaginas = Math.max(1, Math.ceil(lista.length / porPagina));
+  useEffect(() => { setPagina(1); }, [genero, ordem]);
+  const visiveis = lista.slice((pagina - 1) * porPagina, pagina * porPagina);
+  const irParaPagina = (n) => {
+    setPagina(Math.min(totalPaginas, Math.max(1, n)));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-[#080831] via-[#0a0a2a] to-[#001233] text-white overflow-hidden">
@@ -132,7 +143,7 @@ export default function Filmes() {
 
         {/* Grid de filmes */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-          {lista.map((f, i) => (
+          {visiveis.map((f, i) => (
             <article
               key={f.id}
               className="filme-card relative rounded-2xl overflow-hidden bg-white/[0.04] border border-white/10 flex flex-col"
@@ -149,6 +160,41 @@ export default function Filmes() {
             </article>
           ))}
         </div>
+
+        {/* Paginação */}
+        {totalPaginas > 1 && (
+          <nav className="flex flex-wrap items-center justify-center gap-1.5 mt-12">
+            <button
+              onClick={() => irParaPagina(pagina - 1)}
+              disabled={pagina === 1}
+              aria-label="Página anterior"
+              className="text-xs font-medium px-3 py-2 rounded-lg border border-white/10 text-white/60 hover:text-white hover:border-white/30 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            >
+              <i className="fa-solid fa-chevron-left" />
+            </button>
+            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((n) => (
+              <button
+                key={n}
+                onClick={() => irParaPagina(n)}
+                className={`text-xs font-semibold w-9 h-9 rounded-lg border transition-colors tabular-nums ${
+                  pagina === n
+                    ? "bg-[#0969CC] border-[#0969CC] text-white shadow-[0_0_15px_rgba(9,105,204,0.5)]"
+                    : "bg-white/5 border-white/10 text-white/60 hover:text-white hover:border-white/30"
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+            <button
+              onClick={() => irParaPagina(pagina + 1)}
+              disabled={pagina === totalPaginas}
+              aria-label="Próxima página"
+              className="text-xs font-medium px-3 py-2 rounded-lg border border-white/10 text-white/60 hover:text-white hover:border-white/30 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+            >
+              <i className="fa-solid fa-chevron-right" />
+            </button>
+          </nav>
+        )}
       </main>
 
       <style>{`

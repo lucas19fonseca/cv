@@ -1,0 +1,47 @@
+# n8n + Cloudflare Tunnel
+#
+# O cloudflared abre uma conexão de saída para a Cloudflare e serve o n8n em
+# https://${N8N_DOMAIN} — sem abrir porta no roteador e sem IP fixo.
+#
+# Subir:   docker compose up -d
+# Logs:    docker compose logs -f cloudflared
+# Parar:   docker compose down     (os dados ficam no volume n8n_data)
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678" # acesso local direto, usado pelo front em dev
+    environment:
+      - N8N_HOST=${N8N_DOMAIN}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://${N8N_DOMAIN}/
+      - N8N_EDITOR_BASE_URL=https://${N8N_DOMAIN}
+      - N8N_PROXY_HOPS=1 # o cloudflared é 1 proxy na frente
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - TZ=America/Sao_Paulo
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - n8nnet
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CF_TUNNEL_TOKEN}
+    depends_on:
+      - n8n
+    networks:
+      - n8nnet
+
+volumes:
+  n8n_data:
+
+networks:
+  n8nnet:

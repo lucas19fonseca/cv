@@ -2,12 +2,13 @@ import { useState, useRef, useEffect } from "react";
 
 // Backend do chat, por ambiente:
 //
-// PRODUÇÃO (Vercel) -> /api/chat (serverless function que chama a Groq).
-//   localhost:5678 só existe na sua máquina, então o n8n local não serve aqui.
-//   Se um dia o n8n ficar exposto na internet, basta definir
-//   VITE_N8N_WEBHOOK_URL na Vercel que ele volta a ser usado.
+// PRODUÇÃO (Vercel) -> /api/chat, sempre.
+//   Quem decide o backend é a serverless function: ela tenta o n8n (exposto
+//   na internet pelo Cloudflare Tunnel, em N8N_WEBHOOK_URL) e, se ele não
+//   responder, cai na Groq. A URL e a chave do n8n ficam no servidor —
+//   nunca entram no bundle do front.
 //
-// DEV -> n8n local, tentando duas URLs nesta ordem:
+// DEV -> n8n local, tentando nesta ordem:
 //   1. /webhook/      -> funciona sempre que o workflow está ATIVO
 //   2. /webhook-test/ -> funciona depois de clicar "Execute workflow"
 //                        no n8n (vale para UMA chamada por clique)
@@ -270,7 +271,8 @@ export default function ChatBot() {
             {erro && (
               <p className="text-[11px] text-red-400 px-4 pb-2 -mt-1 font-mono">
                 Servidor do chat não respondeu. Em dev: ative o workflow do n8n
-                (toggle Active) ou clique em "Execute workflow".
+                (toggle Active) ou clique em "Execute workflow". Em produção:
+                confira as variáveis N8N_WEBHOOK_URL / GROQ_API_KEY na Vercel.
               </p>
             )}
           </div>
