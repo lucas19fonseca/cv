@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Sprite from "./personagem/Sprite";
-import { ANIMS, precarregarSprites } from "./personagem/anims";
+import { ANIMS, VARIACOES, precarregarSprites } from "./personagem/anims";
 
 // Backend do chat, por ambiente:
 //
@@ -73,6 +73,10 @@ function extrairResposta(data) {
   );
 }
 
+// Durante o passeio, quando ele vai correndo, dá um pulo antes de voltar.
+// Bote false pra tirar o pulo sem mexer no resto.
+const COM_PULO = true;
+
 // A partir do texto do bot, escolhe uma reação do personagem (ou null = neutro).
 function detectarEmocao(txt) {
   const t = (txt || "").toLowerCase();
@@ -114,6 +118,8 @@ export default function ChatBot() {
   const charAnimRef = useRef("idle");
   const baseRef = useRef("idle"); // loop de fundo (idle enquanto parado, typing enquanto responde)
   const fila = useRef([]); // reações one-shot em espera
+  const [passeioX, setPasseioX] = useState(0); // deslocamento horizontal do passeio
+  const passeioRef = useRef({ ativo: false, cancelar: false });
   const enviandoRef = useRef(false);
 
   // ---- narração (El Bigode comentando a navegação) ----
@@ -218,12 +224,95 @@ export default function ChatBot() {
         ANIMS[charAnimRef.current]?.loop &&
         Math.random() < 0.6
       ) {
-        reagir(Math.random() < 0.5 ? "wave" : "coffee");
+        reagir(VARIACOES[Math.floor(Math.random() * VARIACOES.length)]);
       }
     }, 9000);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // De vez em quando ele sai andando (ou correndo) pela tela e volta pro canto.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+
+    const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    // desliza de `de` até `para` no tempo pedido, quadro a quadro
+    function deslizar(de, para, ms) {
+      return new Promise((resolve) => {
+        let inicio = 0;
+        function passo(ts) {
+          if (!inicio) inicio = ts;
+          const t = Math.min(1, (ts - inicio) / ms);
+          setPasseioX(de + (para - de) * t);
+          if (t < 1 && !passeioRef.current.cancelar) requestAnimationFrame(passo);
+          else resolve();
+        }
+        requestAnimationFrame(passo);
+      });
+    }
+
+    async function passear() {
+      const p = passeioRef.current;
+      if (p.ativo) return;
+      p.ativo = true;
+      p.cancelar = false;
+
+      const dist = Math.min(340, Math.max(120, window.innerWidth - 220));
+      const correndo = Math.random() < 0.35;
+      const vel = correndo ? 210 : 90; // px por segundo
+      const dur = (dist / vel) * 1000;
+
+      try {
+        definirBase(correndo ? "runLeft" : "walkLeft");
+        await deslizar(0, -dist, dur);
+        if (p.cancelar) return;
+
+        definirBase("idle");
+        await espera(500);
+        if (p.cancelar) return;
+
+        if (COM_PULO && correndo) {
+          aplicar("jump");
+          await espera(720);
+          if (p.cancelar) return;
+        }
+
+        definirBase(correndo ? "runRight" : "walkRight");
+        await deslizar(-dist, 0, dur);
+      } finally {
+        setPasseioX(0);
+        p.ativo = false;
+        if (!enviandoRef.current) definirBase("idle");
+      }
+    }
+
+    const id = setInterval(() => {
+      if (
+        passeioRef.current.ativo ||
+        openRef.current ||
+        enviandoRef.current ||
+        fila.current.length ||
+        baseRef.current !== "idle" ||
+        !ANIMS[charAnimRef.current]?.loop ||
+        Math.random() > 0.35
+      )
+        return;
+      passear();
+    }, 22000);
+
+    return () => {
+      passeioRef.current.cancelar = true;
+      clearInterval(id);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Abrir o chat interrompe o passeio.
+  useEffect(() => {
+    if (open) passeioRef.current.cancelar = true;
+  }, [open]);
 
   // Narra a seção que entra na faixa central da tela.
   useEffect(() => {
@@ -307,7 +396,8 @@ export default function ChatBot() {
     definirBase("think");
     reagir("surprise");
     const tTyping = setTimeout(() => {
-      if (enviandoRef.current) definirBase("typing");
+      if (enviandoRef.current)
+        definirBase(Math.random() < 0.5 ? "typing" : "computer");
     }, 900);
 
     try {
@@ -351,7 +441,10 @@ export default function ChatBot() {
   const CHAR = 116; // tamanho do personagem em px
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 pointer-events-none">
+    <div
+      className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 pointer-events-none"
+      style={{ transform: `translateX(${passeioX}px)`, willChange: "transform" }}
+    >
       {/* ---------- BALÃO DE HQ (aberto) — cores do site ---------- */}
       {open && (
         <div className="hq-pop pointer-events-auto relative w-[22rem] max-w-[calc(100vw-2rem)] font-hq">
