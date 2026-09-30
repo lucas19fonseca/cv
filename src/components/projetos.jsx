@@ -386,6 +386,8 @@ export default function Projetos() {
                     {projetosParaMostrar.map((projeto, index) => (
                         <article
                             key={index}
+                            data-projeto={projeto.nome}
+                            data-tecs={projeto.tecnologias.map((t) => t.nome).join(", ")}
                             className="group flex flex-col overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] transition-colors duration-300 hover:border-white/10"
                         >
                             {/* Project image */}

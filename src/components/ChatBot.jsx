@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import Sprite from "./personagem/Sprite";
+import { ANIMS, precarregarSprites } from "./personagem/anims";
 
 // Backend do chat, por ambiente:
 //
@@ -55,17 +57,140 @@ async function chamarWebhook(payload) {
   throw ultimoErro ?? new Error("Nenhuma URL de webhook respondeu");
 }
 
+// Extrai o texto da resposta do n8n, aceitando os formatos mais comuns
+function extrairResposta(data) {
+  if (data == null) return "";
+  if (typeof data === "string") return data;
+  if (Array.isArray(data)) return extrairResposta(data[0]);
+  return (
+    data.output ??
+    data.text ??
+    data.reply ??
+    data.message ??
+    data.answer ??
+    (data.json ? extrairResposta(data.json) : "") ??
+    ""
+  );
+}
+
+// A partir do texto do bot, escolhe uma reação do personagem (ou null = neutro).
+function detectarEmocao(txt) {
+  const t = (txt || "").toLowerCase();
+  if (
+    /😄|😁|😊|🎉|🥳|👍|🙌|😎|legal|[óo]tim|show|maravilh|perfeito|adoro|amei|excelente|parab[eé]|boa!/.test(
+      t
+    )
+  )
+    return "happy";
+  if (/😠|😡|🚫|n[ãa]o posso|proib|jamais|cuidado|aten[çc][ãa]o/.test(t))
+    return "angry";
+  if (
+    /😢|😞|😔|desculp|infelizmente|n[ãa]o consegui|que pena|triste|erro|falha/.test(
+      t
+    )
+  )
+    return "sad";
+  if (/😮|😲|🤯|uau|nossa|incr[íi]vel|surpreend|caramba|puxa|s[ée]rio\?/.test(t))
+    return "surprise";
+  return null;
+}
+
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [mensagens, setMensagens] = useState([
     {
       autor: "bot",
-      texto: "Olá! 👋 Sou o assistente virtual do Lucas. Como posso ajudar?",
+      texto: "E aí! 👋 Sou o El Bigode, assistente do Lucas. Manda a pergunta que eu respondo!",
     },
   ]);
   const [input, setInput] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(false);
+  const [teaser, setTeaser] = useState(false);
+
+  // ---- estado das animações do personagem ----
+  const [charAnim, setCharAnim] = useState("idle");
+  const [playId, setPlayId] = useState(0); // muda a cada pedido: força reiniciar a animação
+  const charAnimRef = useRef("idle");
+  const baseRef = useRef("idle"); // loop de fundo (idle enquanto parado, typing enquanto responde)
+  const fila = useRef([]); // reações one-shot em espera
+  const enviandoRef = useRef(false);
+
+  // ---- narração (El Bigode comentando a navegação) ----
+  const [narracao, setNarracao] = useState(null);
+  const openRef = useRef(false);
+  const secAtualRef = useRef(null);
+  const projAtualRef = useRef(null);
+  const narracaoTimer = useRef(null);
+
+  useEffect(() => {
+    charAnimRef.current = charAnim;
+  }, [charAnim]);
+  useEffect(() => {
+    enviandoRef.current = enviando;
+  }, [enviando]);
+
+  // Aplica uma animação. O playId muda sempre, então pedir a MESMA animação
+  // de novo reinicia a reprodução (sem isso ela congelava no último quadro).
+  function aplicar(nome) {
+    const n = ANIMS[nome] ? nome : "idle";
+    charAnimRef.current = n;
+    setCharAnim(n);
+    setPlayId((p) => p + 1);
+  }
+  // Toca a próxima reação da fila; se vazia, volta pro loop de fundo.
+  function avancar() {
+    if (fila.current.length) aplicar(fila.current.shift());
+    else aplicar(baseRef.current);
+  }
+  // Enfileira reações one-shot; começa na hora se o personagem estiver em loop.
+  function reagir(...nomes) {
+    for (const n of nomes) {
+      if (!ANIMS[n]) continue;
+      // não empilha a mesma reação repetida (hover em vários cards, etc.)
+      if (fila.current[fila.current.length - 1] === n) continue;
+      fila.current.push(n);
+    }
+    if (fila.current.length > 3) fila.current = fila.current.slice(-3);
+    if (ANIMS[charAnimRef.current]?.loop) avancar();
+  }
+  // Troca o loop de fundo (idle <-> typing/think).
+  function definirBase(nome) {
+    baseRef.current = nome;
+    if (!fila.current.length && ANIMS[charAnimRef.current]?.loop) aplicar(nome);
+  }
+
+  // Frases por seção da página (El Bigode como guia).
+  const NARR_SECOES = {
+    "home-hero": ["Bem-vindo! 👋 Eu sou o El Bigode, seu guia por aqui.", "wave"],
+    "sobre-mim": ["Essa é a área Sobre Mim — quem é o Lucas de verdade. Dá uma lida! 👀", "happy"],
+    projetos: ["Chegamos nos Projetos! 🚀 Passa o mouse num card que eu te conto sobre ele.", "surprise"],
+    experiencia: ["Aqui é a Experiência dele — por onde já passou. 💼", "think"],
+    estimador: ["Esse é o Estimador de Projeto — simula um orçamento rapidinho. 🧮", "coffee"],
+  };
+
+  // Mostra um balão de narração (só com o chat fechado) e some depois de um tempo.
+  function narrar(texto, anim) {
+    if (openRef.current) return;
+    setTeaser(false);
+    setNarracao(texto);
+    if (anim) reagir(anim);
+    clearTimeout(narracaoTimer.current);
+    narracaoTimer.current = setTimeout(() => setNarracao(null), 5200);
+  }
+
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+
+  // Rede de segurança: se uma animação de tiro único não avisar que terminou
+  // (aba em segundo plano, quadro perdido), volta sozinha pro estado base.
+  useEffect(() => {
+    if (ANIMS[charAnim]?.loop) return;
+    const t = setTimeout(() => avancar(), 3000);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [charAnim, playId]);
 
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
@@ -76,33 +201,96 @@ export default function ChatBot() {
       : `sess-${Date.now()}-${Math.random().toString(16).slice(2)}`
   );
 
+  // Pré-carrega os sprites e mostra o teaser depois de um tempinho.
+  useEffect(() => {
+    precarregarSprites();
+    const t = setTimeout(() => setTeaser(true), 1800);
+    return () => clearTimeout(t);
+  }, []);
+
+  // "Vida" quando parado: de vez em quando dá um aceno/toma um café.
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (
+        !enviandoRef.current &&
+        fila.current.length === 0 &&
+        baseRef.current === "idle" &&
+        ANIMS[charAnimRef.current]?.loop &&
+        Math.random() < 0.6
+      ) {
+        reagir(Math.random() < 0.5 ? "wave" : "coffee");
+      }
+    }, 9000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Narra a seção que entra na faixa central da tela.
+  useEffect(() => {
+    const ids = ["home-hero", "sobre-mim", "projetos", "experiencia", "estimador"];
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    if (!els.length) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting && e.target.id !== secAtualRef.current) {
+            secAtualRef.current = e.target.id;
+            const n = NARR_SECOES[e.target.id];
+            if (n) narrar(n[0], n[1]);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Narra o projeto sob o mouse.
+  useEffect(() => {
+    function onOver(e) {
+      if (openRef.current) return;
+      const card = e.target.closest?.("[data-projeto]");
+      if (!card) {
+        projAtualRef.current = null;
+        return;
+      }
+      const nome = card.getAttribute("data-projeto");
+      if (!nome || nome === projAtualRef.current) return;
+      projAtualRef.current = nome;
+      const tecs = card.getAttribute("data-tecs") || "";
+      narrar(
+        tecs ? `Esse é o ${nome}! Feito com ${tecs}. 🔧` : `Esse é o ${nome}! 🔧`,
+        "happy"
+      );
+    }
+    document.addEventListener("mouseover", onOver);
+    return () => document.removeEventListener("mouseover", onOver);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Rola pro fim sempre que chega mensagem nova
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current)
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [mensagens, enviando]);
+  }, [mensagens, enviando, open]);
 
   useEffect(() => {
-    if (open) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+    if (open) setTimeout(() => inputRef.current?.focus(), 120);
   }, [open]);
 
-  // Extrai o texto da resposta do n8n, aceitando os formatos mais comuns
-  function extrairResposta(data) {
-    if (data == null) return "";
-    if (typeof data === "string") return data;
-    if (Array.isArray(data)) return extrairResposta(data[0]);
-    return (
-      data.output ??
-      data.text ??
-      data.reply ??
-      data.message ??
-      data.answer ??
-      (data.json ? extrairResposta(data.json) : "") ??
-      ""
-    );
+  function alternar() {
+    setTeaser(false);
+    setNarracao(null);
+    clearTimeout(narracaoTimer.current);
+    setOpen((v) => {
+      const novo = !v;
+      if (novo) reagir("surprise", "wave"); // reação ao abrir
+      return novo;
+    });
   }
 
   async function enviarMensagem(e) {
@@ -115,30 +303,32 @@ export default function ChatBot() {
     setEnviando(true);
     setErro(false);
 
+    // pensa e depois "digita"
+    definirBase("think");
+    reagir("surprise");
+    const tTyping = setTimeout(() => {
+      if (enviandoRef.current) definirBase("typing");
+    }, 900);
+
     try {
-      // O node Webhook está como POST: o texto e o sessionId (pra manter o
-      // contexto da conversa) vão no corpo em JSON.
       const data = await chamarWebhook({
         chatInput: texto,
         sessionId: sessionIdRef.current,
-        // contexto da conversa para o /api/chat (o n8n ignora este campo,
-        // lá quem guarda o histórico é o node de memória)
         historico: mensagens.slice(-10),
       });
 
       const textoExtraido = extrairResposta(data);
-
-      if (!textoExtraido) {
-        // Caiu aqui = o n8n respondeu, mas sem o campo de texto do agente.
-        // Quase sempre significa que o node Webhook não está ligado ao
-        // Assistente, então o n8n devolveu o próprio payload de entrada.
-        console.warn("Resposta inesperada do n8n:", data);
-      }
+      if (!textoExtraido) console.warn("Resposta inesperada do n8n:", data);
 
       const respostaBot =
         textoExtraido || "Desculpe, não consegui gerar uma resposta.";
 
       setMensagens((prev) => [...prev, { autor: "bot", texto: respostaBot }]);
+
+      // reação conforme o tom da resposta
+      definirBase("idle");
+      const emo = textoExtraido ? detectarEmocao(respostaBot) : "sad";
+      reagir(emo || "wave");
     } catch (err) {
       console.error("Erro ao falar com o workflow n8n:", err);
       setErro(true);
@@ -147,72 +337,63 @@ export default function ChatBot() {
         {
           autor: "bot",
           texto:
-            "Não consegui me conectar ao servidor do chat agora. Tente novamente em instantes.",
+            "Não consegui me conectar ao servidor do chat agora. Tenta de novo daqui a pouco.",
         },
       ]);
+      definirBase("idle");
+      reagir("sad");
     } finally {
+      clearTimeout(tTyping);
       setEnviando(false);
     }
   }
 
+  const CHAR = 116; // tamanho do personagem em px
+
   return (
-    <>
-      {/* Botão flutuante */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="group fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full flex items-center justify-center bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300"
-        aria-label={open ? "Fechar chat" : "Abrir chat"}
-      >
-        {!open && (
-          <span className="absolute inset-0 rounded-full bg-cyan-500/40 animate-ping" />
-        )}
-        <i
-          className={`relative fa-solid ${
-            open ? "fa-xmark" : "fa-comment-dots"
-          }`}
-        ></i>
-      </button>
-
-      {/* Janela do chat */}
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 pointer-events-none">
+      {/* ---------- BALÃO DE HQ (aberto) — cores do site ---------- */}
       {open && (
-        <div className="fixed bottom-24 right-5 z-50 w-[26rem] max-w-[calc(100vw-2.5rem)]">
-          {/* Halo do card, igual aos cards do site */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl blur opacity-20 pointer-events-none" />
+        <div className="hq-pop pointer-events-auto relative w-[22rem] max-w-[calc(100vw-2rem)] font-hq">
+          {/* halo azul, igual aos cards do site */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-[24px] blur opacity-20 pointer-events-none" />
 
-          <div className="relative h-[28rem] max-h-[75vh] flex flex-col bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-800 rounded-2xl shadow-2xl overflow-hidden">
-            {/* Linha de scan no topo */}
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-60" />
+          <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border-[3px] border-cyan-500/50 rounded-[22px] hq-shadow overflow-hidden">
+            {/* linha de scan no topo */}
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-70" />
 
-            {/* Header */}
-            <div className="flex justify-between items-center px-4 py-3 border-b border-gray-800 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center shrink-0">
-                  <i className="fa-solid fa-robot text-white text-sm"></i>
-                </div>
-                <div className="leading-tight">
-                  <p className="text-blue-400 font-mono text-[11px] tracking-widest">
-                    ASSISTENTE IA
-                  </p>
-                  <p className="text-gray-500 text-[11px] flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                    online
-                  </p>
-                </div>
+            {/* cabeçalho */}
+            <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-gray-800">
+              <div className="flex items-center gap-2">
+                <span className="font-hq-title text-xl leading-none bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  EL BIGODE
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-widest bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-1.5 py-0.5 rounded">
+                  IA
+                </span>
+                <span className="flex items-center gap-1.5 text-[11px] text-gray-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                  online
+                </span>
               </div>
-
               <button
                 onClick={() => setOpen(false)}
-                className="text-gray-500 hover:text-cyan-400 transition-colors"
+                className="w-6 h-6 grid place-items-center rounded-full text-gray-500 hover:text-cyan-400 hover:bg-gray-800 transition-colors"
                 aria-label="Fechar chat"
               >
-                <i className="fa-solid fa-xmark"></i>
+                ✕
               </button>
             </div>
 
-            {/* Mensagens */}
+            {/* mensagens */}
             <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto p-4 space-y-3 text-sm"
+              className="max-h-[42vh] min-h-[6rem] overflow-y-auto p-3 space-y-2.5"
+              style={{
+                backgroundImage:
+                  "radial-gradient(rgba(6,182,212,0.10) 1px, transparent 1px)",
+                backgroundSize: "12px 12px",
+              }}
             >
               {mensagens.map((m, i) => (
                 <div
@@ -222,10 +403,10 @@ export default function ChatBot() {
                   }`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-xl px-3.5 py-2.5 whitespace-pre-wrap break-words ${
+                    className={`max-w-[85%] px-3.5 py-2 text-[15px] font-semibold leading-snug whitespace-pre-wrap break-words ${
                       m.autor === "user"
-                        ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-br-sm shadow-lg shadow-blue-500/20"
-                        : "bg-gray-900/60 border border-gray-800 text-gray-300 rounded-bl-sm"
+                        ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-2xl rounded-br-md shadow-lg shadow-blue-500/20"
+                        : "bg-gray-900/70 border border-gray-700 text-gray-200 rounded-2xl rounded-bl-md"
                     }`}
                   >
                     {m.texto}
@@ -235,49 +416,95 @@ export default function ChatBot() {
 
               {enviando && (
                 <div className="flex justify-start">
-                  <div className="bg-gray-900/60 border border-gray-800 rounded-xl rounded-bl-sm px-3 py-2 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:-0.3s]"></span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:-0.15s]"></span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
+                  <div className="flex items-center gap-1 bg-gray-900/70 border border-gray-700 rounded-2xl rounded-bl-md px-3 py-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 hq-dot" />
+                    <span
+                      className="w-1.5 h-1.5 rounded-full bg-cyan-400 hq-dot"
+                      style={{ animationDelay: "0.15s" }}
+                    />
+                    <span
+                      className="w-1.5 h-1.5 rounded-full bg-cyan-400 hq-dot"
+                      style={{ animationDelay: "0.3s" }}
+                    />
                   </div>
                 </div>
               )}
+
+              {erro && (
+                <p className="text-[11px] text-red-400 font-mono">
+                  Servidor do chat não respondeu. Em dev: ative o workflow do n8n
+                  ou clique em "Execute workflow".
+                </p>
+              )}
             </div>
 
-            {/* Input */}
+            {/* input */}
             <form
               onSubmit={enviarMensagem}
-              className="flex items-center gap-2 p-3 border-t border-gray-800 shrink-0"
+              className="flex items-center gap-2 p-2.5 border-t border-gray-800"
             >
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Digite sua mensagem..."
-                className="flex-1 bg-gray-900 border border-gray-800 text-gray-200 text-sm placeholder-gray-600 rounded-lg px-3 py-2 outline-none focus:border-blue-500/60 transition-colors"
+                placeholder="Escreve aqui..."
+                className="flex-1 bg-gray-950 text-gray-200 text-[15px] font-semibold placeholder-gray-600 border border-gray-700 rounded-xl px-3 py-2 outline-none focus:border-cyan-500/60 transition-colors"
                 disabled={enviando}
               />
               <button
                 type="submit"
                 disabled={enviando || !input.trim()}
-                className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:shadow-lg hover:shadow-blue-500/30 disabled:opacity-40 disabled:hover:shadow-none text-white w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-all"
+                className="w-10 h-10 grid place-items-center rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white shrink-0 hover:shadow-lg hover:shadow-blue-500/30 active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-40 disabled:hover:shadow-none transition-all"
                 aria-label="Enviar mensagem"
               >
-                <i className="fa-solid fa-paper-plane text-sm"></i>
+                ➤
               </button>
             </form>
-
-            {erro && (
-              <p className="text-[11px] text-red-400 px-4 pb-2 -mt-1 font-mono">
-                Servidor do chat não respondeu. Em dev: ative o workflow do n8n
-                (toggle Active) ou clique em "Execute workflow". Em produção:
-                confira as variáveis N8N_WEBHOOK_URL / GROQ_API_KEY na Vercel.
-              </p>
-            )}
           </div>
+
+          {/* rabinho do balão apontando pro personagem */}
+          <span className="absolute -bottom-[18px] right-12 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[21px] border-t-cyan-500/50" />
+          <span className="absolute -bottom-[13px] right-[51px] w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[15px] border-t-gray-950" />
         </div>
       )}
-    </>
+
+      {/* ---------- NARRAÇÃO / TEASER (fechado) ---------- */}
+      {!open && (narracao || teaser) && (
+        <div
+          onClick={alternar}
+          role="button"
+          tabIndex={0}
+          className="hq-pop pointer-events-auto relative mr-1 max-w-[15rem] cursor-pointer font-hq font-bold text-[14px] leading-snug text-cyan-100 bg-gray-900 border-[2px] border-cyan-500/50 rounded-2xl rounded-br-md px-3.5 py-2 hq-shadow"
+          aria-label="Abrir chat"
+        >
+          {narracao || "Fala comigo! 💬"}
+          <span className="absolute -bottom-[13px] right-6 w-0 h-0 border-l-[11px] border-l-transparent border-r-[11px] border-r-transparent border-t-[16px] border-t-cyan-500/50" />
+          <span className="absolute -bottom-[9px] right-[29px] w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[11px] border-t-gray-900" />
+        </div>
+      )}
+
+      {/* ---------- PERSONAGEM ---------- */}
+      <button
+        onClick={alternar}
+        onMouseEnter={() => {
+          if (!open) reagir("wave");
+        }}
+        className="pointer-events-auto relative grid place-items-end select-none focus:outline-none"
+        style={{ width: CHAR, height: CHAR }}
+        aria-label={open ? "Fechar chat" : "Abrir chat com o assistente"}
+      >
+        {!open && (
+          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 w-16 h-3 rounded-full bg-cyan-500/30 blur-sm animate-pulse" />
+        )}
+        <Sprite
+          nome={charAnim}
+          playId={playId}
+          size={CHAR}
+          onDone={avancar}
+          className="drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]"
+        />
+      </button>
+    </div>
   );
 }
