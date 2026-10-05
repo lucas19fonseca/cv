@@ -60,6 +60,7 @@ export const filmes = [
   { id: 58, titulo: "Demolição", ano: 2015, genero: "Drama", duracao: "1h41", emoji: "🔨", cor: "from-zinc-700 to-neutral-950", poster: "https://images.metahub.space/poster/medium/tt1172049/img", sinopse: "Após perder a esposa num acidente, um executivo começa a desmontar — literalmente — tudo à sua volta para entender o que realmente sente." },
   { id: 59, titulo: "De Repente, uma Família", ano: 2018, genero: "Comédia / Drama", duracao: "1h58", emoji: "👨‍👩‍👧‍👦", cor: "from-amber-600 to-rose-950", poster: "https://images.metahub.space/poster/medium/tt7401588/img", sinopse: "Um casal decide adotar e, de uma hora para outra, vira pai e mãe de três irmãos — descobrindo que amar dá muito mais trabalho do que imaginavam." },
   { id: 60, titulo: "Din e o Dragão Genial", ano: 2021, genero: "Animação / Aventura", duracao: "1h38", emoji: "🐉", cor: "from-red-700 to-amber-950", poster: "https://images.metahub.space/poster/medium/tt5562070/img", sinopse: "Um jovem sonhador encontra um dragão mágico que realiza três desejos e embarca numa aventura para reencontrar uma amiga de infância." },
+  { id: 61, titulo: "Homem nas Trevas", ano: 2016, genero: "Terror / Suspense", duracao: "1h28", emoji: "🕶️", cor: "from-neutral-800 to-black", poster: "https://images.metahub.space/poster/medium/tt4160708/img", sinopse: "Três jovens invadem a casa de um veterano cego achando que será um roubo fácil — e descobrem que estão trancados lá dentro com algo muito pior." },
 ];
 
 // Soma automática da duração (formato "2h49", "1h46"...) → total de minutos.
