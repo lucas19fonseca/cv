@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 // Fundo "espaço" reutilizável — mesma pegada do Hero (grid + orbes + estrelas).
-// Aceita densidade menor p/ telas onde performance importa mais (ex.: Avaliação).
+// Aceita densidade menor p/ telas onde performance importa mais.
 export default function SpaceBackground({ stars = 60, particles = 14, orbs = true }) {
   const estrelas = useMemo(
     () =>
