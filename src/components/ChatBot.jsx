@@ -2,62 +2,38 @@ import { useState, useRef, useEffect } from "react";
 import Sprite from "./personagem/Sprite";
 import { ANIMS, VARIACOES, precarregarSprites } from "./personagem/anims";
 
-// Backend do chat, por ambiente:
+// Backend do chat: serverless function em api/chat.js.
 //
-// PRODUÇÃO (Vercel) -> /api/chat, sempre.
-//   Quem decide o backend é a serverless function: ela tenta o n8n (exposto
-//   na internet pelo Cloudflare Tunnel, em N8N_WEBHOOK_URL) e, se ele não
-//   responder, cai na Groq. A URL e a chave do n8n ficam no servidor —
-//   nunca entram no bundle do front.
+// O RAG é feito lá dentro — a base de conhecimento é o arquivo
+// knowledge/perfil-lucas.md, injetado no system prompt da LLM (Groq).
+// A chave de API vive só no servidor, nunca no bundle do front.
 //
-// DEV -> n8n local, tentando nesta ordem:
-//   1. /webhook/      -> funciona sempre que o workflow está ATIVO
-//   2. /webhook-test/ -> funciona depois de clicar "Execute workflow"
-//                        no n8n (vale para UMA chamada por clique)
-//   3. /api/chat      -> fallback (só existe rodando `vercel dev`)
-const N8N_BASE = import.meta.env.VITE_N8N_BASE_URL || "http://localhost:5678";
-const N8N_WEBHOOK_ID = "02b19a44-a6be-42e8-b1dc-ac69d647111a";
-const API_VERCEL = "/api/chat";
+// Em produção (Vercel) a rota existe nativamente. Em dev, o plugin
+// `apiDev` do vite.config.js monta o mesmo handler no dev server, então
+// `npm run dev` já funciona — não precisa de `vercel dev`.
+const API_CHAT = "/api/chat";
 
-const URLS_WEBHOOK = import.meta.env.VITE_N8N_WEBHOOK_URL
-  ? [import.meta.env.VITE_N8N_WEBHOOK_URL]
-  : import.meta.env.DEV
-  ? [
-      `${N8N_BASE}/webhook/${N8N_WEBHOOK_ID}`,
-      `${N8N_BASE}/webhook-test/${N8N_WEBHOOK_ID}`,
-      API_VERCEL,
-    ]
-  : [API_VERCEL];
+async function chamarApi(payload) {
+  const res = await fetch(API_CHAT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
-// Dispara o POST na primeira URL que responder.
-// Um 404 significa "webhook não registrado nessa modalidade" -> tenta a próxima.
-async function chamarWebhook(payload) {
-  let ultimoErro;
-
-  for (const url of URLS_WEBHOOK) {
+  if (!res.ok) {
+    let detalhe = "";
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.status === 404) {
-        ultimoErro = new Error(`HTTP 404 em ${url}`);
-        continue;
-      }
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-      return await res.json();
-    } catch (err) {
-      ultimoErro = err;
+      detalhe = (await res.json())?.error || "";
+    } catch {
+      // resposta sem JSON
     }
+    throw new Error(detalhe || `HTTP ${res.status}`);
   }
 
-  throw ultimoErro ?? new Error("Nenhuma URL de webhook respondeu");
+  return await res.json();
 }
 
-// Extrai o texto da resposta do n8n, aceitando os formatos mais comuns
+// Extrai o texto da resposta, aceitando os formatos mais comuns
 function extrairResposta(data) {
   if (data == null) return "";
   if (typeof data === "string") return data;
@@ -200,7 +176,7 @@ export default function ChatBot() {
 
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
-  // sessionId estável durante a visita, para o n8n manter o contexto da conversa
+  // sessionId estável durante a visita, para identificar a conversa nos logs
   const sessionIdRef = useRef(
     typeof crypto !== "undefined" && crypto.randomUUID
       ? crypto.randomUUID()
@@ -401,14 +377,14 @@ export default function ChatBot() {
     }, 900);
 
     try {
-      const data = await chamarWebhook({
+      const data = await chamarApi({
         chatInput: texto,
         sessionId: sessionIdRef.current,
         historico: mensagens.slice(-10),
       });
 
       const textoExtraido = extrairResposta(data);
-      if (!textoExtraido) console.warn("Resposta inesperada do n8n:", data);
+      if (!textoExtraido) console.warn("Resposta inesperada da API:", data);
 
       const respostaBot =
         textoExtraido || "Desculpe, não consegui gerar uma resposta.";
@@ -420,7 +396,7 @@ export default function ChatBot() {
       const emo = textoExtraido ? detectarEmocao(respostaBot) : "sad";
       reagir(emo || "wave");
     } catch (err) {
-      console.error("Erro ao falar com o workflow n8n:", err);
+      console.error("Erro ao falar com /api/chat:", err);
       setErro(true);
       setMensagens((prev) => [
         ...prev,
@@ -525,8 +501,8 @@ export default function ChatBot() {
 
               {erro && (
                 <p className="text-[11px] text-red-400 font-mono">
-                  Servidor do chat não respondeu. Em dev: ative o workflow do n8n
-                  ou clique em "Execute workflow".
+                  Servidor do chat não respondeu. Confira se GROQ_API_KEY está
+                  definida no .env (dev) ou nas env vars da Vercel (produção).
                 </p>
               )}
             </div>
