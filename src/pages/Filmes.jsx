@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SpaceBackground from "../components/SpaceBackground";
+import ChatBot from "../components/ChatBot";
 import { filmes, estatisticas } from "../data/filmes";
 
 // Área do pôster: usa a imagem se houver e carregar; senão, pôster estilizado.
@@ -146,6 +147,8 @@ export default function Filmes() {
           {visiveis.map((f, i) => (
             <article
               key={f.id}
+              data-filme={f.titulo}
+              data-ano={f.ano}
               className="filme-card relative rounded-2xl overflow-hidden bg-white/[0.04] border border-white/10 flex flex-col"
               style={{ animationDelay: `${i * 55}ms` }}
             >
@@ -196,6 +199,9 @@ export default function Filmes() {
           </nav>
         )}
       </main>
+
+      {/* El Bigode também aqui: dá pra perguntar se o Lucas já viu algum filme */}
+      <ChatBot contexto="filmes" />
 
       <style>{`
         .animate-gradient { animation: sb-grad 3s ease infinite; background-size: 200% auto; }

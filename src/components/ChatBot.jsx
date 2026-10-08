@@ -20,14 +20,27 @@ async function chamarApi(payload) {
     body: JSON.stringify(payload),
   });
 
+  const tipo = res.headers.get("content-type") || "";
+  const ehJson = tipo.includes("application/json");
+
   if (!res.ok) {
-    let detalhe = "";
-    try {
-      detalhe = (await res.json())?.error || "";
-    } catch {
-      // resposta sem JSON
+    if (ehJson) {
+      const corpo = await res.json().catch(() => null);
+      throw new Error(corpo?.error || `HTTP ${res.status}`);
     }
-    throw new Error(detalhe || `HTTP ${res.status}`);
+    // HTML em vez de JSON = a rota /api/chat não existe nesse deploy
+    if (res.status === 404) {
+      throw new Error(
+        "Rota /api/chat não encontrada no deploy. A pasta api/ foi enviada ao Git?"
+      );
+    }
+    throw new Error(`HTTP ${res.status} (resposta não-JSON)`);
+  }
+
+  if (!ehJson) {
+    throw new Error(
+      "A rota /api/chat devolveu HTML em vez de JSON — a serverless function não está ativa."
+    );
   }
 
   return await res.json();
@@ -75,17 +88,29 @@ function detectarEmocao(txt) {
   return null;
 }
 
-export default function ChatBot() {
+// Primeira fala e teaser mudam conforme a página onde o bot aparece.
+const SAUDACAO = {
+  home: "E aí! 👋 Sou o El Bigode, assistente do Lucas. Manda a pergunta que eu respondo!",
+  filmes:
+    "E aí! 👋 Sou o El Bigode. Quer saber se o Lucas já viu algum filme? Pergunta aí! 🍿",
+};
+
+const TEASER = {
+  home: "Fala comigo! 💬",
+  filmes: "Pergunta de filme? 🍿",
+};
+
+export default function ChatBot({ contexto = "home" }) {
   const [open, setOpen] = useState(false);
   const [mensagens, setMensagens] = useState([
     {
       autor: "bot",
-      texto: "E aí! 👋 Sou o El Bigode, assistente do Lucas. Manda a pergunta que eu respondo!",
+      texto: SAUDACAO[contexto] ?? SAUDACAO.home,
     },
   ]);
   const [input, setInput] = useState("");
   const [enviando, setEnviando] = useState(false);
-  const [erro, setErro] = useState(false);
+  const [erro, setErro] = useState(null); // null = sem erro; string = detalhe técnico
   const [teaser, setTeaser] = useState(false);
 
   // ---- estado das animações do personagem ----
@@ -314,13 +339,26 @@ export default function ChatBot() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Narra o projeto sob o mouse.
+  // Narra o projeto (ou o filme) sob o mouse.
   useEffect(() => {
     function onOver(e) {
       if (openRef.current) return;
-      const card = e.target.closest?.("[data-projeto]");
+      const card = e.target.closest?.("[data-projeto], [data-filme]");
       if (!card) {
         projAtualRef.current = null;
+        return;
+      }
+      const filme = card.getAttribute("data-filme");
+      if (filme) {
+        if (filme === projAtualRef.current) return;
+        projAtualRef.current = filme;
+        const ano = card.getAttribute("data-ano");
+        narrar(
+          ano
+            ? `${filme} (${ano})? Esse o Lucas já viu! 🍿`
+            : `${filme}? Esse o Lucas já viu! 🍿`,
+          "happy"
+        );
         return;
       }
       const nome = card.getAttribute("data-projeto");
@@ -366,7 +404,7 @@ export default function ChatBot() {
     setMensagens((prev) => [...prev, { autor: "user", texto }]);
     setInput("");
     setEnviando(true);
-    setErro(false);
+    setErro(null);
 
     // pensa e depois "digita"
     definirBase("think");
@@ -397,7 +435,8 @@ export default function ChatBot() {
       reagir(emo || "wave");
     } catch (err) {
       console.error("Erro ao falar com /api/chat:", err);
-      setErro(true);
+      const detalhe = err?.message || "erro desconhecido";
+      setErro(detalhe);
       setMensagens((prev) => [
         ...prev,
         {
@@ -500,9 +539,8 @@ export default function ChatBot() {
               )}
 
               {erro && (
-                <p className="text-[11px] text-red-400 font-mono">
-                  Servidor do chat não respondeu. Confira se GROQ_API_KEY está
-                  definida no .env (dev) ou nas env vars da Vercel (produção).
+                <p className="text-[11px] text-red-400 font-mono break-words">
+                  {erro}
                 </p>
               )}
             </div>
@@ -547,7 +585,7 @@ export default function ChatBot() {
           className="hq-pop pointer-events-auto relative mr-1 max-w-[15rem] cursor-pointer font-hq font-bold text-[14px] leading-snug text-cyan-100 bg-gray-900 border-[2px] border-cyan-500/50 rounded-2xl rounded-br-md px-3.5 py-2 hq-shadow"
           aria-label="Abrir chat"
         >
-          {narracao || "Fala comigo! 💬"}
+          {narracao || TEASER[contexto] || TEASER.home}
           <span className="absolute -bottom-[13px] right-6 w-0 h-0 border-l-[11px] border-l-transparent border-r-[11px] border-r-transparent border-t-[16px] border-t-cyan-500/50" />
           <span className="absolute -bottom-[9px] right-[29px] w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[11px] border-t-gray-900" />
         </div>
