@@ -15,7 +15,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { filmes } from "../src/data/filmes.js";
+import { filmes, estatisticas } from "../src/data/filmes.js";
 
 const BASE_URL = process.env.GROQ_BASE_URL || "https://api.groq.com/openai/v1";
 
@@ -114,9 +114,17 @@ async function resolverModelo(chave, { forcar = false } = {}) {
 // Lista compacta do que o Lucas já assistiu (mesma fonte da página /filmes),
 // para o bot responder "já viu tal filme?" sem precisar de outra base.
 function listarFilmes() {
-  return filmes
-    .map((f) => `- ${f.titulo} (${f.ano}) — ${f.genero}, ${f.duracao}`)
+  const cabecalho =
+    `Total: ${estatisticas.total} títulos assistidos, ` +
+    `${estatisticas.horasLabel} somadas, ${estatisticas.generos} gêneros diferentes.`;
+  const linhas = filmes
+    .map(
+      (f) =>
+        `- ${f.titulo} (${f.ano}) — ${f.genero}, ${f.duracao}` +
+        (f.franquia ? ` [franquia: ${f.franquia}]` : "")
+    )
     .join("\n");
+  return `${cabecalho}\n${linhas}`;
 }
 
 function montarSystemPrompt(conhecimento) {
@@ -140,6 +148,7 @@ FILMES E SÉRIES
 - Se perguntarem se o Lucas já viu algum filme ou série, consulte a FILMOTECA abaixo (é a lista do que ele já assistiu, a mesma da página /filmes).
 - Está na lista: confirme que ele já viu e pode citar ano, gênero ou duração. Não está: diga que não está na filmoteca dele, então provavelmente ainda não viu.
 - Nunca invente opinião, nota ou comentário do Lucas sobre um filme — só o que a lista traz.
+- A FILMOTECA abaixo está completa: é tudo o que ele já viu. Pode usar o total, as horas somadas e os gêneros para responder "quantos filmes ele já viu", listar por gênero, ano ou franquia, e sugerir títulos da própria lista.
 
 DOCUMENTO (única fonte de verdade sobre o Lucas)
 <<<

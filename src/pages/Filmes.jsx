@@ -4,6 +4,10 @@ import SpaceBackground from "../components/SpaceBackground";
 import ChatBot from "../components/ChatBot";
 import { filmes, estatisticas } from "../data/filmes";
 
+// Normaliza para busca: minúsculo e sem acento ("josé" acha "Jose").
+const normalizar = (t) =>
+  (t || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
 // Área do pôster: usa a imagem se houver e carregar; senão, pôster estilizado.
 function Poster({ filme }) {
   const [erro, setErro] = useState(false);
@@ -36,6 +40,7 @@ function Poster({ filme }) {
 }
 
 export default function Filmes() {
+  const [busca, setBusca] = useState("");
   const [genero, setGenero] = useState("Todos");
   const [ordem, setOrdem] = useState("ano");
 
@@ -50,20 +55,29 @@ export default function Filmes() {
   }, []);
 
   const lista = useMemo(() => {
-    const arr = filmes.filter((f) => genero === "Todos" || f.genero.includes(genero) || f.franquia === genero);
+    const termos = normalizar(busca).split(/\s+/).filter(Boolean);
+    const arr = filmes.filter((f) => {
+      const passaGenero = genero === "Todos" || f.genero.includes(genero) || f.franquia === genero;
+      if (!passaGenero) return false;
+      if (!termos.length) return true;
+      const alvo = normalizar(
+        `${f.titulo} ${f.ano} ${f.genero} ${f.franquia || ""} ${f.sinopse || ""}`
+      );
+      return termos.every((t) => alvo.includes(t));
+    });
     const ordenar = {
       ano: (a, b) => b.ano - a.ano,
       titulo: (a, b) => a.titulo.localeCompare(b.titulo),
       duracao: (a, b) => b.duracao.localeCompare(a.duracao),
     };
     return [...arr].sort(ordenar[ordem]);
-  }, [genero, ordem]);
+  }, [busca, genero, ordem]);
 
   // Paginação: renderiza só a página atual (as capas fora da página nem carregam)
   const porPagina = 15;
   const [pagina, setPagina] = useState(1);
   const totalPaginas = Math.max(1, Math.ceil(lista.length / porPagina));
-  useEffect(() => { setPagina(1); }, [genero, ordem]);
+  useEffect(() => { setPagina(1); }, [busca, genero, ordem]);
   const visiveis = lista.slice((pagina - 1) * porPagina, pagina * porPagina);
   const irParaPagina = (n) => {
     setPagina(Math.min(totalPaginas, Math.max(1, n)));
@@ -103,6 +117,36 @@ export default function Filmes() {
               <b className="text-white tabular-nums">{estatisticas.horasLabel}</b> assistidas
             </span>
           </div>
+        </div>
+
+        {/* Busca */}
+        <div className="max-w-xl mx-auto mb-6">
+          <div className="relative">
+            <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/35 text-sm pointer-events-none" />
+            <input
+              type="search"
+              value={busca}
+              onChange={(ev) => setBusca(ev.target.value)}
+              placeholder="Buscar por título, gênero, ano..."
+              aria-label="Buscar filme"
+              className="w-full bg-white/[0.04] border border-white/10 focus:border-[#0969CC] focus:bg-white/[0.07] rounded-full pl-11 pr-11 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:shadow-[0_0_20px_rgba(9,105,204,0.25)] transition-all [&::-webkit-search-cancel-button]:appearance-none"
+            />
+            {busca && (
+              <button
+                onClick={() => setBusca("")}
+                aria-label="Limpar busca"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white w-7 h-7 rounded-full hover:bg-white/10 transition-colors"
+              >
+                <i className="fa-solid fa-xmark text-sm" />
+              </button>
+            )}
+          </div>
+          {busca && (
+            <p className="mt-2.5 text-center text-xs text-white/45">
+              <b className="text-white tabular-nums">{lista.length}</b>{" "}
+              {lista.length === 1 ? "resultado" : "resultados"} para “{busca}”
+            </p>
+          )}
         </div>
 
         {/* Filtros + ordenação */}
@@ -163,6 +207,22 @@ export default function Filmes() {
             </article>
           ))}
         </div>
+
+        {/* Nada encontrado */}
+        {lista.length === 0 && (
+          <div className="text-center py-20">
+            <i className="fa-regular fa-face-frown text-4xl text-white/20" />
+            <p className="mt-4 text-white/60 text-sm">
+              Nenhum filme encontrado{busca ? ` para “${busca}”` : ""}.
+            </p>
+            <button
+              onClick={() => { setBusca(""); setGenero("Todos"); }}
+              className="mt-4 text-xs font-medium px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:border-white/30 transition-colors"
+            >
+              Limpar filtros
+            </button>
+          </div>
+        )}
 
         {/* Paginação */}
         {totalPaginas > 1 && (
