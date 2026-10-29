@@ -91,6 +91,7 @@ export const filmes = [
   { id: 90, titulo: "Infiltrado", ano: 2021, genero: "Ação / Suspense", duracao: "1h58", emoji: "🎯", cor: "from-zinc-700 to-black", poster: "https://images.metahub.space/poster/medium/tt11083552/img", sinopse: "Um novo segurança de carro-forte revela pontaria letal num assalto — e o passado dele mostra que entrar na empresa nunca foi sobre o emprego." },
   { id: 91, titulo: "Implacável", ano: 2019, genero: "Ação / Crime", duracao: "1h27", emoji: "🦷", cor: "from-red-900 to-neutral-950", poster: "https://images.metahub.space/poster/medium/tt8836988/img", sinopse: "Transformado em máquina de briga pelos anos de prisão, um homem foge da escolta e vai cobrar do próprio irmão a conta do que virou." },
   { id: 92, titulo: "Quebrando Regras", ano: 2008, genero: "Ação / Drama", duracao: "1h50", emoji: "🥋", cor: "from-orange-700 to-neutral-950", poster: "https://images.metahub.space/poster/medium/tt1023111/img", sinopse: "Novo numa escola do Texas, um adolescente revoltado entra para um clube de luta clandestino e treina MMA para encarar o valentão que o humilhou." },
+  { id: 93, titulo: "Soldado Anônimo", ano: 2005, genero: "Drama / Guerra", duracao: "2h05", emoji: "🪖", cor: "from-yellow-700 to-stone-950", poster: "https://images.metahub.space/poster/medium/tt0418763/img", sinopse: "Fuzileiro recém-formado em atirador de elite, Swofford vai para o deserto na Guerra do Golfo e descobre que o pior inimigo é a espera sem um único tiro disparado." },
 ];
 
 // Soma automática da duração (formato "2h49", "1h46"...) → total de minutos.
